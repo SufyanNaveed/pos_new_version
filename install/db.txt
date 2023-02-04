@@ -1,0 +1,1111 @@
+        CREATE TABLE `ci_sessions` (
+        `id` varchar(128) NOT NULL,
+        `ip_address` varchar(45) NOT NULL,
+        `timestamp` int(10) unsigned DEFAULT 0 NOT NULL,
+        `data` blob NOT NULL,
+        PRIMARY KEY (id),
+        KEY `ci_sessions_timestamp` (`timestamp`)
+        );
+
+        CREATE TABLE `geopos_accounts` (
+        `id` int(5) NOT NULL AUTO_INCREMENT,
+        `acn` varchar(35) NOT NULL,
+        `holder` varchar(100) NOT NULL,
+        `adate` datetime NOT NULL,
+        `lastbal` decimal(16,2) DEFAULT '0.00',
+        `code` varchar(30) DEFAULT NULL,
+        `loc` int(4) NULL,
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `acn` (`acn`),
+        KEY `id` (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        INSERT INTO `geopos_accounts` (`id`, `acn`, `holder`, `adate`, `lastbal`, `code`, `loc`) VALUES
+        (1, '123456', 'Sales Account', '2018-01-01 00:00:00', '0.00', 'Default Sales Account','0');
+
+        CREATE TABLE `geopos_attendance` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `emp` int(11) NOT NULL,
+        `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `adate` date NOT NULL,
+        `tfrom` time NOT NULL,
+        `tto` time NOT NULL,
+        `note` varchar(255) DEFAULT NULL,
+        `actual_hours` INT(11) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `emp` (`emp`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_bank_ac` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `name` varchar(50) NOT NULL,
+        `bank` varchar(50) NOT NULL,
+        `acn` varchar(50) NOT NULL,
+        `code` varchar(50) DEFAULT NULL,
+        `note` varchar(2000) DEFAULT NULL,
+        `address` varchar(100) DEFAULT NULL,
+        `branch` varchar(100) DEFAULT NULL,
+        `enable` enum('Yes','No') NOT NULL DEFAULT 'No',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_currencies` (
+        `id` int(4) NOT NULL AUTO_INCREMENT,
+        `code` varchar(3) CHARACTER SET latin1 DEFAULT NULL,
+        `symbol` varchar(3) DEFAULT NULL,
+        `rate` decimal(10,5) NOT NULL,
+        `thous` char(1) CHARACTER SET latin1 DEFAULT NULL,
+        `dpoint` char(1) CHARACTER SET latin1 NOT NULL,
+        `decim` int(2) NOT NULL,
+        `cpos` int(11) NOT NULL DEFAULT '1',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_customers` (
+        `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+        `name` varchar(50) NOT NULL,
+        `phone` varchar(20) DEFAULT NULL,
+        `address` varchar(50) DEFAULT NULL,
+        `city` varchar(50) DEFAULT NULL,
+        `region` varchar(30) DEFAULT NULL,
+        `country` varchar(50) DEFAULT NULL,
+        `postbox` varchar(20) DEFAULT NULL,
+        `email` varchar(60) DEFAULT NULL,
+        `picture` varchar(100) NOT NULL DEFAULT 'example.png',
+        `gid` int(5) NOT NULL DEFAULT '1',
+        `company` varchar(100) DEFAULT NULL,
+        `taxid` varchar(100) DEFAULT NULL,
+        `name_s` varchar(100) DEFAULT NULL,
+        `phone_s` varchar(100) DEFAULT NULL,
+        `email_s` varchar(100) DEFAULT NULL,
+        `address_s` varchar(100) DEFAULT NULL,
+        `city_s` varchar(100) DEFAULT NULL,
+        `region_s` varchar(100) DEFAULT NULL,
+        `country_s` varchar(100) DEFAULT NULL,
+        `postbox_s` varchar(100) DEFAULT NULL,
+        `balance` decimal(16,2) DEFAULT '0.00',
+        `loc` int(11) DEFAULT '0',
+        `docid` VARCHAR(255) DEFAULT NULL,
+        `custom1` VARCHAR(255) DEFAULT NULL,
+        `discount_c` decimal(16,2) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `gid` (`gid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        INSERT INTO `geopos_customers` (`id`, `name`, `phone`, `address`, `city`, `region`, `country`, `postbox`, `email`, `picture`, `gid`, `company`, `taxid`, `name_s`, `phone_s`, `email_s`, `address_s`, `city_s`, `region_s`, `country_s`, `postbox_s`, `balance`) VALUES
+        (1, 'Walk-in Client', '0987654321',NULL, NULL,NULL, NULL, NULL, 'example@example.com', 'example.png', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0.00);
+
+        CREATE TABLE `geopos_cust_group` (
+        `id` int(10) NOT NULL AUTO_INCREMENT,
+        `title` varchar(60) DEFAULT NULL,
+        `summary` varchar(250) DEFAULT NULL,
+        `disc_rate` DECIMAL(9,2) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        INSERT INTO `geopos_cust_group` (`id`, `title`, `summary`) VALUES
+        (1, 'Default Group', 'Default Group');
+
+
+        CREATE TABLE `geopos_custom_fields` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `f_module` int(3) NOT NULL,
+        `f_type` varchar(30) NOT NULL,
+        `name` varchar(30) DEFAULT NULL,
+        `placeholder` varchar(30) DEFAULT NULL,
+        `value_data` text NOT NULL,
+        `f_view` int(2) NOT NULL,
+        `other` varchar(50) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `f_module` (`f_module`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_custom_data` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `field_id` int(11) NOT NULL,
+        `rid` int(11) NOT NULL,
+        `module` int(3) NOT NULL,
+        `data` varchar(255) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `fid` (`field_id`,`rid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+        CREATE TABLE `geopos_documents` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `title` varchar(100) DEFAULT NULL,
+        `filename` varchar(50) DEFAULT NULL,
+        `cdate` date NOT NULL,
+        `permission` int(1) DEFAULT NULL,
+        `cid` int(11) NOT NULL,
+        `fid` int(11) NOT NULL,
+        `rid` int(11) NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_draft` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(11) NOT NULL,
+        `invoicedate` date NOT NULL,
+        `invoiceduedate` date NOT NULL,
+        `subtotal` decimal(16,2) DEFAULT '0.00',
+        `shipping` decimal(16,2) DEFAULT '0.00',
+        `ship_tax` decimal(16,2) NULL DEFAULT NULL,
+        `ship_tax_type` ENUM('incl','excl','off') NULL DEFAULT 'off',
+        `discount` decimal(16,2) DEFAULT '0.00',
+        `tax` decimal(16,2) DEFAULT '0.00',
+        `total` decimal(16,2) DEFAULT '0.00',
+        `pmethod` varchar(14) DEFAULT NULL,
+        `notes` varchar(255) DEFAULT NULL,
+        `status` enum('paid','due','canceled','partial') NOT NULL DEFAULT 'due',
+        `csd` int(5) NOT NULL DEFAULT '0',
+        `eid` int(4) NOT NULL,
+        `pamnt` decimal(16,2) DEFAULT '0.00',
+        `items` decimal(10,2) NOT NULL,
+        `taxstatus` enum('yes','no','cgst','igst') NOT NULL DEFAULT 'yes',
+        `discstatus` tinyint(1) NOT NULL,
+        `format_discount` enum('%','flat','bflat','b_p') NOT NULL DEFAULT '%',
+        `refer` varchar(20) DEFAULT NULL,
+        `term` int(3) NOT NULL,
+        `multi` int(4) DEFAULT NULL,
+        `i_class` int(1) NOT NULL DEFAULT '0',
+        `loc` int(4) NOT NULL,
+        PRIMARY KEY (`id`),
+        KEY `eid` (`eid`),
+        KEY `csd` (`csd`),
+        KEY `invoice` (`tid`) USING BTREE,
+        KEY `i_class` (`i_class`),
+        KEY `loc` (`loc`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_draft_items` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(11) NOT NULL,
+        `pid` int(11) NOT NULL DEFAULT '0',
+        `product` varchar(255) DEFAULT NULL,
+        `code` varchar(20) DEFAULT NULL,
+        `qty` decimal(10,2) NOT NULL DEFAULT '0.00',
+        `price` decimal(16,2) NOT NULL DEFAULT '0.00',
+        `tax` decimal(16,2) DEFAULT '0.00',
+        `discount` decimal(16,2) DEFAULT '0.00',
+        `subtotal` decimal(16,2) DEFAULT '0.00',
+        `totaltax` decimal(16,2) DEFAULT '0.00',
+        `totaldiscount` decimal(16,2) DEFAULT '0.00',
+        `product_des` text,
+        `i_class` int(1) NOT NULL DEFAULT '0',
+        `unit` varchar(5) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `invoice` (`tid`),
+        KEY `i_class` (`i_class`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_employees` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `username` varchar(30) NOT NULL,
+        `name` varchar(50) NOT NULL,
+        `address` varchar(100) DEFAULT NULL,
+        `city` varchar(50) DEFAULT NULL,
+        `region` varchar(50) DEFAULT NULL,
+        `country` varchar(50) DEFAULT NULL,
+        `postbox` varchar(20) DEFAULT NULL,
+        `phone` varchar(15) DEFAULT NULL,
+        `phonealt` varchar(15) DEFAULT NULL,
+        `picture` varchar(50) NOT NULL DEFAULT 'example.png',
+        `sign` varchar(100) DEFAULT 'sign.png',
+        `joindate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `dept` int(11) DEFAULT NULL,
+        `degis` int(11) DEFAULT NULL,
+        `salary` decimal(16,2) DEFAULT '0',
+        `clock` INT(1) DEFAULT NULL,
+        `clockin` INT(11) DEFAULT NULL,
+        `clockout` INT(11) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_events` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `title` varchar(255) NOT NULL,
+        `description` text NOT NULL,
+        `color` varchar(7) NOT NULL DEFAULT '#3a87ad',
+        `start` datetime NOT NULL,
+        `end` datetime DEFAULT NULL,
+        `allDay` varchar(50) NOT NULL DEFAULT 'true',
+        `rel` INT(2) NOT NULL DEFAULT '0',
+        `rid` INT(11) NOT NULL DEFAULT '0',
+        PRIMARY KEY (`id`),
+        KEY `rel` (`rel`),
+        KEY `rid` (`rid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_gateways` (
+        `id` int(5) NOT NULL AUTO_INCREMENT,
+        `name` varchar(50) NOT NULL,
+        `enable` enum('Yes','No') NOT NULL,
+        `key1` varchar(255) NOT NULL,
+        `key2` varchar(255) DEFAULT NULL,
+        `currency` varchar(3) NOT NULL DEFAULT 'USD',
+        `dev_mode` enum('true','false') NOT NULL,
+        `ord` int(5) NOT NULL,
+        `surcharge` decimal(16,2) NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+        INSERT INTO `geopos_gateways` (`id`, `name`, `enable`, `key1`, `key2`, `currency`, `dev_mode`, `ord`, `surcharge`) VALUES
+        (1, 'Stripe', 'Yes', 'sk_test_secratekey', 'none', 'USD', 'true', 1, '0.00'),
+        (2, 'Authorize.Net', 'Yes', 'TRANSACTIONKEY', 'LOGINID', 'AUD', 'true', 2, '0.00'),
+        (3, 'Pin Payments', 'Yes', 'TEST', 'none', 'AUD', 'true', 3, '0.00'),
+        (4, 'PayPal', 'Yes', 'MyPayPalClientId', 'MyPayPalSecret', 'USD', 'true', 4, '0.00'),
+        (5, 'SecurePay', 'Yes', 'ABC0001', 'abc123', 'AUD', 'true', 5, '0.00');
+
+
+        CREATE TABLE `geopos_goals` (
+        `id` int(1) NOT NULL,
+        `income` bigint(20) NOT NULL,
+        `expense` bigint(20) NOT NULL,
+        `sales` bigint(20) NOT NULL,
+        `netincome` bigint(20) NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        INSERT INTO `geopos_goals` (`id`, `income`, `expense`, `sales`, `netincome`) VALUES
+        (1, 999999, 999999, 999999, 999999);
+
+        CREATE TABLE `geopos_hrm` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `typ` int(2) NOT NULL,
+        `rid` int(11) NOT NULL,
+        `val1` varchar(255) DEFAULT NULL,
+        `val2` varchar(255) DEFAULT NULL,
+        `val3` varchar(255)  DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+        CREATE TABLE `geopos_invoices` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(11) NOT NULL,
+        `invoicedate` date NOT NULL,
+        `invoiceduedate` date NOT NULL,
+        `subtotal` decimal(16,2) DEFAULT '0.00',
+        `shipping` decimal(16,2) DEFAULT '0.00',
+        `ship_tax` decimal(16,2) NULL DEFAULT NULL,
+        `ship_tax_type` ENUM('incl','excl','off') NULL DEFAULT 'off',
+        `discount` decimal(16,2) DEFAULT '0.00',
+        `tax` decimal(16,2) DEFAULT '0.00',
+        `total` decimal(16,2) DEFAULT '0.00',
+        `pmethod` varchar(14) DEFAULT NULL,
+        `notes` varchar(255) DEFAULT NULL,
+        `status` enum('paid','due','canceled','partial') NOT NULL DEFAULT 'due',
+        `csd` int(5) NOT NULL DEFAULT '0',
+        `eid` int(4) NOT NULL,
+        `pamnt` decimal(16,2) DEFAULT '0.00',
+        `items` decimal(10,2) NOT NULL,
+        `taxstatus` enum('yes','no','incl','cgst','igst') NOT NULL DEFAULT 'yes',
+        `discstatus` tinyint(1) NOT NULL,
+        `format_discount` enum('%','flat','bflat','b_p') NOT NULL DEFAULT '%',
+        `refer` varchar(20) DEFAULT NULL,
+        `term` int(3) NOT NULL,
+        `multi` int(4) DEFAULT NULL,
+        `i_class` int(1) NOT NULL DEFAULT '0',
+        `loc` int(4) NOT NULL,
+        `r_time` varchar(10) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `eid` (`eid`),
+        KEY `csd` (`csd`),
+        KEY `invoice` (`tid`) USING BTREE,
+        KEY `i_class` (`i_class`),
+        KEY `loc` (`loc`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+        CREATE TABLE `geopos_invoice_items` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(11) NOT NULL,
+        `pid` int(11) NOT NULL DEFAULT '0',
+        `product` varchar(255) DEFAULT NULL,
+        `code` varchar(20) DEFAULT NULL,
+        `qty` decimal(10,2) NOT NULL DEFAULT '0.00',
+        `price` decimal(16,2) NOT NULL DEFAULT '0.00',
+        `tax` decimal(16,2) DEFAULT '0.00',
+        `discount` decimal(16,2) DEFAULT '0.00',
+        `subtotal` decimal(16,2) DEFAULT '0.00',
+        `totaltax` decimal(16,2) DEFAULT '0.00',
+        `totaldiscount` decimal(16,2) DEFAULT '0.00',
+        `product_des` text,
+        `i_class` int(1) NOT NULL DEFAULT '0',
+        `unit` varchar(5) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `invoice` (`tid`),
+        KEY `i_class` (`i_class`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_locations` (
+        `id` int(3) NOT NULL AUTO_INCREMENT,
+        `cname` varchar(100) NOT NULL,
+        `address` varchar(255) DEFAULT NULL,
+        `city` varchar(50) DEFAULT NULL,
+        `region` varchar(40) DEFAULT NULL,
+        `country` varchar(40) DEFAULT NULL,
+        `postbox` varchar(20) DEFAULT NULL,
+        `phone` varchar(20) DEFAULT NULL,
+        `email` varchar(50) DEFAULT NULL,
+        `taxid` varchar(40) DEFAULT NULL,
+        `logo` varchar(50) DEFAULT 'logo.png',
+        `cur` int(4) NOT NULL,
+        `ware` INT NULL DEFAULT '0',
+        `ext` varchar(255) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_log` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `note` mediumtext NOT NULL,
+        `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `user` varchar(100) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_login_attempts` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `ip_address` varchar(39) DEFAULT '0',
+        `timestamp` datetime DEFAULT NULL,
+        `login_attempts` tinyint(2) DEFAULT '0',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+        CREATE TABLE `geopos_metadata` (
+        `id` int(11)  NOT NULL AUTO_INCREMENT,
+        `type` int(3) NOT NULL,
+        `rid` int(11) NOT NULL,
+        `col1` varchar(255) NULL,
+        `col2` varchar(255) NULL,
+        `d_date` date NOT NULL,
+        PRIMARY KEY (`id`),
+        KEY `type` (`type`),
+        KEY `rid` (`rid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+        CREATE TABLE `geopos_milestones` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `pid` int(11) NOT NULL,
+        `name` varchar(255) DEFAULT NULL,
+        `sdate` date NOT NULL,
+        `edate` date NOT NULL,
+        `exp` text NOT NULL,
+        `color` varchar(10) NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        CREATE TABLE `geopos_movers` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `d_type` int(3) NOT NULL,
+        `rid1` int(11) NOT NULL,
+        `rid2` int(11) NOT NULL,
+        `rid3` int(11) NOT NULL,
+        `d_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        `note` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `d_type` (`d_type`,`rid1`,`rid2`,`rid3`)
+
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_notes` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `title` varchar(255) NOT NULL,
+        `content` text,
+        `cdate` date NOT NULL,
+        `last_edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `cid` int(11) NOT NULL DEFAULT '0',
+        `fid` int(11) NOT NULL DEFAULT '0',
+        `rid` int(11) NOT NULL DEFAULT '0',
+        `ntype` int(2) NOT NULL DEFAULT '0',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_pms` (
+        `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+        `sender_id` int(11) UNSIGNED NOT NULL,
+        `receiver_id` int(11) UNSIGNED NOT NULL,
+        `title` varchar(255) NOT NULL,
+        `message` text,
+        `date_sent` datetime DEFAULT NULL,
+        `date_read` datetime DEFAULT NULL,
+        `pm_deleted_sender` int(1) NOT NULL,
+        `pm_deleted_receiver` int(1) NOT NULL,
+        PRIMARY KEY (`id`),
+        KEY `full_index` (`id`,`sender_id`,`receiver_id`,`date_read`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_products` (
+        `pid` int(11) NOT NULL AUTO_INCREMENT,
+        `pcat` int(3) NOT NULL DEFAULT '1',
+        `warehouse` int(11) NOT NULL DEFAULT '1',
+        `product_name` varchar(80) NOT NULL,
+        `product_code` varchar(30) DEFAULT NULL,
+        `product_price` decimal(16,2) DEFAULT '0.00',
+        `fproduct_price` decimal(16,2) DEFAULT '0.00',
+        `taxrate` decimal(16,2) DEFAULT '0.00',
+        `disrate` decimal(16,2) DEFAULT '0.00',
+        `qty` decimal(10,2) NOT NULL,
+        `product_des` text,
+        `alert` int(11) DEFAULT NULL,
+        `unit` varchar(4) DEFAULT NULL,
+        `image` varchar(120) DEFAULT 'default.png',
+        `barcode` varchar(16) DEFAULT NULL,
+        `merge` int(2) NOT NULL,
+        `sub` int(11) NOT NULL,
+        `vb` int(11) NOT NULL,
+        `expiry` DATE NULL DEFAULT NULL,
+        `code_type` VARCHAR(8) NULL DEFAULT 'EAN13',
+        PRIMARY KEY (`pid`),
+        KEY `pcat` (`pcat`),
+        KEY `warehouse` (`warehouse`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_product_cat` (
+        `id` int(3) NOT NULL AUTO_INCREMENT,
+        `title` varchar(100) NOT NULL,
+        `extra` varchar(255) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_projects` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `p_id` varchar(20) NOT NULL,
+        `name` varchar(255) DEFAULT NULL,
+        `status` enum('Waiting','Pending','Terminated','Finished','Progress') NOT NULL DEFAULT 'Pending',
+        `priority` enum('Low','Medium','High','Urgent') NOT NULL DEFAULT 'Medium',
+        `progress` int(3) NOT NULL,
+        `cid` int(11) NOT NULL,
+        `sdate` date NOT NULL,
+        `edate` date NOT NULL,
+        `tag` varchar(255) DEFAULT NULL,
+        `phase` varchar(255) DEFAULT NULL,
+        `note` text,
+        `worth` decimal(16,2) NOT NULL DEFAULT '0.00',
+        `ptype` int(1) NOT NULL,
+        PRIMARY KEY (`id`),
+        KEY `p_id` (`p_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_project_meta` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `pid` int(11) NOT NULL,
+        `meta_key` int(11) NOT NULL,
+        `meta_data` varchar(200) DEFAULT NULL,
+        `value` varchar(255) DEFAULT NULL,
+        `key3` varchar(20) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `pid` (`pid`),
+        KEY `meta_key` (`meta_key`),
+        KEY `key3` (`key3`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_promo` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `code` varchar(15) NOT NULL,
+        `amount` decimal(10,2) NOT NULL,
+        `valid` date NOT NULL,
+        `active` int(1) NOT NULL,
+        `note` varchar(100) NOT NULL,
+        `reflect` int(11) NOT NULL,
+        `qty` int(11) NOT NULL,
+        `available` int(11) NOT NULL,
+        `location` int(1) NOT NULL,
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `code_2` (`code`),
+        KEY `code` (`code`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_purchase` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(11) NOT NULL,
+        `invoicedate` date NOT NULL,
+        `invoiceduedate` date NOT NULL,
+        `subtotal` decimal(16,2) DEFAULT '0.00',
+        `shipping` decimal(16,2) DEFAULT '0.00',
+        `ship_tax` decimal(16,2) NULL DEFAULT NULL,
+        `ship_tax_type` ENUM('incl','excl','off') NULL DEFAULT 'off',
+        `discount` decimal(16,2) DEFAULT '0.00',
+        `tax` decimal(16,2) DEFAULT '0.00',
+        `total` decimal(16,2) DEFAULT '0.00',
+        `pmethod` varchar(14) DEFAULT NULL,
+        `notes` varchar(255) DEFAULT NULL,
+        `status` enum('paid','due','canceled','partial') DEFAULT 'due',
+        `csd` int(5) NOT NULL DEFAULT '0',
+        `eid` int(4) NOT NULL,
+        `pamnt` decimal(16,2) DEFAULT '0.00',
+        `items` decimal(10,2) NOT NULL,
+        `taxstatus` enum('yes','no','incl','cgst','igst') DEFAULT 'yes',
+        `discstatus` tinyint(1) NOT NULL,
+        `format_discount` enum('%','flat','bflat','b_p') DEFAULT NULL,
+        `refer` varchar(20) DEFAULT NULL,
+        `term` int(3) NOT NULL,
+        `loc` int(4) NOT NULL,
+        `multi` INT NULL DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `invoice` (`tid`),
+        KEY `eid` (`eid`),
+        KEY `csd` (`csd`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_purchase_items` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(11) NOT NULL,
+        `pid` int(11) NOT NULL,
+        `product` varchar(255) DEFAULT NULL,
+        `code` varchar(20) DEFAULT NULL,
+        `qty` decimal(10,2) NOT NULL,
+        `price` decimal(16,2) DEFAULT '0.00',
+        `tax` decimal(16,2) DEFAULT '0.00',
+        `discount` decimal(16,2) DEFAULT '0.00',
+        `subtotal` decimal(16,2) DEFAULT '0.00',
+        `totaltax` decimal(16,2) DEFAULT '0.00',
+        `totaldiscount` decimal(16,2) DEFAULT '0.00',
+        `product_des` text,
+        `unit` varchar(5) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `invoice` (`tid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_quotes` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(11) NOT NULL,
+        `invoicedate` date NOT NULL,
+        `invoiceduedate` date NOT NULL,
+        `subtotal` decimal(16,2) DEFAULT '0.00',
+        `shipping` decimal(16,2) DEFAULT '0.00',
+        `ship_tax` decimal(16,2) NULL DEFAULT NULL,
+        `ship_tax_type` ENUM('incl','excl','off') NULL DEFAULT 'off',
+        `discount` decimal(16,2) DEFAULT '0.00',
+        `tax` decimal(16,2) DEFAULT '0.00',
+        `total` decimal(16,2) DEFAULT '0.00',
+        `pmethod` varchar(14) DEFAULT NULL,
+        `notes` varchar(255) DEFAULT NULL,
+        `status` enum('pending','accepted','rejected') DEFAULT 'pending',
+        `csd` int(5) NOT NULL DEFAULT '0',
+        `eid` int(4) NOT NULL,
+        `pamnt` decimal(16,2) NOT NULL,
+        `items` decimal(10,2) NOT NULL,
+        `taxstatus` enum('yes','no','incl','cgst','igst') DEFAULT 'yes',
+        `discstatus` tinyint(1) NOT NULL,
+        `format_discount` enum('%','flat','bflat','b_p') DEFAULT '%',
+        `refer` varchar(20) DEFAULT NULL,
+        `term` int(3) NOT NULL,
+        `proposal` text,
+        `multi` int(4) DEFAULT NULL,
+        `loc` int(4) NOT NULL,
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `invoice` (`tid`),
+        KEY `eid` (`eid`),
+        KEY `csd` (`csd`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_quotes_items` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(11) NOT NULL,
+        `pid` int(11) NOT NULL,
+        `product` varchar(255) DEFAULT NULL,
+        `code` varchar(20) DEFAULT NULL,
+        `qty` decimal(16,2) NOT NULL,
+        `price` decimal(16,2) DEFAULT '0.00',
+        `tax` decimal(16,2) DEFAULT '0.00',
+        `discount` decimal(16,2) DEFAULT '0.00',
+        `subtotal` decimal(16,2) DEFAULT '0.00',
+        `totaltax` decimal(16,2) DEFAULT '0.00',
+        `totaldiscount` decimal(16,2) DEFAULT '0.00',
+        `product_des` text,
+        `unit` varchar(5) NOT NULL,
+        PRIMARY KEY (`id`),
+        KEY `invoice` (`tid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_register` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `uid` int(11) NOT NULL,
+        `o_date` datetime NOT NULL,
+        `c_date` datetime NOT NULL,
+        `cash` decimal(16,2) NOT NULL,
+        `card` decimal(16,2) NOT NULL,
+        `bank` decimal(16,2) NOT NULL,
+        `cheque` decimal(16,2) NOT NULL,
+        `r_change` decimal(16,2) NOT NULL,
+        `active` int(1) NOT NULL DEFAULT '0',
+        PRIMARY KEY (`id`),
+        KEY `uid` (`uid`),
+        KEY `active` (`active`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_reports` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `month` varchar(10) DEFAULT NULL,
+        `year` int(4) NOT NULL,
+        `invoices` int(11) NOT NULL,
+        `sales` decimal(16,2) DEFAULT '0.00',
+        `items` decimal(10,2) NOT NULL,
+        `income` decimal(16,2) DEFAULT '0.00',
+        `expense` decimal(16,2) DEFAULT '0.00',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_restkeys` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `user_id` int(11) NOT NULL,
+        `key` varchar(40) DEFAULT NULL,
+        `level` int(2) NOT NULL,
+        `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
+        `is_private_key` tinyint(1) NOT NULL DEFAULT '0',
+        `ip_addresses` text,
+        `date_created` date NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_smtp` (
+        `id` int(11) NOT NULL,
+        `host` varchar(100) NOT NULL,
+        `port` int(11) NOT NULL,
+        `auth` enum('true','false') NOT NULL,
+        `auth_type` enum('none','tls','ssl') NOT NULL,
+        `username` varchar(100) NOT NULL,
+        `password` varchar(50) NOT NULL,
+        `sender` varchar(100) NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        INSERT INTO `geopos_smtp` (`id`, `host`, `port`, `auth`,`auth_type`, `username`, `password`, `sender`) VALUES
+        (1, 'smtp.com', 587, 'true','none', 'support@example.com', '123456', 'support@example.com');
+
+        CREATE TABLE `geopos_stock_r` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(8) NOT NULL,
+        `invoicedate` date NOT NULL,
+        `invoiceduedate` date NOT NULL,
+        `subtotal` decimal(16,2) DEFAULT '0.00',
+        `shipping` decimal(16,2) DEFAULT '0.00',
+        `ship_tax` decimal(16,2) NULL DEFAULT NULL,
+        `ship_tax_type` ENUM('incl','excl','off') NULL DEFAULT 'off',
+        `discount` decimal(16,2) DEFAULT '0.00',
+        `tax` decimal(16,2) DEFAULT '0.00',
+        `total` decimal(16,2) DEFAULT '0.00',
+        `pmethod` varchar(14) DEFAULT NULL,
+        `notes` varchar(255) DEFAULT NULL,
+        `status` enum('pending','accepted','rejected','partial','canceled') DEFAULT 'pending',
+        `csd` int(5) NOT NULL DEFAULT '0',
+        `eid` int(4) NOT NULL,
+        `pamnt` decimal(16,2) DEFAULT '0.00',
+        `items` decimal(10,0) NOT NULL,
+        `taxstatus` enum('yes','no','incl','cgst','igst') DEFAULT 'yes',
+        `discstatus` tinyint(1) NOT NULL,
+        `format_discount` enum('%','flat','bflat','b_p') DEFAULT NULL,
+        `refer` varchar(20) DEFAULT NULL,
+        `term` int(3) NOT NULL,
+        `loc` int(4) NOT NULL,
+        `i_class` int(1) NOT NULL DEFAULT '0',
+        `multi` int(11) NOT NULL DEFAULT '0',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `invoice` (`tid`),
+        KEY `eid` (`eid`),
+        KEY `csd` (`csd`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_stock_r_items` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(11) NOT NULL,
+        `pid` int(11) NOT NULL,
+        `product` varchar(255) DEFAULT NULL,
+        `code` varchar(20) DEFAULT NULL,
+        `qty` decimal(10,2) NOT NULL,
+        `price` decimal(16,2) DEFAULT '0.00',
+        `tax` decimal(16,2) DEFAULT '0.00',
+        `discount` decimal(16,2) DEFAULT '0.00',
+        `subtotal` decimal(16,2) DEFAULT '0.00',
+        `totaltax` decimal(16,2) DEFAULT '0.00',
+        `totaldiscount` decimal(16,2) DEFAULT '0.00',
+        `product_des` text,
+        `unit` varchar(5) DEFAULT NULL,
+        PRIMARY KEY (`id`),
+        KEY `invoice` (`tid`) KEY_BLOCK_SIZE=1024 USING BTREE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_supplier` (
+        `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+        `name` varchar(50) NOT NULL,
+        `phone` varchar(20) DEFAULT NULL,
+        `address` varchar(50) DEFAULT NULL,
+        `city` varchar(50) DEFAULT NULL,
+        `region` varchar(30) DEFAULT NULL,
+        `country` varchar(50) DEFAULT NULL,
+        `postbox` varchar(20) DEFAULT NULL,
+        `email` varchar(60) DEFAULT NULL,
+        `picture` varchar(100) NOT NULL DEFAULT 'example.png',
+        `gid` int(5) NOT NULL DEFAULT '1',
+        `company` varchar(100) DEFAULT NULL,
+        `taxid` varchar(100) DEFAULT NULL,
+        `loc` int(11) NOT NULL,
+        PRIMARY KEY (`id`),
+        KEY `gid` (`gid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_system` (
+        `id` int(1) NOT NULL,
+        `cname` char(50) NOT NULL,
+        `address` varchar(255) NOT NULL,
+        `city` varchar(30) NOT NULL,
+        `region` varchar(40) NOT NULL,
+        `country` varchar(30) NOT NULL,
+        `postbox` varchar(15) NOT NULL,
+        `phone` varchar(20) NOT NULL,
+        `email` varchar(40) NOT NULL,
+        `taxid` varchar(20) NOT NULL,
+        `tax` int(11) NOT NULL,
+        `currency` varchar(4) CHARACTER SET utf8 COLLATE utf8_swedish_ci NOT NULL,
+        `currency_format` int(1) NOT NULL,
+        `prefix` varchar(5) NOT NULL,
+        `dformat` int(1) NOT NULL,
+        `zone` varchar(25) NOT NULL,
+        `logo` varchar(30) NOT NULL,
+        `lang` varchar(20) DEFAULT 'english',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        INSERT INTO `geopos_system` (`id`, `cname`, `address`, `city`, `region`, `country`, `postbox`, `phone`, `email`, `taxid`, `tax`, `currency`, `currency_format`, `prefix`, `dformat`, `zone`, `logo`, `lang`) VALUES
+        (1, 'ABC Company', '412 Example South Street,', 'Los Angeles', 'FL', 'USA', '123', '410-987-89-60', 'support@ultimatekode.com', '23442', -1, '$', 0, 'SRN', 1, 'Etc/Greenwich', 'logo.png', 'english');
+
+        CREATE TABLE `geopos_terms` (
+        `id` int(4) NOT NULL AUTO_INCREMENT,
+        `title` varchar(100) NOT NULL,
+        `type` int(1) NOT NULL,
+        `terms` text NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        INSERT INTO `geopos_terms` (`id`, `title`, `type`, `terms`) VALUES
+        (1, 'Payment On Receipt', 0, '<p>1. 10% discount if payment received within ten days otherwise payment 30 days
+            after invoice date<br></p>');
+
+        CREATE TABLE `geopos_tickets` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `subject` varchar(255) NOT NULL,
+        `created` datetime NOT NULL,
+        `cid` int(11) NOT NULL,
+        `status` enum('Solved','Processing','Waiting') NOT NULL,
+        `section` varchar(11) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_tickets_th` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tid` int(11) NOT NULL,
+        `message` text,
+        `cid` int(11) NOT NULL,
+        `eid` int(11) NOT NULL,
+        `cdate` datetime NOT NULL,
+        `attach` varchar(255) NOT NULL,
+        PRIMARY KEY (`id`),
+        KEY `tid` (`tid`),
+        KEY `cid` (`cid`),
+        KEY `eid` (`eid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_todolist` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `tdate` date NOT NULL,
+        `name` varchar(100) DEFAULT NULL,
+        `status` enum('Due','Done','Progress') NOT NULL DEFAULT 'Due',
+        `start` date NOT NULL,
+        `duedate` date NOT NULL,
+        `description` text,
+        `eid` int(11) NOT NULL,
+        `aid` int(11) NOT NULL,
+        `related` int(11) NOT NULL,
+        `priority` enum('Low','Medium','High','Urgent') NOT NULL,
+        `rid` int(11) NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_transactions` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `acid` int(11) NOT NULL,
+        `account` varchar(200) NOT NULL,
+        `type` enum('Income','Expense','Transfer') NOT NULL,
+        `cat` varchar(200) NOT NULL,
+        `debit` decimal(16,2) DEFAULT '0.00',
+        `credit` decimal(16,2) DEFAULT '0.00',
+        `payer` varchar(200) DEFAULT NULL,
+        `payerid` int(11) NOT NULL DEFAULT '0',
+        `method` varchar(200) DEFAULT NULL,
+        `date` date NOT NULL,
+        `tid` int(11) NOT NULL DEFAULT '0',
+        `eid` int(11) NOT NULL,
+        `note` varchar(255) DEFAULT NULL,
+        `ext` int(1) DEFAULT '0',
+        `loc` int(4) NOT NULL,
+        PRIMARY KEY (`id`),
+        KEY `loc` (`loc`),
+        KEY `acid` (`acid`),
+        KEY `eid` (`eid`),
+        KEY `tid` (`tid`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_trans_cat` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `name` varchar(25) NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        INSERT INTO `geopos_trans_cat` (`id`, `name`) VALUES
+        (1, 'Income'),
+        (2, 'Expenses'),
+        (3, 'Other');
+
+        CREATE TABLE `geopos_units` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `name` varchar(20) NOT NULL,
+        `code` varchar(5) NOT NULL,
+        `type` int(1) NOT NULL,
+        `sub` int(1) NOT NULL,
+        `rid` int(11) NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_users` (
+        `id` int(11) UNSIGNED  NOT NULL AUTO_INCREMENT,
+        `email` varchar(100) NOT NULL,
+        `pass` varchar(64) NOT NULL,
+        `username` varchar(100) DEFAULT NULL,
+        `banned` tinyint(1) DEFAULT '0',
+        `last_login` datetime DEFAULT NULL,
+        `last_activity` datetime DEFAULT NULL,
+        `date_created` datetime DEFAULT NULL,
+        `forgot_exp` text,
+        `remember_time` datetime DEFAULT NULL,
+        `remember_exp` text,
+        `verification_code` text,
+        `totp_secret` varchar(16) DEFAULT NULL,
+        `ip_address` text,
+        `roleid` int(1) NOT NULL,
+        `picture` varchar(50) DEFAULT NULL,
+        `loc` int(11) NOT NULL,
+        PRIMARY KEY (`id`),
+        KEY `email` (`email`),
+        KEY `username` (`username`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_warehouse` (
+        `id` int(3) NOT NULL AUTO_INCREMENT,
+        `title` varchar(100) NOT NULL,
+        `extra` varchar(255) DEFAULT NULL,
+        `loc` int(4) DEFAULT '0',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+        CREATE TABLE `univarsal_api` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `name` varchar(100) DEFAULT NULL,
+        `key1` varchar(255) DEFAULT NULL,
+        `key2` varchar(255) DEFAULT NULL,
+        `url` varchar(255) DEFAULT NULL,
+        `method` varchar(10) DEFAULT NULL,
+        `other` text,
+        `active` int(11) DEFAULT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        INSERT INTO `univarsal_api` (`id`, `name`, `key1`, `key2`, `url`, `method`, `other`, `active`) VALUES
+        (1, 'Goo.gl URL Shortner', 'yourkey', '0', '0', '0', '0', 0),
+        (2, 'Twilio SMS API', 'ac', 'key', '+11234567', '0', '0', 1),
+        (3, 'Company Support', '1', '1', 'support@gmail.com', NULL, '<p>Your footer</p>', 1),
+        (4, 'Currency', '.', ',', '2', 'l', NULL, NULL),
+        (5, 'Exchange', 'key1v', 'key2', 'USD', NULL, NULL, 0),
+        (6, 'New Invoice Notification', '[{Company}] Invoice #{BillNumber} Generated', NULL, NULL, NULL, '<p>Dear
+            Client,\r\n</p><p>We are contacting you in regard to a payment received for invoice # {BillNumber} that has
+            been created on your account. You may find the invoice with below link.\r\n\r\nView
+            Invoice\r\n{URL}\r\n\r\nWe look forward to conducting future business with you.\r\n\r\nKind
+            Regards,\r\nTeam\r\n{CompanyDetails}</p>', NULL),
+        (7, 'Invoice Payment Reminder', '[{Company}] Invoice #{BillNumber} Payment Reminder', NULL, NULL, NULL, '<p>Dear
+            Client,</p><p>We are contacting you in regard to a payment reminder of invoice # {BillNumber} that has been
+            created on your account. You may find the invoice with below link. Please pay the balance of {Amount} due by
+            {DueDate}.</p><p>\r\n\r\n<b>View Invoice</b></p><p><span style=\"font-size: 1rem;\">{URL}\r\n</span></p><p>
+            <span style=\"font-size: 1rem;\">\r\nWe look forward to conducting future business with you.</span></p><p>
+            <span style=\"font-size: 1rem;\">\r\n\r\nKind Regards,\r\n</span></p><p><span style=\"font-size: 1rem;\">\r\nTeam\r\n</span>
+        </p><p><span style=\"font-size: 1rem;\">\r\n{CompanyDetails}</span></p>', NULL),
+        (8, 'Invoice Refund Proceeded', '{Company} Invoice #{BillNumber} Refund Proceeded', NULL, NULL, NULL, '<p>Dear
+            Client,</p><p>\r\nWe are contacting you in regard to a refund request processed for invoice # {BillNumber}
+            that has been created on your account. You may find the invoice with below link. Please pay the balance of
+            {Amount} by {DueDate}.\r\n</p><p>\r\nView Invoice\r\n</p><p>{URL}\r\n</p><p>\r\nWe look forward to
+            conducting future business with you.\r\n</p><p>\r\nKind Regards,\r\n</p><p>
+            \r\nTeam\r\n\r\n{CompanyDetails}</p>', NULL),
+        (9, 'Invoice payment Received', '{Company} Payment Received for Invoice #{BillNumber}', NULL, NULL, NULL, '<p>
+            Dear Client,\r\n</p><p>We are contacting you in regard to a payment received for invoice # {BillNumber} that
+            has been created on your account. You can find the invoice with below link.\r\n</p><p>\r\nView Invoice</p>
+        <p>\r\n{URL}\r\n</p><p>\r\nWe look forward to conducting future business with you.\r\n</p><p>\r\nKind
+            Regards,\r\n</p><p>\r\nTeam\r\n</p><p>\r\n{CompanyDetails}</p>', NULL),
+        (10, 'Invoice Overdue Notice', '{Company} Invoice #{BillNumber} Generated for you', NULL, NULL, NULL, '<p>Dear
+            Client,</p><p>\r\nWe are contacting you in regard to an Overdue Notice for invoice # {BillNumber} that has
+            been created on your account. You may find the invoice with below link.\r\nPlease pay the balance of
+            {Amount} due by {DueDate}.\r\n</p><p>View Invoice\r\n</p><p>{URL}\r\n</p><p>\r\nWe look forward to
+            conducting future business with you.\r\n</p><p>\r\nKind Regards,\r\n</p><p>\r\nTeam</p><p>
+            \r\n\r\n{CompanyDetails}</p>', NULL),
+        (11, 'Quote Proposal', '{Company} Quote #{BillNumber} Generated for you', NULL, NULL, NULL, '<p>Dear Client,</p>
+        <p>\r\nWe are contacting you in regard to a new quote # {BillNumber} that has been created on your account. You
+            may find the quote with below link.\r\n</p><p>\r\nView Invoice\r\n</p><p>{URL}\r\n</p><p>\r\nWe look forward
+            to conducting future business with you.</p><p>\r\n\r\nKind Regards,</p><p>\r\n\r\nTeam</p><p>
+            \r\n\r\n{CompanyDetails}</p>', NULL),
+        (12, 'Purchase Order Request', '{Company} Purchase Order #{BillNumber} Requested', NULL, NULL, NULL, '<p>Dear
+            Client,\r\n</p><p>We are contacting you in regard to a new purchase # {BillNumber} that has been requested
+            on your account. You may find the order with below link. </p><p>\r\n\r\nView Invoice\r\n</p><p>{URL}</p><p>
+            \r\n\r\nWe look forward to conducting future business with you.</p><p>\r\n\r\nKind Regards,\r\n</p><p>
+            \r\nTeam</p><p>\r\n\r\n{CompanyDetails}</p>', NULL),
+        (13, 'Stock Return Mail', '{Company} New purchase return # {BillNumber}', NULL, NULL, NULL, 'Dear Client,\r\n\r\nWe are contacting you in regard to a new purchase return # {BillNumber} that has been requested on your account. You may find the order with below link.\r\n\r\nView Invoice\r\n\r\n{URL}\r\n\r\nWe look forward to conducting future business with you.\r\n\r\nKind Regards,\r\n\r\nTeam\r\n\r\n{CompanyDetails}', NULL),
+        ('14', 'Customer Registration', '{Company}  Customer Registration - {NAME}', NULL, NULL, NULL, 'Dear Customer,\r\nThank You for registration, please confirm the registration by the following URL {REG_URL}\r\nRegards', NULL),
+        ('15', ' Customer Password Reset', '{Company}  Customer Password Reset- {NAME}', NULL, NULL, NULL, 'Dear Customer,\r\nPlease reset the password by the following URL {RESET_URL}\r\nRegards', NULL),
+        ('16', 'Customer Registration by Employee', '{Company}  Customer Registration - {NAME}', '0', '0', '0', 'Dear Customer,\r\nThank You for registration.\r\nLogin URL: {URL}\r\nLogin Email: {EMAIL}\r\nPassword: {PASSWORD}\r\n\r\nRegards\r\n{CompanyDetails}', '0'),
+        (30, 'New Invoice Notification', NULL, NULL, NULL, NULL, 'Dear Customer, new invoice  # {BillNumber} generated. {URL} Regards', NULL),
+        (31, 'Invoice Payment Reminder', NULL, NULL, NULL, NULL, 'Dear Customer, Please make payment of invoice  # {BillNumber}. {URL} Regards', NULL),
+        (32, 'Invoice Refund Proceeded', NULL, NULL, NULL, NULL, 'Dear Customer, Refund generated of invoice # {BillNumber}. {URL} Regards', NULL),
+        (33, 'Invoice payment Received', NULL, NULL, NULL, NULL, 'Dear Customer, Payment received of invoice # {BillNumber}. {URL} Regards', NULL),
+        (34, 'Invoice Overdue Notice', NULL, NULL, NULL, NULL, 'Dear Customer, Dear Customer,Payment is overdue of invoice # {BillNumber}. {URL} Regards', NULL),
+        (35, 'Quote Proposal', NULL, NULL, NULL, NULL, 'Dear Customer, Dear Customer, a quote created for you # {BillNumber}. {URL} Regards', NULL),
+        (36, 'Purchase Order Request', NULL, NULL, NULL, NULL, 'Dear Customer, Dear, a purchased order for you # {BillNumber}. {URL} Regards', NULL),
+        (51, 'QT#', 'PO#', 'SUB#', 'SR#', 'TRN#', 'SRN#', 1),
+        (52, 'ThermalPrint', '0', NULL, NULL, NULL, 'POS#', 0),
+        (53, 'ConfPort', 'Public Key', '0', 'Private Key', NULL, NULL, 1),
+        (54, 'online_payment', '1', 'USD', '1', '1', NULL, 1),
+        (55, 'CronJob', '99293768', 'rec_email', 'email', 'rec_due', 'recemail', NULL),
+        (56, 'Auto Email SMS', 'email', 'sms', NULL, NULL, NULL, NULL),
+        ('60', 'Warehouse', '1', NULL, NULL, NULL, NULL, NULL),
+        (61, 'Discount & Shipping', '%', '10.00', 'incl', NULL, '% Discount After TAX', NULL),
+        ('62', 'AutoAttendance', '1', '0', '0', '0', '0', NULL),
+        ('63', 'Zero Stock Billing', '1', '0', '0', '0', '0', '0'),
+        (64, 'FrontEndSection', '0', '0', '0', '0', NULL, '0');
+
+        CREATE TABLE `users` (
+        `users_id` int(11) NOT NULL AUTO_INCREMENT,
+        `user_id` varchar(255) DEFAULT NULL,
+        `var_key` varchar(255) DEFAULT NULL,
+        `status` varchar(255) DEFAULT NULL,
+        `is_deleted` varchar(255) DEFAULT NULL,
+        `name` varchar(255) DEFAULT NULL,
+        `password` varchar(255) DEFAULT NULL,
+        `email` varchar(255) DEFAULT NULL,
+        `profile_pic` varchar(255) DEFAULT NULL,
+        `user_type` varchar(255) DEFAULT NULL,
+        `cid` int(11) DEFAULT NULL,
+        `lang` varchar(25) NOT NULL DEFAULT 'english',
+        `code` VARCHAR(255) NULL DEFAULT NULL,
+        PRIMARY KEY (`users_id`),
+        KEY `code` (`code`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        CREATE TABLE `geopos_premissions` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `module` enum('Sales','Stock','Crm','Project','Accounts','Miscellaneous','Employees','Assign Project','Customer Profile') NOT NULL,
+        `r_1` int(1) NOT NULL,
+        `r_2` int(1) NOT NULL,
+        `r_3` int(1) NOT NULL,
+        `r_4` int(1) NOT NULL,
+        `r_5` int(1) NOT NULL,
+        `r_6` int(1) NOT NULL,
+        `r_7` int(1) NOT NULL,
+        `r_8` int(1) NOT NULL,
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+        CREATE TABLE `geopos_config` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `type` int(3) NOT NULL,
+        `val1` varchar(50) NOT NULL,
+        `val2` varchar(200) NOT NULL,
+        `val3` varchar(100) NOT NULL,
+        `val4` varchar(100) NOT NULL,
+        `rid` int(11) NOT NULL,
+        `other` int(11) NOT NULL,
+        PRIMARY KEY (`id`),
+        KEY `type` (`type`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+        INSERT INTO `geopos_premissions` (`id`, `module`, `r_1`, `r_2`, `r_3`, `r_4`, `r_5`, `r_6`, `r_7`, `r_8`) VALUES
+        (1, 'Sales', 0, 1, 1, 1, 1, 0, 0, 0),
+        (2, 'Stock', 1, 0, 1, 1, 1, 0, 0, 0),
+        (3, 'Crm', 0, 0, 1, 1, 1, 0, 0, 0),
+        (4, 'Project', 0, 0, 0, 1, 1, 1, 0, 0),
+        (5, 'Accounts', 0, 0, 0, 1, 1, 0, 0, 0),
+        (6, 'Miscellaneous', 0, 0, 0, 1, 1, 0, 0, 0),
+        (7, 'Assign Project', 0, 1, 0, 0, 1, 0, 0, 0),
+        (8, 'Customer Profile', 0, 0, 0, 0, 1, 0, 0, 0),
+        (9, 'Employees', 0, 0, 0, 0, 1, 0, 0, 0);
+
+        INSERT INTO `geopos_warehouse` (`id`, `title`, `extra`,`loc`) VALUES
+        (1, 'Main WareHouse', 'The Main WareHouse',0);
+
+        INSERT INTO `geopos_product_cat` (`id`, `title`, `extra`) VALUES
+        (1, 'General', 'General Cat');
+
+        INSERT INTO `users` (`users_id`, `user_id`, `var_key`, `status`, `is_deleted`, `name`, `password`, `email`, `profile_pic`, `user_type`, `cid`,`lang`) VALUES
+        (1, '1', NULL, 'active', '0', 'Walk-in Client', '$2y$10$TKfTVltchv/jxZIouy8i8O7rSzVvtdx4Y5wNRodK5RNyTBJkEoIAW', 'example@example.com', NULL, 'Member', 1,'english');
+
+        INSERT INTO `geopos_employees`  (`id`, `username`, `name`, `address`, `city`, `region`, `country`, `postbox`, `phone`, `phonealt`, `picture`, `sign`) VALUES
+        (13,'admin', 'BusinessOwner', 'Test Street', 'Test City', 'Test Region', 'Test Country', '123456', '12345678', '0', 'example.png', 'sign.png');
+
+		UPDATE `geopos_gateways` SET `key2` = 'stripe_public_key' WHERE `geopos_gateways`.`id` = 1;
+ALTER TABLE `geopos_gateways` ADD `extra` VARCHAR(40) NOT NULL DEFAULT 'none' AFTER `surcharge`;
+INSERT INTO `geopos_gateways` (`id`, `name`, `enable`, `key1`, `key2`, `currency`, `dev_mode`, `ord`, `surcharge`, `extra`) VALUES ('6', '2Checkout', 'Yes', 'Publishable Key', 'Private Key', 'USD', 'true', '6', '0', 'seller_id');
+
+INSERT INTO `geopos_gateways` (`id`, `name`, `enable`, `key1`, `key2`, `currency`, `dev_mode`, `ord`, `surcharge`, `extra`) VALUES ('7', 'PayU Money', 'Yes', 'MERCHANT_KEY', 'MERCHANT_SALT', 'USD', 'true', '7', '0', 'none');
+
+
+INSERT INTO `geopos_gateways` (`id`, `name`, `enable`, `key1`, `key2`, `currency`, `dev_mode`, `ord`, `surcharge`, `extra`) VALUES ('8', 'RazorPay', 'Yes', 'Key Id', 'Key Secret', 'INR', 'true', '8', '0', 'none');
+
+ALTER TABLE `geopos_customers` ADD `reg_date` DATETIME NULL DEFAULT NULL AFTER `discount_c`;
+ALTER TABLE `geopos_customers` CHANGE `reg_date` `reg_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE `geopos_employees` ADD `c_rate` decimal(16,2) DEFAULT NULL AFTER `clockout`;
+INSERT INTO `univarsal_api` (`id`, `name`, `key1`, `key2`, `url`, `method`, `other`, `active`) VALUES ('65', 'Dual Entry', '0', '1', '0', '0', '0', '0');
+ALTER TABLE `geopos_invoices` ADD `discount_rate` decimal(10,2) NULL DEFAULT '0' AFTER `discount`;
+INSERT INTO `univarsal_api` (`id`, `name`, `key1`, `key2`, `url`, `method`, `other`, `active`) VALUES ('66', 'Email Alert', '0', '0', 'sample@email.com', '0', '0', '0');
+
+INSERT INTO `univarsal_api` (`id`, `name`, `key1`, `key2`, `url`, `method`, `other`, `active`) VALUES (69, 'pos_settings', '1', NULL, NULL, NULL, NULL, NULL);
+ALTER TABLE `geopos_accounts` ADD `account_type` ENUM('Assets','Expenses','Income','Liabilities','Equity','Basic') NOT NULL DEFAULT 'Basic' AFTER `loc`;
+ALTER TABLE `geopos_product_cat` ADD `c_type` INT(2) NULL DEFAULT '0' AFTER `extra`, ADD `rel_id` INT(11) NULL DEFAULT '0' AFTER `c_type`;
+ALTER TABLE `geopos_products` ADD `sub_id` INT(11) NULL DEFAULT '0' AFTER `code_type`;
+ALTER TABLE `geopos_products` ADD `b_id` INT(11) NULL DEFAULT '0' AFTER `sub_id`;
+ALTER TABLE `geopos_project_meta` ADD `key4` INT(11) NOT NULL DEFAULT '0' AFTER `key3`;
+
+ALTER TABLE `geopos_premissions` CHANGE `module` `module` ENUM('Sales','Stock','Crm','Project','Accounts','Miscellaneous','Employees','Assign Project','Customer Profile','Reports','Delete') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+ALTER TABLE `geopos_invoices` CHANGE `format_discount` `format_discount` ENUM('%','flat','b_p','bflat') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '%';
+
+ALTER TABLE `geopos_quotes` CHANGE `format_discount` `format_discount` ENUM('%','flat','b_p','bflat') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '%';
+
+ALTER TABLE `geopos_purchase` CHANGE `format_discount` `format_discount` ENUM('%','flat','b_p','bflat') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+ALTER TABLE `geopos_stock_r` CHANGE `format_discount` `format_discount` ENUM('%','flat','bflat','b_p') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+
+INSERT INTO `geopos_premissions` (`id`, `module`, `r_1`, `r_2`, `r_3`, `r_4`, `r_5`, `r_6`, `r_7`, `r_8`) VALUES ('10', 'Reports', '0', '0', '0', '1', '1', '0', '0', '0');
+
+INSERT INTO `geopos_premissions` (`id`, `module`, `r_1`, `r_2`, `r_3`, `r_4`, `r_5`, `r_6`, `r_7`, `r_8`) VALUES ('11', 'Delete', '1', '1', '1', '1', '1', '1', '1', '1');
+
+ALTER TABLE `geopos_system` ADD `foundation` DATE NULL DEFAULT NULL AFTER `lang`;
+
+INSERT INTO `univarsal_api` (`id`, `name`, `key1`, `key2`, `url`, `method`, `other`, `active`) VALUES (67, 'billing_settings', '0', '0', NULL, NULL, NULL, NULL);
+
+ALTER TABLE `geopos_invoice_items` ADD `serial` VARCHAR(200) NULL DEFAULT NULL AFTER `unit`;
+
+ALTER TABLE `geopos_quotes` CHANGE `status` `status` ENUM('pending','accepted','rejected','customer_approved') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'pending';
+
+CREATE TABLE `geopos_product_serials` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `serial` varchar(200) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `geopos_product_serials`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `geopos_product_serials`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;ALTER TABLE `geopos_users` ADD `lang` CHAR(15) NOT NULL DEFAULT 'english' AFTER `loc`;
+ALTER TABLE `geopos_products` CHANGE `barcode` `barcode` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
+INSERT INTO `univarsal_api` (`id`, `name`, `key1`, `key2`, `url`, `method`, `other`, `active`) VALUES ('70', 'DB-B-150', '4a99003dd3aa27b87fabfa153f1ab06a2ff08c3d', NULL, NULL, NULL, NULL, NULL);
+ALTER TABLE `geopos_premissions` CHANGE `module` `module` ENUM('Sales','Stock','Crm','Project','Accounts','Miscellaneous','Employees','Assign Project','Customer Profile','Reports','Delete','POS','Sales Edit','Stock Edit') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+INSERT INTO `geopos_premissions` (`id`, `module`, `r_1`, `r_2`, `r_3`, `r_4`, `r_5`, `r_6`, `r_7`, `r_8`) VALUES (12, 'POS', '1', '1', '1', '1', '1', '1', '1', '1');INSERT INTO `geopos_premissions` (`id`, `module`, `r_1`, `r_2`, `r_3`, `r_4`, `r_5`, `r_6`, `r_7`, `r_8`) VALUES ('13', 'Sales Edit', '1', '1', '1', '1', '1', '1', '1', '1'), ('14', 'Stock Edit', '1', '1', '1', '1', '1', '1', '1', '1');
+        

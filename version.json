@@ -1,0 +1,6 @@
+{
+ "version": "7.1",
+ "build": "155",
+ "system_id": "%read_system_id%",
+ "log_id": "%generate_log_id%"
+}
