@@ -615,26 +615,20 @@
                 <div class="modal-body">
                     <p id="statusMsg"></p>
 
-                    <div class="text-center"><h1 id="b_total"></h1></div>
+                    <div class="text-center">
+                        <h1 id="b_total"></h1>
+                        <button class="btn btn-success pull-right new_payment_form" type="button" data-count="0"><i class="fa fa-plus"></i></button><br><br>                                
+                    </div>
                     <div class="row">
-
-
                         <div class="col-6">
                             <div class="card-title">
                                 <label for="cardNumber"><?php echo $this->lang->line('Amount') ?></label>
                                 <div class="input-group">
-                                    <input
-                                            type="text"
-                                            class="form-control  text-bold-600 blue-grey"
-                                            name="p_amount"
-                                            placeholder="Amount" onkeypress="return isNumber(event)"
-                                            id="p_amount" onkeyup="update_pay_pos()" inputmode="numeric"
-                                    />
-                                    <span class="input-group-addon"><i
-                                                class="icon icon-cash"></i></span>
+                                    <input type="text" class="form-control  text-bold-600 blue-grey" name="p_amount" placeholder="Amount" onkeypress="return isNumber(event)" id="p_amount" onkeyup="update_pay_pos()" inputmode="numeric" />
+                                    <span class="input-group-addon"><i class="icon icon-cash"></i></span>
                                 </div>
                             </div>
-                        </div>
+                        </div>                        
                         <div class="col-6">
                             <div class="card-title">
                                 <label for="cardNumber"><?php echo $this->lang->line('Payment Method') ?></label>
@@ -642,22 +636,17 @@
                                     <option value='Cash'><?php echo $this->lang->line('Cash') ?></option>
                                     <option value='Card Swipe'><?php echo $this->lang->line('Card Swipe') ?></option>
                                     <option value='Bank'><?php echo $this->lang->line('Bank') ?></option>
-
-                                </select></div>
+                                </select>
+                            </div>
                         </div>
-
-
                     </div>
-
+                    <div class="insert_new_entry"></div>
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group  text-bold-600 red">
                                 <label for="amount"><?php echo $this->lang->line('Balance Due') ?>
                                 </label>
-                                <input type="text" class="form-control red" name="amount" id="balance1"
-                                       onkeypress="return isNumber(event)"
-                                       value="0.00"
-                                       required>
+                                <input type="text" class="form-control red" name="amount" id="balance1" onkeypress="return isNumber(event)" value="0.00" required>
                             </div>
                         </div>
                         <div class="col-6">
@@ -683,7 +672,6 @@
                                 </select></div>
                         </div>
                     <?php } ?>
-
                     <div class="row">
                         <div class="col-12">
                             <button class="btn btn-success btn-lg btn-block mb-1"
@@ -704,11 +692,7 @@
                             <p class="payment-errors"></p>
                         </div>
                     </div>
-
-
                     <!-- shipping -->
-
-
                 </div>
                 <!-- Modal Footer -->
 
@@ -991,7 +975,17 @@
     });
 
     function update_pay_pos() {
-        var am_pos = accounting.unformat($('#p_amount').val(), accounting.settings.number.decimal);
+        var counter =  $('.new_payment_form').attr('data-count');
+        console.log(counter);
+        var am_pos = 0;
+        for(var i= 0; i <= counter; i++ ){
+            if(i ==0){
+                var am_pos = accounting.unformat($('#p_amount').val(), accounting.settings.number.decimal);
+            }else if(i > 0){
+                var new_pos = accounting.unformat($('#p_amount_'+i).val(), accounting.settings.number.decimal);
+                var am_pos = parseInt(new_pos) + parseInt(am_pos);
+            }
+        }
         var ttl_pos = accounting.unformat($('#invoiceyoghtml').val(), accounting.settings.number.decimal);
         <?php
         $round_off = $this->custom->api_config(4);
@@ -1026,18 +1020,30 @@
         update_register();
     });
     $('#pos_basic_pay').on("click", function (e) {
+        var counter = $('.new_payment_form').attr('data-count');
         e.preventDefault();
-        $('#basicPay').modal('toggle');
-        $("#notify .message").html("<strong>Processing</strong>: .....");
-        $("#notify").removeClass("alert-danger").addClass("alert-primary").fadeIn();
-        $("html, body").animate({scrollTop: $('body').offset().top - 100}, 1000);
-        var o_data = $("#data_form").serialize() + '&p_amount=' + accounting.unformat($('#p_amount').val(), accounting.settings.number.decimal) + '&p_method=' + $("#p_method option:selected").val() + '&type=' + $(this).attr('data-type') + '&account=' + $("#p_account option:selected").val() + '&employee=' + $("#employee option:selected").val();
-        var action_url = $('#action-url').val();
-        addObject(o_data, action_url);
-        setTimeout(
-            function () {
-                update_register();
-            }, 3000);
+            if(counter == 0 || $('#p_amount_1').val() != ''){
+                $('#basicPay').modal('toggle');
+            }
+            
+            $("#notify .message").html("<strong>Processing</strong>: .....");
+            $("#notify").removeClass("alert-danger").addClass("alert-primary").fadeIn();
+            $("html, body").animate({scrollTop: $('body').offset().top - 100}, 1000);
+            var addition_payment = '';
+            for(var i=0; i <= counter; i++){
+                if(i == 0){
+                    addition_payment = "&p_amount=" + accounting.unformat($('#p_amount').val(), accounting.settings.number.decimal) + "&p_method=" + $('#p_method option:selected').val();
+                }else if(i > 0){
+                    addition_payment = addition_payment + " +&p_amount_"+i+"=" + accounting.unformat($('#p_amount_'+i).val(), accounting.settings.number.decimal) + "&p_method_"+i+"=" +$('#p_method_'+ i +' option:selected').val();
+                }
+            }
+            var o_data = $("#data_form").serialize() + '&type=' + $(this).attr('data-type') + '&account=' + $("#p_account option:selected").val() + '&employee=' + $("#employee option:selected").val() + addition_payment + '&counter_val=' + counter;
+            var action_url = $('#action-url').val();
+            addObject(o_data, action_url);
+            setTimeout(
+                function () {
+                    update_register();
+                }, 3000);
     });
 
     $('#pos_basic_print').on("click", function (e) {
@@ -1278,4 +1284,44 @@
             }
         });
     });
+
+    $(document.body).on('click', '.new_payment_form', function (e) {
+        var count = $(this).attr('data-count');
+        var  count = parseInt(count) + 1;
+        var html = '<button class="btn btn-danger pull-right remove_payment_form" type="button"><i class="fa fa-minus"></i></button><br><br>'+
+                    '<div class="row">'+
+                        '<div class="col-6">'+
+                            '<div class="card-title">'+
+                                '<label for="cardNumber"><?php echo $this->lang->line("Amount") ?></label>'+
+                                '<div class="input-group">'+
+                                    '<input type="text" class="form-control  text-bold-600 blue-grey required" name="p_amount'+ count +'" placeholder="Amount" onkeypress="return isNumber(event)" id="p_amount_'+ count +'" onkeyup="update_pay_pos()" inputmode="numeric"/>'+
+                                    '<span class="input-group-addon"><i class="icon icon-cash"></i></span>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div> '+                     
+                        '<div class="col-6">'+
+                            '<div class="card-title">'+
+                                '<label for="cardNumber"><?php echo $this->lang->line("Payment Method") ?></label>'+
+                                '<select class="form-control required" name="p_method_'+ count +'" id="p_method_'+ count +'">'+
+                                    '<option value="Cash"><?php echo $this->lang->line("Cash") ?></option>'+
+                                    '<option value="Card Swipe" selected><?php echo $this->lang->line("Card Swipe") ?></option>'+
+                                    '<option value="Bank"><?php echo $this->lang->line("Bank") ?></option>'+
+                                '</select>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>';
+        $('.insert_new_entry').append(html);
+        $('.new_payment_form').attr('data-count',count);
+        $('.new_payment_form').hide();      
+    });
+    
+    $(document.body).on('click', '.remove_payment_form', function (e) {
+        var count = $('.new_payment_form').attr('data-count');
+        var  count = parseInt(count) - 1;        
+        $('.insert_new_entry').empty();
+        $('.new_payment_form').attr('data-count',count);
+        $('.new_payment_form').show();      
+
+    });
+
 </script>

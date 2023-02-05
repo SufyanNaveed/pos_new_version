@@ -212,7 +212,6 @@ class Pos_invoices extends CI_Controller
     public function action()
     {
 
-
         $v2 = $this->input->get('v2');
         $ptype = $this->input->post('type');
         $coupon = $this->input->post('coupon');
@@ -251,8 +250,28 @@ class Pos_invoices extends CI_Controller
             $emp = $this->aauth->get_user()->id;
         }
         if ($ptype == 4) {
-            $p_amount = rev_amountExchange_s($this->input->post('p_amount'), $currency, $this->aauth->get_user()->loc);
-            $pmethod = $this->input->post('p_method');
+            $loop_counter = $this->input->post('counter_val');
+            $p_amount = 0;
+            $pmethod = '';
+            $pmnt_0 = 0;
+            $pmnt_1 = 0;
+            $pmethod_0 = '';
+            $pmethod_1 = '';
+            for($i=0; $i <= $loop_counter; $i++){
+                if($i == 0){
+                    $pmnt_0 = rev_amountExchange_s($this->input->post('p_amount'), $currency, $this->aauth->get_user()->loc);
+                    $p_amount = rev_amountExchange_s($this->input->post('p_amount'), $currency, $this->aauth->get_user()->loc);
+                    $pmethod = trim($this->input->post('p_method'));
+                    $pmethod_0 = trim($this->input->post('p_method'));
+
+                }else if($i > 0){
+                    $pmnt_1 = rev_amountExchange_s($this->input->post('p_amount_'.$i), $currency, $this->aauth->get_user()->loc);
+                    $p_amount += rev_amountExchange_s($this->input->post('p_amount_'.$i), $currency, $this->aauth->get_user()->loc);
+                    $pmethod .= '_'. trim($this->input->post('p_method_'.$i));
+                    $pmethod_1 = trim($this->input->post('p_method_'.$i));
+
+                }
+            }
 
             $c_amt = $p_amount - $total;
             if ($c_amt == 0.00) {
@@ -319,7 +338,13 @@ class Pos_invoices extends CI_Controller
                 $invocieno=$query->row()->tid+1;
             }
 
-            $data = array('tid' => $invocieno, 'invoicedate' => $bill_date, 'invoiceduedate' => $bill_due_date, 'subtotal' => $subtotal, 'shipping' => $shipping, 'ship_tax' => $shipping_tax, 'ship_tax_type' => $ship_taxtype, 'discount_rate' => $disc_val, 'total' => $total, 'pmethod' => $pmethod, 'notes' => $notes, 'status' => $status, 'csd' => $customer_id, 'eid' => $emp, 'pamnt' => 0, 'taxstatus' => $tax, 'discstatus' => $discstatus, 'format_discount' => $discountFormat, 'refer' => $refer, 'term' => $pterms, 'multi' => $currency, 'i_class' => 1, 'loc' => $this->aauth->get_user()->loc);
+            $data = array('tid' => $invocieno, 'invoicedate' => $bill_date, 'invoiceduedate' => $bill_due_date, 
+            'subtotal' => $subtotal, 'shipping' => $shipping, 'ship_tax' => $shipping_tax, 
+            'ship_tax_type' => $ship_taxtype, 'discount_rate' => $disc_val, 'total' => $total, 
+            'pmethod' => $pmethod, 'notes' => $notes, 'status' => $status, 'csd' => $customer_id, 
+            'eid' => $emp, 'pamnt' => 0, 'taxstatus' => $tax, 'discstatus' => $discstatus, 
+            'format_discount' => $discountFormat, 'refer' => $refer, 'term' => $pterms, 
+            'multi' => $currency, 'i_class' => 1, 'loc' => $this->aauth->get_user()->loc);
 
 
             if ($this->db->insert('geopos_invoices', $data)) {
@@ -447,6 +472,11 @@ class Pos_invoices extends CI_Controller
                         $r_amt2 = 0;
                         $r_amt3 = $pamnt;
                         break;
+                    case 'Cash_Card Swipe' :
+                        $r_amt1 = $pmnt_0;
+                        $r_amt2 = $pmnt_1;
+                        $r_amt3 = 0;
+                        break;
                 }
                 $d_trans = $this->plugins->universal_api(69);
         if ($d_trans['key2']) {
@@ -481,7 +511,22 @@ class Pos_invoices extends CI_Controller
             $this->db->update('geopos_accounts');
 
         }
-                if ($pamnt > 0) $this->billing->paynow($invocieno, $pamnt, $tnote, $pmethod, $this->aauth->get_user()->loc, $bill_date, $account);
+                if ($pamnt > 0) {
+                    for($i=0; $i <= $loop_counter; $i++){
+                        if($i == 0){
+                            $pamnt = $pmnt_0;
+                            $pmethod = $pmethod_0;
+                            $tnote = '#' . $invocieno_n . '-' . $pmethod;
+                            $this->billing->paynow($invocieno, $pamnt, $tnote, $pmethod, $this->aauth->get_user()->loc, $bill_date, $account);
+                        }else if($i > 0){
+                            $pamnt = $pmnt_1;
+                            $pmethod = $pmethod_1;
+                            $tnote = '#' . $invocieno_n . '-' . $pmethod;
+                            $this->billing->paynow($invocieno, $pamnt, $tnote, $pmethod, $this->aauth->get_user()->loc, $bill_date, $account);
+
+                        }
+                    }
+                }
                 $this->registerlog->update($this->aauth->get_user()->id, $r_amt1, $r_amt2, $r_amt3, 0, $c_amt);
                 if ($promo_flag) {
                     $cqty = $result_c['available'] - 1;
