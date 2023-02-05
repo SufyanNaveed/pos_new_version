@@ -5,7 +5,10 @@
     <title>Print BarCode</title>
     <style>  @page {
             margin: 0 auto;
-            sheet-size: 300px 250mm;
+            sheet-size: 250px 48mm;
+        }
+        h1{
+            font-size:50px !important; 
         }
     </style>
 </head>
@@ -14,100 +17,8 @@
 
     <tr>
         <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
-            </barcode><br></td>
-
-
-    </tr>
-    <tr>
-        <td>
-            <small><?= $name ?><br><br></small>
-            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".7"/>
+            <h1><?= $name ?><br><br></h1>
+            <barcode type="<?= $ctype ?>" code="<?= $code ?>" text="1" class="barcode" height=".4" size="5">
             </barcode><br></td>
 
 

@@ -1320,7 +1320,8 @@
         var  count = parseInt(count) - 1;        
         $('.insert_new_entry').empty();
         $('.new_payment_form').attr('data-count',count);
-        $('.new_payment_form').show();      
+        $('.new_payment_form').show(); 
+        update_pay_pos().click();     
 
     });
 
