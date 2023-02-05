@@ -1,9 +1,9 @@
 <table>
     <tr>
         <td class="myco">
-            <img src="<?php $loc = location($invoice['loc']);
-            echo FCPATH . 'userfiles/company/' . $loc['logo'] ?>"
-                 class="top_logo">
+            <?php  if ($invoice['tax'] > 0) { ?>
+                <img src="<?php $loc = location($invoice['loc']); echo FCPATH . 'userfiles/company/' . $loc['logo'] ?>" class="top_logo">
+            <?php } ?>    
         </td>
         <td>
 

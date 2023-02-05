@@ -180,19 +180,24 @@
     <table class="party">
         <thead>
         <tr class="heading">
-            <td> <?php echo $this->lang->line('Our Info') ?>:</td>
+            <?php  if ($invoice['tax'] > 0) { ?>
+                <td> <?php echo $this->lang->line('Our Info') ?>:</td>
+            <?php } ?>
             <td><?= $general['person'] ?>:</td>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <td><strong><?php $loc = location($invoice['loc']);
-                    echo $loc['cname']; ?></strong><br>
-                <?php echo
-                    $loc['address'] . '<br>' . $loc['city'] . ', ' . $loc['region'] . '<br>' . $loc['country'] . ' -  ' . $loc['postbox'] . '<br>' . $this->lang->line('Phone') . ': ' . $loc['phone'] . '<br> ' . $this->lang->line('Email') . ': ' . $loc['email'];
-                if ($loc['taxid']) echo '<br>' . $this->lang->line('TaxID') . ': ' . $loc['taxid'];
-                ?>
-            </td>
+            <?php  if ($invoice['tax'] > 0) { ?>
+                <td>
+                    <strong><?php $loc = location($invoice['loc']);
+                        echo $loc['cname']; ?></strong><br>
+                    <?php echo
+                        $loc['address'] . '<br>' . $loc['city'] . ', ' . $loc['region'] . '<br>' . $loc['country'] . ' -  ' . $loc['postbox'] . '<br>' . $this->lang->line('Phone') . ': ' . $loc['phone'] . '<br> ' . $this->lang->line('Email') . ': ' . $loc['email'];
+                    if ($loc['taxid']) echo '<br>' . $this->lang->line('TaxID') . ': ' . $loc['taxid'];
+                    ?>
+                </td>
+            <?php } ?>
             <td>
                 <?php echo '<strong>' . $invoice['name'] . '</strong><br>';
                 if ($invoice['company']) echo $invoice['company'] . '<br>';
