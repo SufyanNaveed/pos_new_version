@@ -34,6 +34,13 @@ use Mike42\Escpos\EscposImage;
 use Omnipay\Omnipay;
 use Endroid\QrCode\QrCode;
 
+use Salla\ZATCA\GenerateQrCode;
+use Salla\ZATCA\Tags\InvoiceDate;
+use Salla\ZATCA\Tags\InvoiceTaxAmount;
+use Salla\ZATCA\Tags\InvoiceTotalAmount;
+use Salla\ZATCA\Tags\Seller;
+use Salla\ZATCA\Tags\TaxNumber;
+
 
 class Pos_invoices extends CI_Controller
 {
@@ -452,7 +459,7 @@ class Pos_invoices extends CI_Controller
                     if (@$printer['val2'] == 'server') $p_tid = 'thermal_server';
 
                     echo json_encode(array('status' => 'Success', 'message' =>
-                        $this->lang->line('Invoice Success') . " <a target='_blank' href='thermal_pdf?id=$invocieno' class='btn btn-blue btn-lg'><span class='fa fa-ticket' aria-hidden='true'></span> PDF  </a> &nbsp; &nbsp;   <a id='$p_tid' data-ptid='$invocieno' data-url='" . @$printer['val3'] . "'  class='btn btn-info btn-lg white'><span class='fa fa-ticket' aria-hidden='true'></span> " . $this->lang->line('Thermal Printer') . "  </a> &nbsp; &nbsp;<a href='#' class='btn btn-reddit btn-lg print_image' id='print_image' data-inid='$invocieno'><span class='fa fa-window-restore' aria-hidden='true'></span></a> &nbsp; &nbsp; <a target='_blank' href='printinvoice?id=$invocieno' class='btn btn-blue btn-lg'><span class='fa fa-print' aria-hidden='true'></span> A4  </a> &nbsp; &nbsp; <a href='view?id=$invocieno' class='btn btn-purple btn-lg'><span class='fa fa-eye' aria-hidden='true'></span> " . $this->lang->line('View') . "  </a> &nbsp; &nbsp; <a href='$link' class='btn btn-blue-grey btn-lg'><span class='fa fa-globe' aria-hidden='true'></span> " . $this->lang->line('Public View') . " </a> &nbsp;<a href='create?v2=$v2' class='btn btn-flickr btn-lg'><span class='fa fa-plus-circle' aria-hidden='true'></span> " . $this->lang->line('Create') . "  </a>"));
+                        $this->lang->line('Invoice Success') . " <a target='_blank' href='thermal_pdf?id=$invocieno' class='btn btn-blue btn-lg'><span class='fa fa-ticket' aria-hidden='true'></span> PDF  </a> &nbsp; &nbsp;   <a id='$p_tid' data-ptid='$invocieno' data-url='" . @$printer['val3'] . "'  class='btn btn-info btn-lg white'><span class='fa fa-ticket' aria-hidden='true'></span> " . $this->lang->line('Thermal Printer') . "  </a> &nbsp; &nbsp;<a href='#' class='btn btn-reddit btn-lg print_image' id='print_image' data-inid='$invocieno'><span class='fa fa-window-restore' aria-hidden='true'></span></a> &nbsp; &nbsp; <a target='_blank' href='printinvoice?id=$invocieno' class='btn btn-blue btn-lg'><span class='fa fa-print' aria-hidden='true'></span> A4  </a> &nbsp; &nbsp; <a target='_blank' href='printinvoice_eng_arabic?id=$invocieno' class='btn btn-blue btn-lg'><span class='fa fa-print' aria-hidden='true'></span> A4 Arabic </a> &nbsp; &nbsp; <a href='view?id=$invocieno' class='btn btn-purple btn-lg'><span class='fa fa-eye' aria-hidden='true'></span> " . $this->lang->line('View') . "  </a> &nbsp; &nbsp; <a href='$link' class='btn btn-blue-grey btn-lg'><span class='fa fa-globe' aria-hidden='true'></span> " . $this->lang->line('Public View') . " </a> &nbsp;<a href='create?v2=$v2' class='btn btn-flickr btn-lg'><span class='fa fa-plus-circle' aria-hidden='true'></span> " . $this->lang->line('Create') . "  </a>"));
                 }
                 $this->load->model('billing_model', 'billing');
                 $tnote = '#' . $invocieno_n . '-' . $pmethod;
@@ -1052,6 +1059,20 @@ class Pos_invoices extends CI_Controller
         } else {
             $pref = $this->config->item('prefix');
         }
+        $token = hash_hmac('ripemd160', $tid, $this->config->item('encryption_key'));
+        $data['qrc'] = 'pos_' . date('Y_m_d_H_i_s') . '_.png';
+        $loc = location($data['invoice']['loc']);
+        $generatedString = GenerateQrCode::fromArray([
+            new Seller($loc['cname']),   
+            new TaxNumber($loc['taxid']), 
+            new InvoiceDate(date("Y-m-d", strtotime($data['invoice']['invoicedate'])). ' ' . date('H:i:s')),
+            new InvoiceTotalAmount($data['invoice']['total']), 
+            new InvoiceTaxAmount($data['invoice']['tax'])
+        ])->toBase64();        
+        $qrCode = new QrCode($generatedString);        
+        $writer = new \Endroid\QrCode\Writer\PngWriter();
+        $result = $writer->write($qrCode);
+        $result->saveToFile(FCPATH . 'userfiles/pos_temp/' . $data['qrc']);
         $data['general'] = array('title' => $this->lang->line('Invoice'), 'person' => $this->lang->line('Customer'), 'prefix' => $pref, 't_type' => 0);
         ini_set('memory_limit', '64M');
         if ($data['invoice']['taxstatus'] == 'cgst' || $data['invoice']['taxstatus'] == 'igst') {
@@ -1078,6 +1099,65 @@ class Pos_invoices extends CI_Controller
         }
     }
 
+    public function printinvoice_eng_arabic()
+    {
+        $tid = $this->input->get('id');
+        $data['id'] = $tid;
+        $data['arabic'] = 1;
+        $data['round_off'] = $this->custom->api_config(4);
+        $data['invoice'] = $this->invocies->invoice_details($tid, $this->limited);
+        if ($data['invoice']['id']) $data['products'] = $this->invocies->invoice_products($tid);
+        if ($data['invoice']['id']) $data['employee'] = $this->invocies->employee($data['invoice']['eid']);
+        if (CUSTOM) $data['c_custom_fields'] = $this->custom->view_fields_data($data['invoice']['cid'], 1, 1);
+        if ($data['invoice']['i_class'] == 1) {
+            $pref = prefix(7);
+        } else {
+            $pref = $this->config->item('prefix');
+        }
+        
+        $token = hash_hmac('ripemd160', $tid, $this->config->item('encryption_key'));
+        $data['qrc'] = 'pos_' . date('Y_m_d_H_i_s') . '_.png';
+        $loc = location($data['invoice']['loc']);
+        $generatedString = GenerateQrCode::fromArray([
+            new Seller($loc['cname']),   
+            new TaxNumber($loc['taxid']), 
+            new InvoiceDate(date("Y-m-d", strtotime($data['invoice']['invoicedate'])). ' ' . date('H:i:s')),
+            new InvoiceTotalAmount($data['invoice']['total']), 
+            new InvoiceTaxAmount($data['invoice']['tax'])
+        ])->toBase64();        
+        $qrCode = new QrCode($generatedString);        
+        $writer = new \Endroid\QrCode\Writer\PngWriter();
+        $result = $writer->write($qrCode);
+        $result->saveToFile(FCPATH . 'userfiles/pos_temp/' . $data['qrc']);
+
+        $data['general'] = array('title' => $this->lang->line('Invoice'), 'person' => $this->lang->line('Customer'), 'prefix' => $pref, 't_type' => 0);
+        ini_set('memory_limit', '64M');
+        if ($data['invoice']['taxstatus'] == 'cgst' || $data['invoice']['taxstatus'] == 'igst') {
+            $html = $this->load->view('print_files/invoice-a4-gst_v' . INVV, $data, true);      
+        } else {
+            $html = $this->load->view('print_files/invoice-a4_arabic_v' . INVV, $data, true);
+        } 
+        // echo INVV;
+        // echo $html;exit;
+        //PDF Rendering
+        $this->load->library('pdf');
+        if (INVV == 1) {
+            $header = $this->load->view('print_files/invoice-header_arabic_v' . INVV, $data, true);
+            $pdf = $this->pdf->load_split(array('margin_top' => 40));
+            $pdf->SetHTMLHeader($header);
+        }
+        if (INVV == 2) {
+            $pdf = $this->pdf->load_split(array('margin_top' => 5));
+        }
+        $pdf->SetHTMLFooter('<div style="text-align: right;font-family: serif; font-size: 8pt; color: #5C5C5C; font-style: italic;margin-top:-6pt;">{PAGENO}/{nbpg} #' . $data['invoice']['tid'] . '</div>');
+        $pdf->WriteHTML($html);
+        if ($this->input->get('d')) {
+            $pdf->Output('Invoice_pos' . $data['invoice']['tid'] . '.pdf', 'D');
+        } else {
+            $pdf->Output('Invoice_pos' . $data['invoice']['tid'] . '.pdf', 'I');
+        }
+    }
+    
     public function delete_i()
     {
         $id = $this->input->post('deleteid');

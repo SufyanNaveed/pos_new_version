@@ -1,0 +1,40 @@
+<table>
+    <tr>
+        <td class="myco">
+            <?php  if ($invoice['tax'] > 0) { ?>
+                <img src="<?php $loc = location($invoice['loc']); echo FCPATH . 'userfiles/company/' . $loc['logo'] ?>" class="top_logo">
+            <?php } ?>
+        </td>
+        <td>
+
+        </td>
+        <td class="myw">
+            <table class="top_sum">
+                <tr>
+                    <td colspan="1" class="t_center"><h2><?= $general['title'] ?> / فاتورة</h2><br><br></td>
+                </tr>
+                <tr>
+                    <td><?= $general['title'] ?> / فاتورة </td>
+                    <td><?= $general['prefix'] . ' ' . $invoice['tid'] ?></td>
+                </tr>
+                <tr>
+                    <td><?= $general['title'] . ' ' . $this->lang->line('Date') ?> /تاريخ الفاتورة    </td>
+                    <td><?php echo dateformat($invoice['invoicedate']) ?></td>
+                </tr>
+                <tr>
+                    <td><?php echo $this->lang->line('Due Date') ?> / تاريخ الاستحقاق  </td>
+                    <td><?php echo dateformat($invoice['invoiceduedate']) ?></td>
+                </tr>
+                <?php if ($invoice['refer']) { ?>
+                    <tr>
+                        <td><?php echo $this->lang->line('Reference') ?></td>
+                        <td><?php echo $invoice['refer'] ?></td>
+                    </tr>
+                <?php } ?>
+            </table>
+
+
+        </td>
+    </tr>
+</table>
+<br>

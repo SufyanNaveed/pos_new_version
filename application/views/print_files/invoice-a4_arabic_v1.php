@@ -11,7 +11,7 @@
 
         .invoice-box {
             width: 210mm;
-            height: 297mm;
+            height: 150mm;
             margin: auto;
             padding: 4mm;
             border: 0;
@@ -170,8 +170,15 @@
             max-height: 180px;
             max-width: 250px;
         <?php if(LTR=='rtl') echo 'margin-left: 200px;' ?>
-        }
-
+        } 
+        .stamp {
+                margin: 5pt;
+                padding: 3pt;
+                border: 3pt solid #111;
+                text-align: center;
+                font-size: 20pt;
+                color
+            }
     </style>
 </head>
 <body dir="<?= LTR ?>">
@@ -180,23 +187,19 @@
     <table class="party">
         <thead>
         <tr class="heading">
-            <?php  if ($invoice['tax'] > 0) { ?>
-                <td> <?php echo $this->lang->line('Our Info') ?>:</td>
-            <?php } ?>
-            <td><?= $general['person'] ?>:</td>
-            <td>QR Scan:</td>
-
+            <?php  if ($invoice['tax'] > 0) { ?> <td> <?php echo $this->lang->line('Our Info') ?> / معلوماتنا  :</td> <?php } ?>
+            <td><?= $general['person'] ?> /عميل   :</td>
+            <td>QR Scan / مسح QR  :</td>
         </tr>
         </thead>
         <tbody>
         <tr>
             <?php  if ($invoice['tax'] > 0) { ?>
-                <td>
-                    <strong><?php $loc = location($invoice['loc']);
-                        echo $loc['cname']; ?></strong><br>
+                <td><strong><?php $loc = location($invoice['loc']);
+                    echo $loc['cname']; ?></strong><br>
                     <?php echo
                         $loc['address'] . '<br>' . $loc['city'] . ', ' . $loc['region'] . '<br>' . $loc['country'] . ' -  ' . $loc['postbox'] . '<br>' . $this->lang->line('Phone') . ': ' . $loc['phone'] . '<br> ' . $this->lang->line('Email') . ': ' . $loc['email'];
-                    if ($loc['taxid']) echo '<br>' . $this->lang->line('TaxID') . ': ' . $loc['taxid'];
+                    if ($loc['taxid']) echo '<br>' . $this->lang->line('Tax') . ' ID: ' . $loc['taxid'];
                     ?>
                 </td>
             <?php } ?>
@@ -210,7 +213,7 @@
                 if ($invoice['phone']) echo '<br>' . $this->lang->line('Phone') . ': ' . $invoice['phone'];
                 if ($invoice['email']) echo '<br> ' . $this->lang->line('Email') . ': ' . $invoice['email'];
 
-                if ($invoice['taxid']) echo '<br>' . $this->lang->line('TaxID') . ': ' . $invoice['taxid'];
+                if ($invoice['taxid']) echo '<br>' . $this->lang->line('Tax') . ' ID: ' . $invoice['taxid'];
                 if (is_array($c_custom_fields)) {
                     echo '<br>';
                     foreach ($c_custom_fields as $row) {
@@ -254,18 +257,18 @@
                 #
             </td>
             <td>
-                <?php echo $this->lang->line('Description') ?>
+                <?php echo $this->lang->line('Description') ?> / الوصف
             </td>
             <td>
-                <?php echo $this->lang->line('Price') ?>
+                <?php echo $this->lang->line('Price') ?> / سعر
             </td>
             <td>
-                <?php echo $this->lang->line('Qty') ?>
+                <?php echo $this->lang->line('Qty') ?> / الكمية
             </td>
-            <?php if ($invoice['tax'] > 0) echo '<td>' . $this->lang->line('Tax') . '</td>';
-            if ($invoice['discount'] > 0) echo '<td>' . $this->lang->line('Discount') . '</td>'; ?>
+            <?php if ($invoice['tax'] > 0) echo '<td>' . $this->lang->line('Tax') . ' / الضرائب </td>';
+            if ($invoice['discount'] > 0) echo '<td>' . $this->lang->line('Discount') . ' / خصم  </td>'; ?>
             <td class="t_center">
-                <?php echo $this->lang->line('SubTotal') ?>
+                <?php echo $this->lang->line('SubTotal') ?> / المجموع الفرعي
             </td>
         </tr>
         <?php
@@ -352,15 +355,15 @@
 
         <tr>
             <td class="myco2" rowspan="<?php echo $sub_t_col ?>"><br>
-                <p><?php echo '<strong>' . $this->lang->line('Status') . ': ' . $this->lang->line(ucwords($invoice['status'])) . '</strong></p>';
+                <p><?php echo '<strong>' . $this->lang->line('Status') . ' /حالة  : ' . $this->lang->line(ucwords($invoice['status'])) . '</strong></p>';
                     if (!$general['t_type']) {
-                        echo '<br><p>' . $this->lang->line('Total Amount') . ': ' . amountExchange($invoice['total'], $invoice['multi'], $invoice['loc']) . '</p><br><p>';
+                        echo '<br><p>' . $this->lang->line('Total Amount') . ' /المبلغ الإجمالي   : ' . amountExchange($invoice['total'], $invoice['multi'], $invoice['loc']) . '</p><br><p>';
                         if (@$round_off['other']) {
                             $final_amount = round($invoice['total'], $round_off['active'], constant($round_off['other']));
                             echo '<p>' . $this->lang->line('Round Off') . ' ' . $this->lang->line('Amount') . ': ' . amountExchange($final_amount, $invoice['multi'], $invoice['loc']) . '</p><br><p>';
                         }
 
-                        echo $this->lang->line('Paid Amount') . ': ' . amountExchange($invoice['pamnt'], $invoice['multi'], $invoice['loc']);
+                        echo $this->lang->line('Paid Amount') . ' /المبلغ المدفوع   : ' . amountExchange($invoice['pamnt'], $invoice['multi'], $invoice['loc']);
                     }
 
                     if ($general['t_type'] == 1) {
@@ -368,34 +371,34 @@
                     }
                     ?></p>
             </td>
-            <td><strong><?php echo $this->lang->line('Summary') ?>:</strong></td>
+            <td><strong><?php echo $this->lang->line('Summary') ?> / ملخص:</strong></td>
             <td>&nbsp;</td>
         </tr>
         <tr class="f_summary">
-            <td><?php echo $this->lang->line('SubTotal') ?>:</td>
+            <td><?php echo $this->lang->line('SubTotal') ?> / المجموع الفرعي:</td>
             <td><?php echo amountExchange($sub_t, $invoice['multi'], $invoice['loc']); ?></td>
         </tr>
         <?php if ($invoice['tax'] > 0) {
             echo '<tr>
-            <td> ' . $this->lang->line('Total Tax') . ' :</td>
+            <td> ' . $this->lang->line('Total Tax') . ' / مجموع الضريبة :</td>
             <td>' . amountExchange($invoice['tax'], $invoice['multi'], $invoice['loc']) . '</td>
         </tr>';
         }
         if ($invoice['discount'] > 0) {
             echo '<tr>
-            <td>' . $this->lang->line('Total Discount') . ':</td>
+            <td>' . $this->lang->line('Total Discount') . ' / /إجمالي الخصم:</td>
             <td>' . amountExchange($invoice['discount'], $invoice['multi'], $invoice['loc']) . '</td>
         </tr>';
         }
         if ($invoice['shipping'] > 0) {
             echo '<tr>
-            <td>' . $this->lang->line('Shipping') . ':</td>
+            <td>' . $this->lang->line('Shipping') . ' / شحن  :</td>
             <td>' . amountExchange($invoice['shipping'], $invoice['multi'], $invoice['loc']) . '</td>
         </tr>';
         }
         ?>
         <tr>
-            <td><?php echo $this->lang->line('Balance Due') ?>:</td>
+            <td><?php echo $this->lang->line('Balance Due') ?> / الرصيد المستحق  :</td>
             <td><strong><?php $rming = $invoice['total'] - $invoice['pamnt'];
     if ($rming < 0) {
         $rming = 0;
@@ -404,12 +407,41 @@
         $rming = round($rming, $round_off['active'], constant($round_off['other']));
     }
     echo amountExchange($rming, $invoice['multi'], $invoice['loc']);
-    echo '</strong></td>
-		</tr>
-		</table><br><div class="sign">' . $this->lang->line('Authorized person') . '</div><div class="sign1"><img src="' . FCPATH . 'userfiles/employee_sign/' . $employee['sign'] . '" width="160" height="50" border="0" alt=""></div><div class="sign2">(' . $employee['name'] . ')</div><div class="terms">' . $invoice['notes'] . '<hr><strong>' . $this->lang->line('Terms') . ':</strong><br>';
-
-    echo '<strong>' . $invoice['termtit'] . '</strong><br>' . $invoice['terms'];
+     echo '</strong></td>
+        </tr>
+        <tr>
+            <td style="border: 0px;"><br>
+                <div class="sign">Prepared By</div><br><br>
+                <div class="sign1">____________________________________</div><br>
+            </td>
+            <td style="border: 1px solid #fff;"></td>
+            <td style="border: 0px;"><br>
+                <div class="sign2">Approved By</div><br><br>
+                <div class="sign1">____________________________________</div> 
+            </td>
+        </tr>
+        </table>';
     ?></div>
+
+    <table>
+        <tbody> 
+        <tr>
+            <td><?php
+                    echo $invoice['notes'] . '<strong>' . $this->lang->line('Terms') . ':</strong>'?>
+                <?php echo
+                    '<strong>' . $invoice['termtit'] . '</strong><br>' . $invoice['terms'];?>
+            </td>
+            <td><?php
+                    echo '<br><br><strong>Payable to:</strong>'?>
+                <?php echo
+                    '<p>Beneficiary name: Shades House Office</p>
+                <p>IBAN: SA6045000000011572609001</p>
+                <p>Account Currency: SAR</p>
+                <p>Bank: SABB</p> </div>';?>
+            </td> 
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>
