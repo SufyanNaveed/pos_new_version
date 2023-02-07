@@ -237,6 +237,7 @@ class Pos_invoices extends CI_Controller
         $discountFormat = $this->input->post('discountFormat');
         $pterms = $this->input->post('pterms');
         $currency = $this->input->post('mcurrency');
+        $wholesale_check = $this->input->post('wholesale_check');
         $total_discount = rev_amountExchange_s($this->input->post('after_disc'), $currency, $this->aauth->get_user()->loc);
         $disc_val = numberClean($this->input->post('disc_val'));
         $ship_taxtype = $this->input->post('ship_taxtype');
@@ -351,7 +352,8 @@ class Pos_invoices extends CI_Controller
             'pmethod' => $pmethod, 'notes' => $notes, 'status' => $status, 'csd' => $customer_id, 
             'eid' => $emp, 'pamnt' => 0, 'taxstatus' => $tax, 'discstatus' => $discstatus, 
             'format_discount' => $discountFormat, 'refer' => $refer, 'term' => $pterms, 
-            'multi' => $currency, 'i_class' => 1, 'loc' => $this->aauth->get_user()->loc);
+            'multi' => $currency, 'i_class' => 1, 'loc' => $this->aauth->get_user()->loc,
+            'wholesale' => $wholesale_check);
 
 
             if ($this->db->insert('geopos_invoices', $data)) {
@@ -369,6 +371,7 @@ class Pos_invoices extends CI_Controller
                 $product_name1 = $this->input->post('product_name', true);
                 $product_qty = $this->input->post('product_qty');
                 $product_price = $this->input->post('product_price');
+                $product_wholesale_price = $this->input->post('wholesale_price');
                 $product_tax = $this->input->post('product_tax');
                 $product_discount = $this->input->post('product_discount');
                 $product_subtotal = $this->input->post('product_subtotal');
@@ -392,7 +395,7 @@ class Pos_invoices extends CI_Controller
                             'product' => $product_name1[$key],
                             'code' => $product_hsn[$key],
                             'qty' => numberClean($product_qty[$key]),
-                            'price' => rev_amountExchange_s($product_price[$key], $currency, $this->aauth->get_user()->loc),
+                            'price' => $wholesale_check == 0 ? rev_amountExchange_s($product_price[$key], $currency, $this->aauth->get_user()->loc) : rev_amountExchange_s($product_wholesale_price[$key], $currency, $this->aauth->get_user()->loc),
                             'tax' => numberClean($product_tax[$key]),
                             'discount' => numberClean($product_discount[$key]),
                             'subtotal' => rev_amountExchange_s($product_subtotal[$key], $currency, $this->aauth->get_user()->loc),

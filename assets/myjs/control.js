@@ -179,8 +179,8 @@ $(document).ready(function () {
         if (custom_discount > 0) discount = accounting.formatNumber(custom_discount);
         var flag = true;
 
-             $('#v2_search_bar').attr('readonly',false);
-         $('#v2_search_bar').val('');
+            $('#v2_search_bar').attr('readonly',false);
+            $('#v2_search_bar').val('');
             $('.pdIn').each(function () {
 
                 if (pid == $(this).val()) {
@@ -215,7 +215,7 @@ $(document).ready(function () {
                 var cvalue = parseInt(ganak);
                 var functionNum = "'" + cvalue + "'";
                 count = $('#saman-row div').length;
-                var data = ' <div class="row  m-0 pt-1 pb-1 border-bottom"  id="ppid-' + cvalue + '"> <div class="col-6 "> <span class="quantity"><input type="text" class="form-control req amnt display-inline mousetrap" name="product_qty[]" inputmode="numeric" id="amount-' + cvalue + '" onkeypress="return isNumber(event)" onkeyup="rowTotal(' + functionNum + '), billUpyog()" autocomplete="off" value="1" ><div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div></span>' + $(this).attr('data-name') + '-' + $(this).attr('data-pcode') + '</div> <div class="col-3"> ' + $(this).attr('data-price') + ' </div> <div class="col-3"><strong><span class="ttlText" id="result-' + cvalue + '">0</span></strong><a data-rowid="' + cvalue + '" class="red removeItem" title="Remove"> <i class="fa fa-trash"></i> </a></div><input type="hidden" class="form-control text-center" name="product_name[]" id="productname-' + cvalue + '" value="' + $(this).attr('data-name') + '-' + $(this).attr('data-pcode') + '"><input type="hidden" id="alert-' + cvalue + '" value="' + $(this).attr('data-stock') + '"  name="alert[]"><input type="hidden" class="form-control req prc" name="product_price[]" id="price-' + cvalue + '" onkeypress="return isNumber(event)" onkeyup="rowTotal(' + functionNum + '), billUpyog()" autocomplete="off"  value="' + $(this).attr('data-price') + '" inputmode="numeric"> <input type="hidden" class="form-control vat" name="product_tax[]" id="vat-' + cvalue + '" onkeypress="return isNumber(event)" onkeyup="rowTotal(' + functionNum + '), billUpyog()" autocomplete="off"  value="' + t_r + '"><input type="hidden" class="form-control discount pos_w" name="product_discount[]" onkeypress="return isNumber(event)" id="discount-' + cvalue + '" onkeyup="rowTotal(' + functionNum + '), billUpyog()" autocomplete="off"  value="' + discount + '"><input type="hidden" name="taxa[]" id="taxa-' + cvalue + '" value="0"><input type="hidden" name="disca[]" id="disca-' + cvalue + '" value="0"><input type="hidden" class="ttInput" name="product_subtotal[]" id="total-' + cvalue + '" value="0"> <input type="hidden" class="pdIn" name="pid[]" id="pid-' + cvalue + '" value="' + $(this).attr('data-pid') + '"> <input type="hidden" name="unit[]" id="unit-' + cvalue + '" value="' + $(this).attr('data-unit') + '"><input type="hidden" name="hsn[]" id="hsn-' + cvalue + '" value="' + $(this).attr('data-pcode') + '"> <input type="hidden" name="serial[]" id="serial-' + cvalue + '" value="' + $(this).attr('data-serial') + '"></div>';
+                var data = ' <div class="row  m-0 pt-1 pb-1 border-bottom"  id="ppid-' + cvalue + '"> <div class="col-4 "> <span class="quantity"><input type="text" class="form-control req amnt display-inline mousetrap" name="product_qty[]" inputmode="numeric" id="amount-' + cvalue + '" onkeypress="return isNumber(event)" onkeyup="rowTotal(' + functionNum + '), billUpyog()" autocomplete="off" value="1" ><div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div></span>' + $(this).attr('data-name') + '-' + $(this).attr('data-pcode') + '</div> <div class="col-2 price"> ' + $(this).attr('data-price') + ' </div> <div class="col-3 wholesale_price"> ' + $(this).attr('data-wholesale_price') + ' </div> <div class="col-3"><strong><span class="ttlText" id="result-' + cvalue + '">0</span></strong><a data-rowid="' + cvalue + '" class="red removeItem" title="Remove"> <i class="fa fa-trash"></i> </a></div><input type="hidden" class="form-control text-center" name="product_name[]" id="productname-' + cvalue + '" value="' + $(this).attr('data-name') + '-' + $(this).attr('data-pcode') + '"><input type="hidden" id="alert-' + cvalue + '" value="' + $(this).attr('data-stock') + '"  name="alert[]"><input type="hidden" class="form-control req prc" name="product_price[]" id="price-' + cvalue + '" onkeypress="return isNumber(event)" onkeyup="rowTotal(' + functionNum + '), billUpyog()" autocomplete="off"  value="' + $(this).attr('data-price') + '" inputmode="numeric"> <input type="hidden" class="form-control req prc" name="wholesale_price[]" id="price-' + cvalue + '" onkeypress="return isNumber(event)" onkeyup="rowTotal(' + functionNum + '), billUpyog()" autocomplete="off"  value="' + $(this).attr('data-wholesale_price') + '" inputmode="numeric"> <input type="hidden" class="form-control vat" name="product_tax[]" id="vat-' + cvalue + '" onkeypress="return isNumber(event)" onkeyup="rowTotal(' + functionNum + '), billUpyog()" autocomplete="off"  value="' + t_r + '"><input type="hidden" class="form-control discount pos_w" name="product_discount[]" onkeypress="return isNumber(event)" id="discount-' + cvalue + '" onkeyup="rowTotal(' + functionNum + '), billUpyog()" autocomplete="off"  value="' + discount + '"><input type="hidden" name="taxa[]" id="taxa-' + cvalue + '" value="0"><input type="hidden" name="disca[]" id="disca-' + cvalue + '" value="0"><input type="hidden" class="ttInput" name="product_subtotal[]" id="total-' + cvalue + '" value="0"> <input type="hidden" class="pdIn" name="pid[]" id="pid-' + cvalue + '" value="' + $(this).attr('data-pid') + '"> <input type="hidden" name="unit[]" id="unit-' + cvalue + '" value="' + $(this).attr('data-unit') + '"><input type="hidden" name="hsn[]" id="hsn-' + cvalue + '" value="' + $(this).attr('data-pcode') + '"> <input type="hidden" name="serial[]" id="serial-' + cvalue + '" value="' + $(this).attr('data-serial') + '"><input type="hidden" name="wholesale_check" id="wholesale_check-' + cvalue + '" value="0"></div>';
                 //ajax request
                 // $('#saman-row').append(data);
                 $('#pos_items').append(data);
@@ -224,21 +224,23 @@ $(document).ready(function () {
                 $('#ganak').val(cvalue + 1);
                 $('#amount-' + cvalue).focus();
             }
-                 var whr = $('#v2_warehouses option:selected').val();
-                            var cat = $('#v2_categories option:selected').val();
+            var whr = $('#v2_warehouses option:selected').val();
+            var cat = $('#v2_categories option:selected').val();
+            $.ajax({
+                type: "POST",
+                url: baseurl + 'search_products/v2_pos_search',
+                data: 'name=' + $(this).val() + '&wid=' + whr + '&cid=' + cat + '&' + crsf_token + '=' + crsf_hash+'&bar=' + $('#bar_only').prop('checked')+'&bar=' + $('#bar_only').prop('checked'),
+                beforeSend: function () {
+                    $("#customer-box").css("background", "#FFF url(" + baseurl + "assets/custom/load-ring.gif) no-repeat 165px");
+                },
+                success: function (data) {
+                    $("#pos_item").html(data);
+                    if($('#wholesale_only').is(':checked')){
+                        $("#wholesale_only").click().click();
+                    }
 
-                                $.ajax({
-                                    type: "POST",
-                                    url: baseurl + 'search_products/v2_pos_search',
-                                    data: 'name=' + $(this).val() + '&wid=' + whr + '&cid=' + cat + '&' + crsf_token + '=' + crsf_hash+'&bar=' + $('#bar_only').prop('checked')+'&bar=' + $('#bar_only').prop('checked'),
-                                    beforeSend: function () {
-                                        $("#customer-box").css("background", "#FFF url(" + baseurl + "assets/custom/load-ring.gif) no-repeat 165px");
-                                    },
-                                    success: function (data) {
-                                        $("#pos_item").html(data);
-
-                                    }
-                                });
+                }
+            });
 
 
 
@@ -259,11 +261,11 @@ $(document).ready(function () {
      var flag = true;
      var barcode_flag = true;
 
-     var bar = $(this).attr('data-bar');
-     var search = $('#v2_search_bar').val();
-  $('#v2_search_bar').attr('readonly',false);
-         $('#v2_search_bar').val('');
-     if (bar && search && bar == search) {
+    var bar = $(this).attr('data-bar');
+    var search = $('#v2_search_bar').val();
+    $('#v2_search_bar').attr('readonly',false);
+    $('#v2_search_bar').val('');
+    if (bar && search && bar == search) {
 
          $('.pdIn').each(function () {
 

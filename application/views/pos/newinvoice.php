@@ -17,12 +17,15 @@
                         </div>
                     </div>
                     <div id="customer-box-result" class="col-md-12"></div>
-                    <div id="customer" class="col-md-12 ml-3">
+                    <div id="customer" class="col-md-12 ml-3" style="margin-bottom: -40px;">
                         <div class="clientinfo">
-
                             <input type="hidden" name="customer_id" id="customer_id" value="1">
                             <div id="customer_name"><?php echo $this->lang->line('Default'); ?>: <strong>Walk
-                                    In </strong></div>
+                                In </strong>
+                            </div>
+                            <div style="text-align:right;padding-right: 25px; padding-bottom: 20px;" id="customer_name"> Wholesale Price &nbsp;
+                                <input type="checkbox" aria-label="Enable Whole Sale" value="1" id="wholesale_only" style="width: 15px !important; margin-top: -4px;">
+                            </div>
                         </div>
 
 
@@ -34,12 +37,15 @@
 
                         <br>
                         <div class="row bg-gradient-directional-purple white m-0 pt-1 pb-1">
-                            <div class="col-6 ">
+                            <div class="col-4 ">
                                 <i class="fa fa-briefcase"></i>
                                 <?php echo $this->lang->line('Products') ?></th>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
                                 <i class="fa fa-money"></i><?php echo $this->lang->line('Price') ?>
+                            </div>
+                            <div class="col-3">
+                                <i class="fa fa-money"></i><?php echo $this->lang->line('Wholesale Price') ?>
                             </div>
                             <div class="col-3">
                                 <i
@@ -392,8 +398,7 @@
         </div>
     </div>
     <input type="hidden" value="pos_invoices/action" id="action-url">
-    <input type="hidden" value="0" id="subttlform"
-           name="subtotal">
+    <input type="hidden" value="0" id="subttlform" name="subtotal">
     <input type="hidden" value="search" id="billtype">
     <input type="hidden" value="0" name="counter" id="ganak">
     <input type="hidden" value="0" id="custom_discount">
@@ -1325,4 +1330,45 @@
 
     });
 
+    $(document.body).on('click', '#wholesale_only', function (e) {
+        if($('#wholesale_only').is(':checked')){
+            var sum_of_wholesale = 0;
+            var id = $('#pos_items').children().last().attr('id');
+            var counter = id.split('-');
+            for(var i=0; i <= counter[1]; i++){
+                if( $('#ppid-'+i).length){
+                    var wholesale = $('#ppid-'+i+' > .wholesale_price').text();
+                    var quantity = $('#amount-'+i).val();
+                    var wholesale_quantity = wholesale * parseInt(quantity)
+                    $('#result-'+i).html((wholesale_quantity).toFixed(2));
+                    sum_of_wholesale += parseFloat(wholesale_quantity) ;
+                    $('#total-'+i).val(wholesale_quantity.toFixed(2));
+                    $('#wholesale_check-'+i).val(1);
+                }
+            }
+            $('#bigtotal').html(sum_of_wholesale.toFixed(2));
+            $('#invoiceyoghtml').val(sum_of_wholesale.toFixed(2));
+            $('#subttlform').val(sum_of_wholesale.toFixed(2));
+            $('#wholesale_check').val(1);
+        }else{
+            var sum_of_price = 0;
+            var id = $('#pos_items').children().last().attr('id');
+            var counter = id.split('-');
+            for(var i=0; i < counter[1]; i++){
+                if( $('#ppid-'+i).length){
+                    var price = $('#ppid-'+i+' > .price').text();
+                    var quantity = $('#amount-'+i).val();
+                    var price_quantity = price * parseInt(quantity)
+                    $('#result-'+i).html((price_quantity).toFixed(2));
+                    sum_of_price += parseFloat(price_quantity) ;
+                    $('#total-'+i).val(sum_of_price.toFixed(2));
+                } 
+            }
+            $('#bigtotal').html(sum_of_price.toFixed(2));
+            $('#invoiceyoghtml').val(sum_of_price.toFixed(2));
+            $('#subttlform').val(sum_of_wholesale.toFixed(2));
+            $('#wholesale_check').val(0);
+
+        }
+    });
 </script>

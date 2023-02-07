@@ -328,8 +328,8 @@ class Search_products extends CI_Controller
         $name = $this->input->post('name', true);
         $cid = $this->input->post('cid', true);
         $wid = $this->input->post('wid', true);
-         $enable_bar = $this->input->post('bar', true);
-$flag_p=false;
+        $enable_bar = $this->input->post('bar', true);
+        $flag_p=false;
 
         $qw = '';
 
@@ -358,9 +358,9 @@ $flag_p=false;
         }
 
         $bar = '';
-   $p_class='v2_select_pos_item';
+        $p_class='v2_select_pos_item';
         if ($enable_bar=='true' AND is_numeric($name) AND strlen($name)>8) {
-$flag_p=true;
+        $flag_p=true;
             $bar = " (geopos_products.barcode = '" . (substr($name, 0, -1)) . "' OR geopos_products.barcode LIKE '" . $name . "%')";
 
                $query = "SELECT geopos_products.*  FROM geopos_products $join WHERE " . $qw . "$bar AND (geopos_products.qty>0) ORDER BY geopos_products.product_name LIMIT 6";
@@ -388,7 +388,7 @@ if($flag_p) {
     foreach ($result as $row) {
         if ($bar) $bar = $row['barcode'];
         $out .= '    <div class="col-2 border mb-1"  ><div class=" rounded" >
-                                 <a  id="posp' . $i . '"  class="' . $p_class . ' round"   data-name="' . $row['product_name'] . '"  data-price="' . amountExchange_s($row['product_price'], 0, $this->aauth->get_user()->loc) . '"  data-tax="' . amountFormat_general($row['taxrate']) . '"  data-discount="' . amountFormat_general($row['disrate']) . '" data-pcode="' . $row['product_code'] . '"   data-pid="' . $row['pid'] . '"  data-stock="' . amountFormat_general($row['qty']) . '" data-unit="' . $row['unit'] . '" data-serial="' . @$row['serial'] . '" data-bar="' . $bar . '">
+                                 <a  id="posp' . $i . '"  class="' . $p_class . ' round"   data-name="' . $row['product_name'] . '"  data-price="' . amountExchange_s($row['product_price'], 0, $this->aauth->get_user()->loc). '"  data-wholesale_price="' . amountExchange_s($row['product_wholesale_price'], 0, $this->aauth->get_user()->loc) . '"  data-tax="' . amountFormat_general($row['taxrate']) . '"  data-discount="' . amountFormat_general($row['disrate']) . '" data-pcode="' . $row['product_code'] . '"   data-pid="' . $row['pid'] . '"  data-stock="' . amountFormat_general($row['qty']) . '" data-unit="' . $row['unit'] . '" data-serial="' . @$row['serial'] . '" data-bar="' . $bar . '">
                                         <img class="round"
                                              src="' . base_url('userfiles/product/' . $row['image']) . '"  style="max-height: 100%;max-width: 100%">
                                         <div class="text-center" style="margin-top: 4px;">
@@ -476,7 +476,7 @@ if($flag_p) {
         foreach ($result as $row) {
 
             $out .= '    <div class="col-2 border mb-1"  ><div class=" rounded" >
-                                 <a  id="posp' . $i . '"  class="v2_select_pos_item round"   data-name="' . $row['product_name'] . '"  data-price="' . amountExchange_s($row['product_price'], 0, $this->aauth->get_user()->loc) . '"  data-tax="' . amountFormat_general($row['taxrate']) . '"  data-discount="' . amountFormat_general($row['disrate']) . '" data-pcode="' . $row['product_code'] . '"   data-pid="' . $row['pid'] . '"  data-stock="' . amountFormat_general($row['qty']) . '" data-unit="' . $row['unit'] . '" data-serial="' . @$row['serial'] . '">
+                                 <a  id="posp' . $i . '"  class="v2_select_pos_item round"   data-name="' . $row['product_name'] . '"  data-price="' . amountExchange_s($row['product_price'], 0, $this->aauth->get_user()->loc). '"  data-wholesale_price="' . amountExchange_s($row['product_wholesale_price'], 0, $this->aauth->get_user()->loc) . '"  data-tax="' . amountFormat_general($row['taxrate']) . '"  data-discount="' . amountFormat_general($row['disrate']) . '" data-pcode="' . $row['product_code'] . '"   data-pid="' . $row['pid'] . '"  data-stock="' . amountFormat_general($row['qty']) . '" data-unit="' . $row['unit'] . '" data-serial="' . @$row['serial'] . '">
                                         <img class="round"
                                              src="' . base_url('userfiles/product/' . $row['image']) . '"  style="max-height: 100%;max-width: 100%">
                                         <div class="text-center" style="margin-top: 4px;">

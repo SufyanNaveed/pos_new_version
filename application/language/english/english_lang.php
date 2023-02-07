@@ -346,6 +346,7 @@ $lang['Product Name'] = "Product Name";
 $lang['Product Code'] = "Product Code";
 $lang['Product Retail Price'] = "Product Retail Price";
 $lang['Product Wholesale Price'] = "Product Wholesale Price";
+$lang['Wholesale Price'] = "Wholesale Price";
 $lang['Default TAX Rate'] = "Default TAX Rate";
 $lang['Tax rate during'] = "You can change the Tax rate during invoice creation also";
 $lang['Default Discount Rate'] = "Default Discount Rate";
