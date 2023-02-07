@@ -98,6 +98,7 @@ class Products extends CI_Controller
             $row[] = $prd->c_title;
             $row[] = $prd->title;
             $row[] = amountExchange($prd->product_price, 0, $this->aauth->get_user()->loc);
+            $row[] = amountExchange($prd->product_wholesale_price, 0, $this->aauth->get_user()->loc);
             $row[] = '<a href="#" data-object-id="' . $pid . '" class="btn btn-success  btn-sm  view-object"><span class="fa fa-eye"></span> ' . $this->lang->line('View') . '</a> 
 <div class="btn-group">
                                     <button type="button" class="btn btn-indigo dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i>  ' . $this->lang->line('Print') . '</button>

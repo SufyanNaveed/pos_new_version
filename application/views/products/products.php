@@ -95,6 +95,7 @@
                         <th><?php echo $this->lang->line('Category') ?></th>
                         <th><?php echo $this->lang->line('Warehouse') ?></th>
                         <th><?php echo $this->lang->line('Price') ?></th>
+                        <th><?php echo $this->lang->line('Wholesale Price') ?></th>
                         <th><?php echo $this->lang->line('Settings') ?></th>
                     </tr>
                     </thead>
@@ -110,6 +111,7 @@
                         <th><?php echo $this->lang->line('Category') ?></th>
                         <th><?php echo $this->lang->line('Warehouse') ?></th>
                         <th><?php echo $this->lang->line('Price') ?></th>
+                        <th><?php echo $this->lang->line('Wholesale Price') ?></th>
                         <th><?php echo $this->lang->line('Settings') ?></th>
                     </tr>
                     </tfoot>
