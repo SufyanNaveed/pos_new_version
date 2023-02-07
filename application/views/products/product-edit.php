@@ -105,10 +105,8 @@
                         </div>
                     </div>
                     <div class="form-group row">
-
                         <label class="col-sm-2 control-label"
                                for="product_price"><?php echo $this->lang->line('Product Retail Price') ?>*</label>
-
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon"><?php echo $this->config->item('currency');
@@ -121,9 +119,21 @@
                         </div>
                     </div>
                     <div class="form-group row">
-
-                        <label class="col-sm-2 col-form-label"><?php echo $this->lang->line('Product Wholesale Price') ?></label>
-
+                        <label class="col-sm-2 control-label"
+                               for="product_wholesale_price"><?php echo $this->lang->line('Product Wholesale Price') ?>*</label>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon"><?php echo $this->config->item('currency');
+                                    echo $product['product_wholesale_price'] ?></span>
+                                <input type="text" name="product_wholesale_price" class="form-control required"
+                                       placeholder="0.00" aria-describedby="sizing-addon"
+                                       onkeypress="return isNumber(event)"
+                                       value="<?php echo edit_amountExchange_s($product['product_wholesale_price'], 0, $this->aauth->get_user()->loc) ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label"><?php echo $this->lang->line('Purchase Order') . $this->lang->line('Price') ?></label>
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon"><?php echo $this->config->item('currency') ?></span>

@@ -1250,13 +1250,13 @@
                 }
             }
 
-            if (event.keyCode == 13 && !$('#v2_search_bar').attr('readonly')) {
+            if (this.value.length == 13) {
+                console.log(this.value.length);
                 $('#v2_search_bar').attr('readonly', true);
                 wait = false;
                 def_timeout(1000).then(function () {
-                    $('#posp0').click();
-
-                    def_timeout(1800).then(function () {
+                $('#posp0').click();
+                def_timeout(1800).then(function () {
 
 
                         var whr = $('#v2_warehouses option:selected').val();

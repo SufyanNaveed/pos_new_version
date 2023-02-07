@@ -129,6 +129,7 @@ class Products extends CI_Controller
         $warehouse = $this->input->post('product_warehouse');
         $product_code = $this->input->post('product_code');
         $product_price = numberClean($this->input->post('product_price'));
+        $product_wholesale_price = numberClean($this->input->post('product_wholesale_price'));
         $factoryprice = numberClean($this->input->post('fproduct_price'));
         $taxrate = numberClean($this->input->post('product_tax', true));
         $disrate = numberClean($this->input->post('product_disc', true));
@@ -150,7 +151,7 @@ class Products extends CI_Controller
         $brand = $this->input->post('brand');
         $serial = $this->input->post('product_serial');
         if ($catid) {
-            $this->products->addnew($catid, $warehouse, $product_name, $product_code, $product_price, $factoryprice, $taxrate, $disrate, $product_qty, $product_qty_alert, $product_desc, $image, $unit, $barcode, $v_type, $v_stock, $v_alert, $wdate, $code_type, $w_type, $w_stock, $w_alert, $sub_cat, $brand, $serial);
+            $this->products->addnew($catid, $warehouse, $product_name, $product_code, $product_price, $product_wholesale_price, $factoryprice, $taxrate, $disrate, $product_qty, $product_qty_alert, $product_desc, $image, $unit, $barcode, $v_type, $v_stock, $v_alert, $wdate, $code_type, $w_type, $w_stock, $w_alert, $sub_cat, $brand, $serial);
         }
     }
 
@@ -231,6 +232,7 @@ class Products extends CI_Controller
         $warehouse = $this->input->post('product_warehouse');
         $product_code = $this->input->post('product_code');
         $product_price = numberClean($this->input->post('product_price'));
+        $product_wholesale_price = numberClean($this->input->post('product_wholesale_price'));
         $factoryprice = numberClean($this->input->post('fproduct_price'));
         $taxrate = numberClean($this->input->post('product_tax'));
         $disrate = numberClean($this->input->post('product_disc'));
@@ -255,7 +257,7 @@ class Products extends CI_Controller
         $serial['new'] = $this->input->post('product_serial');
         $serial['old'] = $this->input->post('product_serial_e');
         if ($pid) {
-            $this->products->edit($pid, $catid, $warehouse, $product_name, $product_code, $product_price, $factoryprice, $taxrate, $disrate, $product_qty, $product_qty_alert, $product_desc, $image, $unit, $barcode, $code_type, $sub_cat, $brand, $vari, $serial);
+            $this->products->edit($pid, $catid, $warehouse, $product_name, $product_code, $product_price, $product_wholesale_price, $factoryprice, $taxrate, $disrate, $product_qty, $product_qty_alert, $product_desc, $image, $unit, $barcode, $code_type, $sub_cat, $brand, $vari, $serial);
         }
     }
 

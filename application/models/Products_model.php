@@ -159,7 +159,7 @@ class Products_model extends CI_Model
         return $this->db->count_all_results();
     }
 
-    public function addnew($catid, $warehouse, $product_name, $product_code, $product_price, $factoryprice, $taxrate, $disrate, $product_qty, $product_qty_alert, $product_desc, $image, $unit, $barcode, $v_type, $v_stock, $v_alert, $wdate, $code_type, $w_type = '', $w_stock = '', $w_alert = '', $sub_cat = '', $b_id = '', $serial = '')
+    public function addnew($catid, $warehouse, $product_name, $product_code, $product_price, $product_wholesale_price, $factoryprice, $taxrate, $disrate, $product_qty, $product_qty_alert, $product_desc, $image, $unit, $barcode, $v_type, $v_stock, $v_alert, $wdate, $code_type, $w_type = '', $w_stock = '', $w_alert = '', $sub_cat = '', $b_id = '', $serial = '')
     {
         $ware_valid = $this->valid_warehouse($warehouse);
         if (!$sub_cat) $sub_cat = 0;
@@ -182,6 +182,7 @@ class Products_model extends CI_Model
                         'product_name' => $product_name,
                         'product_code' => $product_code,
                         'product_price' => $product_price,
+                        'product_wholesale_price' => $product_wholesale_price,
                         'fproduct_price' => $factoryprice,
                         'taxrate' => $taxrate,
                         'disrate' => $disrate,
@@ -207,6 +208,7 @@ class Products_model extends CI_Model
                         'product_name' => $product_name,
                         'product_code' => $product_code,
                         'product_price' => $product_price,
+                        'product_wholesale_price' => $product_wholesale_price,
                         'fproduct_price' => $factoryprice,
                         'taxrate' => $taxrate,
                         'disrate' => $disrate,
@@ -291,6 +293,7 @@ class Products_model extends CI_Model
                     'product_name' => $product_name,
                     'product_code' => $product_code,
                     'product_price' => $product_price,
+                    'product_wholesale_price' => $product_wholesale_price,
                     'fproduct_price' => $factoryprice,
                     'taxrate' => $taxrate,
                     'disrate' => $disrate,
@@ -313,6 +316,7 @@ class Products_model extends CI_Model
                     'product_name' => $product_name,
                     'product_code' => $product_code,
                     'product_price' => $product_price,
+                    'product_wholesale_price' => $product_wholesale_price,
                     'fproduct_price' => $factoryprice,
                     'taxrate' => $taxrate,
                     'disrate' => $disrate,
@@ -392,7 +396,7 @@ class Products_model extends CI_Model
         }
     }
 
-    public function edit($pid, $catid, $warehouse, $product_name, $product_code, $product_price, $factoryprice, $taxrate, $disrate, $product_qty, $product_qty_alert, $product_desc, $image, $unit, $barcode, $code_type, $sub_cat = '', $b_id = '', $vari = null, $serial = null)
+    public function edit($pid, $catid, $warehouse, $product_name, $product_code, $product_price, $product_wholesale_price, $factoryprice, $taxrate, $disrate, $product_qty, $product_qty_alert, $product_desc, $image, $unit, $barcode, $code_type, $sub_cat = '', $b_id = '', $vari = null, $serial = null)
     {
         $this->db->select('qty');
         $this->db->from('geopos_products');
@@ -409,6 +413,7 @@ class Products_model extends CI_Model
                     'product_name' => $product_name,
                     'product_code' => $product_code,
                     'product_price' => $product_price,
+                    'product_wholesale_price' => $product_wholesale_price,
                     'fproduct_price' => $factoryprice,
                     'taxrate' => $taxrate,
                     'disrate' => $disrate,
@@ -449,6 +454,7 @@ class Products_model extends CI_Model
                 'product_name' => $product_name,
                 'product_code' => $product_code,
                 'product_price' => $product_price,
+                'product_wholesale_price' => $product_wholesale_price,
                 'fproduct_price' => $factoryprice,
                 'taxrate' => $taxrate,
                 'disrate' => $disrate,
