@@ -1348,13 +1348,12 @@
             }
             $('#bigtotal').html(sum_of_wholesale.toFixed(2));
             $('#invoiceyoghtml').val(sum_of_wholesale.toFixed(2));
-            $('#subttlform').val(sum_of_wholesale.toFixed(2));
-            $('#wholesale_check').val(1);
+            $('#subttlform').val(sum_of_wholesale.toFixed(2)); 
         }else{
             var sum_of_price = 0;
             var id = $('#pos_items').children().last().attr('id');
             var counter = id.split('-');
-            for(var i=0; i < counter[1]; i++){
+            for(var i=0; i <= counter[1]; i++){
                 if( $('#ppid-'+i).length){
                     var price = $('#ppid-'+i+' > .price').text();
                     var quantity = $('#amount-'+i).val();
@@ -1362,13 +1361,13 @@
                     $('#result-'+i).html((price_quantity).toFixed(2));
                     sum_of_price += parseFloat(price_quantity) ;
                     $('#total-'+i).val(sum_of_price.toFixed(2));
+                    $('#wholesale_check-'+i).val(0);
+                    
                 } 
             }
             $('#bigtotal').html(sum_of_price.toFixed(2));
             $('#invoiceyoghtml').val(sum_of_price.toFixed(2));
-            $('#subttlform').val(sum_of_wholesale.toFixed(2));
-            $('#wholesale_check').val(0);
-
+            $('#subttlform').val(sum_of_price.toFixed(2));
         }
     });
 </script>
