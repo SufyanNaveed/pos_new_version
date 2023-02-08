@@ -199,7 +199,7 @@
                             <tbody>
                             <tr>
                                 <td><input type="text" class="form-control text-center" name="product_name[]"
-                                           placeholder="<?php echo $this->lang->line('Enter Product name') ?>"
+                                           placeholder="<?php echo $this->lang->line('Enter Product name').' or Barcode' ?>"
                                            id='productname-0'>
                                 </td>
                                 <td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-0"
