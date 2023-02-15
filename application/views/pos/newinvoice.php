@@ -1029,7 +1029,8 @@
     });
     $('#pos_basic_pay').on("click", function (e) {
         var credit_setting = $('#credit_setting').val();
-        if(credit_setting == 1 && $('#balance1').val() > 0 ){
+        var balance1 = $('#balance1').val();
+        if(credit_setting == 1 && balance1 > 0 ){
             $('#balance1').css('border','2px solid red');
             $('#credit_msg').html('<b>Your balance due is greater then zero.</b>');
             $('#credit_msg').css('color','red');
