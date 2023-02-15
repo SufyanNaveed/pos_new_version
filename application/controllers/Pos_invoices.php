@@ -96,6 +96,7 @@ class Pos_invoices extends CI_Controller
         $data['cat'] = $this->categories_model->category_list();
         $data['taxdetails'] = $this->common->taxdetail();
         $data['acc_list'] = $this->invocies->accountslist();
+        $data['credit_settings'] = $this->plugins->universal_api(71);
 
         $data['emp'] = $this->plugins->universal_api(69);
         if ($data['emp']['key1']) {

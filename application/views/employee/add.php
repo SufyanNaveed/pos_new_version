@@ -176,6 +176,17 @@
             <div class="form-group row">
 
                 <label class="col-sm-2 col-form-label"
+                       for="phone"><?php echo 'Target' ?></label>
+
+                <div class="col-sm-5">
+                    <input type="text" placeholder="Target" onkeypress="return isNumber(event)"
+                           class="form-control margin-bottom" name="target"
+                           value="0">
+                </div>
+            </div>
+            <div class="form-group row">
+
+                <label class="col-sm-2 col-form-label"
                        for="city"><?php echo $this->lang->line('Commission') ?>
                     %</label>
 

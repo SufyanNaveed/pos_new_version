@@ -792,10 +792,12 @@ FROM geopos_invoices AS i LEFT JOIN geopos_customers AS c ON i.csd=c.id GROUP BY
             $stock = $this->input->post('stock', true);
             $serial = $this->input->post('serial', true);
             $expired = $this->input->post('expired', true);
-            $this->settings->billing_settings($stock, $serial, $expired);
+            $credit = $this->input->post('credit', true);
+            $this->settings->billing_settings($stock, $serial, $expired,$credit);
         } else {
             $data['zero_stock'] = $this->plugins->universal_api(63);
             $data['billing_settings'] = $this->plugins->universal_api(67);
+            $data['credit_settings'] = $this->plugins->universal_api(71);
             $head['title'] = "Billing Settings";
             $head['usernm'] = $this->aauth->get_user()->username;
             $this->load->view('fixed/header', $head);

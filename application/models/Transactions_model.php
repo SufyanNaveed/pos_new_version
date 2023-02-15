@@ -28,8 +28,10 @@ class Transactions_model extends CI_Model
 
     private function _get_datatables_query()
     {
-        $this->db->select('geopos_transactions.*,geopos_transactions.id as id');
+        $this->db->select('geopos_transactions.*,geopos_transactions.id as id, geopos_employees.username as sale_person, geopos_invoices.tid as invoice_no');
         $this->db->from($this->table);
+        $this->db->join('geopos_employees', 'geopos_employees.id = geopos_transactions.eid', 'left');
+        $this->db->join('geopos_invoices', 'geopos_invoices.id = geopos_transactions.tid', 'left');
         switch ($this->opt) {
             case 'income':
                 $this->db->where('type', 'Income');
@@ -459,6 +461,41 @@ class Transactions_model extends CI_Model
         }
         $query = $this->db->get();
         return $query->row_array();
+    }
+
+    public function trans_sum()
+    {
+        $this->db->select('SUM(credit) as cash');
+        $this->db->from('geopos_transactions');
+        $this->db->where('method', 'cash');
+        if ($this->aauth->get_user()->loc) {
+            $this->db->group_start();
+            $this->db->where('loc', $this->aauth->get_user()->loc);
+            if (BDATA) $this->db->or_where('loc', 0);
+            $this->db->group_end();
+        } elseif (!BDATA) {
+            $this->db->where('loc', 0);
+        }
+        $query = $this->db->get();
+        $res = $query->row();
+        $trans_sum['cash'] = $res->cash;
+
+        $this->db->select('SUM(credit)');
+        $this->db->from('geopos_transactions');
+        $this->db->where('method', 'card');
+        if ($this->aauth->get_user()->loc) {
+            $this->db->group_start();
+            $this->db->where('loc', $this->aauth->get_user()->loc);
+            if (BDATA) $this->db->or_where('loc', 0);
+            $this->db->group_end();
+        } elseif (!BDATA) {
+            $this->db->where('loc', 0);
+        }
+        $query = $this->db->get();
+        $res1 = $query->row();
+        $trans_sum['card'] = $res1->card;
+        
+        return $trans_sum;
     }
 
 

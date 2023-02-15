@@ -1,4 +1,59 @@
 <div class="content-body">
+<div class="row">
+        <div class="col-xl-4 col-lg-6 col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="media-body text-left">
+                                <h3 class="success"><span id="dash_0"><?php echo amountExchange($trans_sum['cash'], 0, $this->aauth->get_user()->loc); ?></span></h3>
+                                <span><?php echo $this->lang->line('Cash') ?></span>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="icon-rocket success font-large-2 float-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-6 col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="media-body text-left">
+                                <h3 class="danger"><span id="dash_1"><?php echo amountExchange($trans_sum['card'], 0, $this->aauth->get_user()->loc); ?></span></h3>
+                                <span><?php echo $this->lang->line('Card') ?></span>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="icon-eyeglasses danger font-large-2 float-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-lg-6 col-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-body">
+                        <div class="media d-flex">
+                            <div class="media-body text-left">
+                                <h3 class="purple"><span id="dash_2"><?php echo amountExchange($trans_sum['cash'] + $trans_sum['card'], 0, $this->aauth->get_user()->loc); ?></span></h3>
+                                <span><?php echo $this->lang->line('Total') ?></span>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="icon-pie-chart purple font-large-2 float-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
     <div class="card">
         <div class="card-header">
             <h5><?php echo $this->lang->line('Transactions') ?> <a
@@ -30,6 +85,8 @@
                 <tr>
 
                     <th><?php echo $this->lang->line('Date') ?></th>
+                    <th><?php echo '#' ?></th>
+                    <th><?php echo $this->lang->line('Sales Person') ?></th>
                     <th><?php echo $this->lang->line('Account') ?></th>
                     <th><?php echo $this->lang->line('Debit') ?></th>
                     <th><?php echo $this->lang->line('Credit') ?></th>
@@ -46,6 +103,8 @@
                 <tfoot>
                 <tr>
                     <th><?php echo $this->lang->line('Date') ?></th>
+                    <th><?php echo '#' ?></th>
+                    <th><?php echo $this->lang->line('Sales Person') ?></th>
                     <th><?php echo $this->lang->line('Account') ?></th>
                     <th><?php echo $this->lang->line('Debit') ?></th>
                     <th><?php echo $this->lang->line('Credit') ?></th>

@@ -622,8 +622,11 @@
 
                     <div class="text-center">
                         <h1 id="b_total"></h1>
+                        <br>
+                        <Span id="credit_msg"></span>
                         <button class="btn btn-success pull-right new_payment_form" type="button" data-count="0"><i class="fa fa-plus"></i></button><br><br>                                
                     </div>
+                    <input type="hidden" value="<?php echo $credit_settings['key1'];?>" name="credit_setting" id="credit_setting">
                     <div class="row">
                         <div class="col-6">
                             <div class="card-title">
@@ -1025,6 +1028,15 @@
         update_register();
     });
     $('#pos_basic_pay').on("click", function (e) {
+        var credit_setting = $('#credit_setting').val();
+        if(credit_setting == 1 && $('#balance1').val() > 0 ){
+            $('#balance1').css('border','2px solid red');
+            $('#credit_msg').html('<b>Your balance due is greater then zero.</b>');
+            $('#credit_msg').css('color','red');
+            $('#pos_basic_pay #pos_basic_print').attr('disabled','disabled');
+            return false;
+        }
+        
         var counter = $('.new_payment_form').attr('data-count');
         e.preventDefault();
             if(counter == 0 || $('#p_amount_1').val() != ''){

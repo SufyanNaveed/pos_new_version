@@ -71,7 +71,7 @@ class Employee_model extends CI_Model
         return $query->result_array();
     }
 
-    public function update_employee($id, $name, $phone, $phonealt, $address, $city, $region, $country, $postbox, $location, $salary = 0, $department = -1, $commission = 0, $roleid = false)
+    public function update_employee($id, $name, $phone, $phonealt, $address, $city, $region, $country, $postbox, $location, $salary = 0, $target, $department = -1, $commission = 0, $roleid = false)
     {
         $this->db->select('salary');
         $this->db->from('geopos_employees');
@@ -95,6 +95,7 @@ class Employee_model extends CI_Model
             'country' => $country,
             'postbox' => $postbox,
             'salary' => $salary,
+            'target' => $target,
             'c_rate' => $commission
         );
         if ($department > -1) {
@@ -108,6 +109,7 @@ class Employee_model extends CI_Model
                 'country' => $country,
                 'postbox' => $postbox,
                 'salary' => $salary,
+                'target' => $target,
                 'dept' => $department,
                 'c_rate' => $commission
             );
@@ -354,7 +356,7 @@ class Employee_model extends CI_Model
     }
 
 
-    public function add_employee($id, $username, $name, $roleid, $phone, $address, $city, $region, $country, $postbox, $location, $salary = 0, $commission = 0, $department = 0)
+    public function add_employee($id, $username, $name, $roleid, $phone, $address, $city, $region, $country, $postbox, $location, $salary = 0, $target, $commission = 0, $department = 0)
     {
         $data = array(
             'id' => $id,
@@ -368,6 +370,7 @@ class Employee_model extends CI_Model
             'phone' => $phone,
             'dept' => $department,
             'salary' => $salary,
+            'target' => $target,
             'c_rate' => $commission
         );
 

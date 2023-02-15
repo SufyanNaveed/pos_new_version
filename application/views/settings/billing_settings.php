@@ -100,7 +100,33 @@
                     </div>
                 </div>
 
+                <hr>
+                <h5><?php echo 'Allow credit to customers' ?> </h5>
+                <hr>
+                <div class="form-group row">
 
+                    <label class="col-sm-2 col-form-label"
+                           for="product_name">   <h5><?php echo 'Allow credit to customers' ?> </h5></label>
+
+                    <div class="col-sm-6"><select name="credit" class="form-control">
+
+                            <?php switch ($credit_settings['key1']) {
+                                case '0' :
+                                    echo '<option value="0">** ' . $this->lang->line('No') . ' **</option>';
+                                    break;
+                                case '1' :
+                                    echo '<option value="1">**' . $this->lang->line('Yes') . '**</option>';
+                                    break;
+
+                            } ?>
+                            <option value="0"><?php echo $this->lang->line('No') ?></option>
+                            <option value="1"><?php echo $this->lang->line('Yes') ?></option>
+
+
+                        </select>
+
+                    </div>
+                </div>
 
                 <div class="form-group row">
 

@@ -36,14 +36,14 @@ class Transactions extends CI_Controller
     public function index()
     {
         if (!$this->aauth->premission(5)) {
-
             exit('<h3>Sorry! You have insufficient permissions to access this section</h3>');
 
         }
         $head['title'] = "Transaction";
         $head['usernm'] = $this->aauth->get_user()->username;
+        $data['trans_sum'] = $this->transactions->trans_sum();
         $this->load->view('fixed/header', $head);
-        $this->load->view('transactions/index');
+        $this->load->view('transactions/index', $data);
         $this->load->view('fixed/footer');
 
     }
@@ -440,7 +440,9 @@ class Transactions extends CI_Controller
             $no++;
             $row = array();
             $pid = $prd->id;
-            $row[] = dateformat($prd->date);
+            $row[] = $prd->date;
+            $row[] = $prd->invoice_no;
+            $row[] = $prd->sale_person;
             $row[] = $prd->account;
             $row[] = amountExchange($prd->debit, 0, $this->aauth->get_user()->loc);
             $row[] = amountExchange($prd->credit, 0, $this->aauth->get_user()->loc);

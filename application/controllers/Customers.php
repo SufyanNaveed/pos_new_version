@@ -843,4 +843,47 @@ class Customers extends CI_Controller
         echo json_encode(array('status' => 'Success', 'message' => $this->lang->line('Paid') . ' ' . amountExchange($amount), 'due' => amountExchange_s($due)));
     }
 
+
+    public function cus_report()
+    {
+        $head['usernm'] = $this->aauth->get_user()->username;
+        $head['title'] = 'Customers Wise Report';
+        $this->load->view('fixed/header', $head);
+        $this->load->view('reports/cus_report');
+        $this->load->view('fixed/footer');
+    }
+
+    public function load_cus_report()
+    {
+        $no = $this->input->post('start');
+
+        $list = $this->customers->get_cus_report_datatables();
+        $data = array();        
+        foreach ($list as $key=>$customers) {
+            
+            $row = array();
+            $row[] = $key+1;
+            $row[] = $customers->invoice_no;
+            $row[] = $customers->invoicedate;
+            $row[] = $customers->name;
+            $row[] = $customers->address;
+            $row[] = $customers->phone;
+            $row[] = $customers->email;
+            $row[] = $customers->items;
+            $row[] = str_replace(","," + ",$customers->price);
+            $row[] = str_replace(","," + ",$customers->tax);
+            $row[] = amountExchange($customers->pamnt, 0, $this->aauth->get_user()->loc);
+            $row[] = amountExchange($customers->cash, 0, $this->aauth->get_user()->loc);
+            $row[] = amountExchange($customers->card, 0, $this->aauth->get_user()->loc);
+            $row[] = $customers->notes;
+            $data[] = $row;
+        }
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->customers->count_all(),
+            "recordsFiltered" => $this->customers->count_filtered(),
+            "data" => $data,
+        ); 
+        echo json_encode($output);
+    }
 }

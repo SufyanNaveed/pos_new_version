@@ -1106,5 +1106,31 @@ class Customers_model extends CI_Model
         }
     }
 
+    public function get_cus_report_datatables(){
+        // $this->db->select('');
+        // $this->db->from('geopos_transactions');
+        // $where_clause = $this->db->get_compiled_select();
+
+
+        $this->db->select('geopos_invoices.*, geopos_invoices.tid as invoice_no,geopos_customers.*,
+        (SELECT group_concat(price) FROM geopos_invoice_items WHERE geopos_invoice_items.tid = geopos_invoices.id) AS price,
+        (SELECT group_concat(totaltax) FROM geopos_invoice_items WHERE geopos_invoice_items.tid = geopos_invoices.id) AS tax,
+        (SELECT credit FROM geopos_transactions WHERE geopos_transactions.tid = geopos_invoices.id AND method="cash") AS cash,
+        (SELECT credit FROM geopos_transactions WHERE geopos_transactions.tid = geopos_invoices.id AND method="Card Swipe") AS card
+        ');
+        $this->db->from('geopos_invoices');
+        $this->db->join('geopos_customers', 'geopos_customers.id = geopos_invoices.csd', 'left');
+        //$this->db->join('geopos_invoice_items', 'geopos_invoice_items.tid = geopos_invoices.id', 'left');
+        // $this->db->join('geopos_transactions', 'geopos_transactions.tid = geopos_invoices.id', 'left');
+        // $this->db->where('geopos_invoices.status!=', 'paid');
+        if ($this->aauth->get_user()->loc) {
+            $this->db->where('geopos_customers.loc', $this->aauth->get_user()->loc);
+        } elseif (!BDATA) {
+            $this->db->where('geopos_customers.loc', 0);
+        }
+        //$this->db->group_by('geopos_invoices.csd');
+        $query = $this->db->get();
+        return $query->result();
+    }
 
 }

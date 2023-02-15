@@ -1177,6 +1177,32 @@
             <?php }
             ?>
 
+            <li  class="dropdown nav-item" data-menu="dropdown">
+                <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                    <i class="ft-bar-chart-2"></i><span><?php echo $this->lang->line('Reports'); ?></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li data-menu="">
+                        <a class="dropdown-item" href="<?php echo base_url(); ?>customers/cus_report">
+                            <?php echo $this->lang->line('Customer') .' '. $this->lang->line('Report'); ?></a>
+                    </li>
+                    <li data-menu="">
+                        <a class="dropdown-item" href="<?php echo base_url(); ?>products/cus_report">
+                            <?php echo $this->lang->line('Item') .' '. $this->lang->line('Report'); ?></a>
+                    </li>
+
+                    <li data-menu="">
+                        <a class="dropdown-item" href="<?php echo base_url(); ?>products/cus_report">
+                            <?php echo $this->lang->line('Purchase') .' '. $this->lang->line('Report'); ?></a>
+                    </li>
+
+                    <li data-menu="">
+                        <a class="dropdown-item" href="<?php echo base_url(); ?>products/cus_report">
+                            <?php echo $this->lang->line('Stock') .' '. $this->lang->line('Report'); ?></a>
+                    </li>
+
+                </ul>
+            </li>
         </ul>
     </div>
     <!-- /horizontal menu content-->

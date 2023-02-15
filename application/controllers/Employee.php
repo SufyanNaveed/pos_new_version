@@ -131,9 +131,9 @@ class Employee extends CI_Controller
         $country = $this->input->post('country', true);
         $postbox = $this->input->post('postbox', true);
         $salary = numberClean($this->input->post('salary', true));
+        $target = numberClean($this->input->post('target', true));
         $commission = $this->input->post('commission', true);
         $department = $this->input->post('department', true);
-
 
         $a = $this->aauth->create_user($email, $password, $username);
 
@@ -143,7 +143,7 @@ class Employee extends CI_Controller
             if ($nuid > 0) {
 
 
-                $this->employee->add_employee($nuid, (string)$this->aauth->get_user($a)->username, $name, $roleid, $phone, $address, $city, $region, $country, $postbox, $location, $salary, $commission, $department);
+                $this->employee->add_employee($nuid, (string)$this->aauth->get_user($a)->username, $name, $roleid, $phone, $address, $city, $region, $country, $postbox, $location, $salary, $target, $commission, $department);
 
             }
 
@@ -394,10 +394,11 @@ class Employee extends CI_Controller
             $postbox = $this->input->post('postbox', true);
             $location = $this->input->post('location', true);
             $salary = numberClean($this->input->post('salary', true));
+            $target = numberClean($this->input->post('target', true));
             $department = $this->input->post('department', true);
             $commission = $this->input->post('commission', true);
             $roleid = $this->input->post('roleid', true);
-            $this->employee->update_employee($eid, $name, $phone, $phonealt, $address, $city, $region, $country, $postbox, $location, $salary, $department, $commission, $roleid);
+            $this->employee->update_employee($eid, $name, $phone, $phonealt, $address, $city, $region, $country, $postbox, $location, $salary,$target, $department, $commission, $roleid);
 
         } else {
             $head['usernm'] = $this->aauth->get_user($id)->username;

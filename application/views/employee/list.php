@@ -33,6 +33,7 @@
                         <th><?php echo $this->lang->line('Name') ?></th>
                         <th>Role</th>
                         <th><?php echo $this->lang->line('Status') ?></th>
+                        <th><?php echo 'Target'; ?></th>
                         <th><?php echo $this->lang->line('Actions') ?></th>
 
 
@@ -47,6 +48,7 @@
                         $name = $row['name'];
                         $role = user_role($row['roleid']);
                         $status = $row['banned'];
+                        $target = $row['target'];
 
                         if ($status == 1) {
                             $status = 'Deactive';
@@ -61,6 +63,7 @@
                     <td>$name</td>
                     <td>$role</td>                 
                     <td>$status</td>
+                    <td>$target</td>
                     <td><a href='" . base_url("employee/view?id=$aid") . "' class='btn btn-success btn-xs'><i class='fa fa-eye'></i> " . $this->lang->line('View') . "</a>&nbsp;&nbsp;$btn&nbsp;&nbsp;<a href='#pop_model' data-toggle='modal' data-remote='false' data-object-id='" . $aid . "' class='btn btn-danger btn-xs delemp' title='Delete'><i class='fa fa-trash'></i></a></td></tr>";
                         $i++;
                     }
@@ -72,6 +75,7 @@
                         <th><?php echo $this->lang->line('Name') ?></th>
                         <th>Role</th>
                         <th><?php echo $this->lang->line('Status') ?></th>
+                        <th><?php echo 'Target'; ?></th>
                         <th><?php echo $this->lang->line('Actions') ?></th>
                     </tr>
                     </tfoot>

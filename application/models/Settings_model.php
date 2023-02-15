@@ -481,12 +481,23 @@ class Settings_model extends CI_Model
         $this->db->update('univarsal_api');
     }
 
-        public function billing_settings($stock,$serial,$expired)
+    public function credit_billing($credit)
+    {
+        $data = array(
+            'key1' => $credit
+        );
+        $this->db->set($data);
+        $this->db->where('id', 71);
+        $this->db->update('univarsal_api');
+    }
+
+        public function billing_settings($stock,$serial,$expired,$credit)
     {
         $this->zerostock($stock);
+        $this->credit_billing($credit);
         $data = array(
             'key1' => $serial,
-             'key2' => $expired
+            'key2' => $expired
 
         );
         $this->db->set($data);
