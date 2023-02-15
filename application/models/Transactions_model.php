@@ -467,7 +467,7 @@ class Transactions_model extends CI_Model
     {
         $this->db->select('SUM(credit) as cash');
         $this->db->from('geopos_transactions');
-        $this->db->where('method', 'cash');
+        $this->db->where('method', 'Cash');
         if ($this->aauth->get_user()->loc) {
             $this->db->group_start();
             $this->db->where('loc', $this->aauth->get_user()->loc);
@@ -480,9 +480,9 @@ class Transactions_model extends CI_Model
         $res = $query->row();
         $trans_sum['cash'] = $res->cash;
 
-        $this->db->select('SUM(credit)');
+        $this->db->select('SUM(credit) as card');
         $this->db->from('geopos_transactions');
-        $this->db->where('method', 'card');
+        $this->db->where('method', 'Card Swipe');
         if ($this->aauth->get_user()->loc) {
             $this->db->group_start();
             $this->db->where('loc', $this->aauth->get_user()->loc);
