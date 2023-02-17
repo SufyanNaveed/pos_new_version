@@ -90,7 +90,8 @@
                     'processing': true,
                     'serverSide': true,
                     'stateSave': true,
-                    responsive: true,
+                    // responsive: true,
+                    scrollX: true,
                     <?php datatable_lang();?>
                     'order': [],
                     'ajax': {
