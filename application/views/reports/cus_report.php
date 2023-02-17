@@ -28,9 +28,9 @@ if ($this->input->get('due')) {
                        width="100%">
                     <thead>
                         <tr>
-                            <th>Sr.No</th>
+                            <th><?php echo $this->lang->line('serialNO') ?></th>
                             <th>#</th>
-                            <th>Date</th>
+                            <th><?php echo $this->lang->line('Date') ?></th>
                             <th><?php echo $this->lang->line('Name') ?></th>
                             <th><?php echo $this->lang->line('Address') ?></th>
                             <th><?php echo $this->lang->line('Phone') ?></th>
@@ -49,9 +49,9 @@ if ($this->input->get('due')) {
 
                     <tfoot>
                         <tr>
-                            <th>Sr.No</th>
+                            <th><?php echo $this->lang->line('serialNO') ?></th>
                             <th>#</th>
-                            <th>Date</th>
+                            <th><?php echo $this->lang->line('Date') ?></th>
                             <th><?php echo $this->lang->line('Name') ?></th>
                             <th><?php echo $this->lang->line('Address') ?></th>
                             <th><?php echo $this->lang->line('Phone') ?></th>

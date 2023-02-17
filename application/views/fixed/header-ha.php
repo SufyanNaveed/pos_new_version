@@ -1187,17 +1187,17 @@
                             <?php echo $this->lang->line('Customer') .' '. $this->lang->line('Report'); ?></a>
                     </li>
                     <li data-menu="">
-                        <a class="dropdown-item" href="<?php echo base_url(); ?>products/cus_report">
+                        <a class="dropdown-item" href="<?php echo base_url(); ?>pos_invoices/inv_report">
                             <?php echo $this->lang->line('Item') .' '. $this->lang->line('Report'); ?></a>
                     </li>
 
                     <li data-menu="">
-                        <a class="dropdown-item" href="<?php echo base_url(); ?>products/cus_report">
+                        <a class="dropdown-item" href="<?php echo base_url(); ?>purchase/pur_report">
                             <?php echo $this->lang->line('Purchase') .' '. $this->lang->line('Report'); ?></a>
                     </li>
 
                     <li data-menu="">
-                        <a class="dropdown-item" href="<?php echo base_url(); ?>products/cus_report">
+                        <a class="dropdown-item" href="<?php echo base_url(); ?>products/pro_report">
                             <?php echo $this->lang->line('Stock') .' '. $this->lang->line('Report'); ?></a>
                     </li>
 

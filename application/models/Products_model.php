@@ -796,4 +796,12 @@ FROM geopos_products $whr");
         $this->db->insert('geopos_movers', $data);
     }
 
+    public function get_pro_report_datatables(){
+        $this->db->select('geopos_products.*, geopos_product_cat.title as pro_cat
+        ');
+        $this->db->from('geopos_products');
+        $this->db->join('geopos_product_cat', 'geopos_product_cat.id = geopos_products.pcat', 'left');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

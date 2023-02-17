@@ -2106,4 +2106,72 @@ echo 6;
 
     }
 
+    public function inv_report()
+    {
+        $head['usernm'] = $this->aauth->get_user()->username;
+        $head['title'] = 'Item Report';
+        $this->load->view('fixed/header', $head);
+        $this->load->view('reports/inv_report');
+        $this->load->view('fixed/footer');
+    }
+
+    public function load_inv_report()
+    {
+        $no = $this->input->post('start');
+
+        $list = $this->invocies->get_inv_report_datatables();
+        $data = array();        
+        foreach ($list as $key=>$invoice) {
+            
+            $product = $this->invocies->get_product_detail($invoice->id);
+
+            $row = array();
+            $row[] = $key+1;
+            $row[] = $invoice->emp_name;
+            $row[] = $invoice->invoice_no;
+            $row[] = $invoice->invoicedate;
+            $row[] = $product->product_code;
+            $row[] = $product->product_name;
+            $row[] = $product->pro_cat;
+            $row[] = $invoice->items;
+            $row[] = str_replace(","," + ",$product->price);
+            $row[] = amountExchange($product->net_total, 0, $this->aauth->get_user()->loc);
+            $row[] = str_replace(","," + ",$product->tax);
+            $row[] = amountExchange($product->subtotal, 0, $this->aauth->get_user()->loc);
+
+            $row[] = str_replace(","," + ",$product->pur_price);
+            $row[] = amountExchange($product->pur_net_total, 0, $this->aauth->get_user()->loc);
+            
+            $pur_prices = explode(',', $product->pur_price);
+            $pur_taxes = explode(',', $product->pur_total_tax);
+            $values = '';
+            $SUM = '';
+            foreach($pur_prices as $key=>$price) {
+                $val = (($price *  $pur_taxes[$key]) /100); 
+                $values .= number_format((($price *  $pur_taxes[$key]) /100),2); 
+                if($key < count($pur_taxes)-1)
+                    $values .= ' + ';
+                $SUM += $val;
+            }
+
+            $row[] = $values;
+            
+            
+            $row[] = amountExchange($product->pur_net_total + $SUM, 0, $this->aauth->get_user()->loc);
+            
+            // $row[] = amountExchange($product->price, 0, $this->aauth->get_user()->loc);
+            // $row[] = amountExchange($product->price * $purchase->qty, 0, $this->aauth->get_user()->loc);
+            // $row[] = amountExchange($product->tax, 0, $this->aauth->get_user()->loc);
+            // $row[] = amountExchange($product->subtotal, 0, $this->aauth->get_user()->loc);
+            $data[] = $row;
+        }
+        $output = array(
+            // "draw" => $this->input->post('draw'),
+            // "recordsTotal" => $this->customers->count_all(),
+            // "recordsFiltered" => $this->customers->count_filtered(),
+            "data" => $data,
+        ); 
+        echo json_encode($output);
+    }
+
 }

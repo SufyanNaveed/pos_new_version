@@ -529,4 +529,45 @@ class Purchase extends CI_Controller
             }
         }
     }
+
+    public function pur_report()
+    {
+        $head['usernm'] = $this->aauth->get_user()->username;
+        $head['title'] = 'Purchase Report';
+        $this->load->view('fixed/header', $head);
+        $this->load->view('reports/pur_report');
+        $this->load->view('fixed/footer');
+    }
+
+    public function load_pur_report()
+    {
+        $no = $this->input->post('start');
+
+        $list = $this->purchase->get_pur_report_datatables();
+        $data = array();        
+        foreach ($list as $key=>$purchase) {
+            
+            $row = array();
+            $row[] = $key+1;
+            $row[] = $purchase->invoice_no;
+            $row[] = $purchase->refer;
+            $row[] = $purchase->invoicedate;
+            $row[] = $purchase->product_code;
+            $row[] = $purchase->product_name;
+            $row[] = $purchase->pcat;
+            $row[] = amountExchange($purchase->price, 0, $this->aauth->get_user()->loc);
+            $row[] = $purchase->qty;
+            $row[] = amountExchange($purchase->price * $purchase->qty, 0, $this->aauth->get_user()->loc);
+            $row[] = amountExchange($purchase->tax, 0, $this->aauth->get_user()->loc);
+            $row[] = amountExchange($purchase->subtotal, 0, $this->aauth->get_user()->loc);
+            $data[] = $row;
+        }
+        $output = array(
+            // "draw" => $this->input->post('draw'),
+            // "recordsTotal" => $this->customers->count_all(),
+            // "recordsFiltered" => $this->customers->count_filtered(),
+            "data" => $data,
+        ); 
+        echo json_encode($output);
+    }
 }

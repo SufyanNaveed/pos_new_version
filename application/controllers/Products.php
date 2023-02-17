@@ -787,5 +787,45 @@ class Products extends CI_Controller
         }
     }
 
+    public function pro_report()
+    {
+        $head['usernm'] = $this->aauth->get_user()->username;
+        $head['title'] = 'Stock Report';
+        $this->load->view('fixed/header', $head);
+        $this->load->view('reports/pro_report');
+        $this->load->view('fixed/footer');
+    }
 
+    public function load_pro_report()
+    {
+        $list = $this->products->get_pro_report_datatables();
+        $data = array();        
+        foreach ($list as $key=>$product) {
+            
+            $row = array();
+            $row[] = $key+1;
+            $row[] = $product->product_code;
+            $row[] = $product->pro_cat;
+            $row[] = $product->product_name;
+            $row[] = $product->qty;
+            $row[] = amountExchange($product->fproduct_price, 0, $this->aauth->get_user()->loc);
+            $row[] = amountExchange($product->fproduct_price * $product->qty, 0, $this->aauth->get_user()->loc);
+            $row[] = amountExchange($product->product_price, 0, $this->aauth->get_user()->loc);
+            $row[] = amountExchange($product->product_price * $product->qty, 0, $this->aauth->get_user()->loc);
+            $date1 = Date('Y-m-d');
+            $date2 = $product->created_date; 
+            $datediff = strtotime($date2) - strtotime($date1);
+            $no_of_days =  abs(round($datediff / 86400));
+            $row[] = $no_of_days. ' Days';
+            $row[] = $product->qty > 0 ? 'Active' : 'DeActive';
+            $data[] = $row;
+        }
+        $output = array(
+            // "draw" => $this->input->post('draw'),
+            // "recordsTotal" => $this->customers->count_all(),
+            // "recordsFiltered" => $this->customers->count_filtered(),
+            "data" => $data,
+        ); 
+        echo json_encode($output);
+    }
 }

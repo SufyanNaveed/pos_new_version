@@ -418,4 +418,70 @@ class Pos_invoices_model extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    public function get_inv_report_datatables(){
+//        geopos_product_cat.title as pro_cat, geopos_products.product_name, geopos_products.product_code,
+
+        $this->db->select('geopos_invoices.id, geopos_invoices.items, geopos_invoices.tid as invoice_no, geopos_invoices.tid as invoicedate, geopos_employees.name as emp_name');
+        $this->db->from('geopos_invoices');
+        $this->db->join('geopos_employees', 'geopos_employees.id = geopos_invoices.eid', 'left');
+        if ($this->aauth->get_user()->loc) {
+            $this->db->where('geopos_invoices.loc', $this->aauth->get_user()->loc);
+        } elseif (!BDATA) {
+            $this->db->where('geopos_invoices.loc', 0);
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    // (SELECT group_concat(price) FROM geopos_invoice_items WHERE geopos_invoice_items.tid = geopos_invoices.id) AS price,
+        
+        // 
+    public function get_product_detail($id){
+
+        $this->db->select('geopos_invoice_items.*,
+        (SELECT SUM(price) FROM geopos_invoice_items WHERE geopos_invoice_items.tid = '.$id.') AS net_total,
+        (SELECT group_concat(price) FROM geopos_invoice_items WHERE geopos_invoice_items.tid = '.$id.') AS price,
+        (SELECT SUM(subtotal) FROM geopos_invoice_items WHERE geopos_invoice_items.tid = '.$id.') AS subtotal,
+        (SELECT group_concat(totaltax) FROM geopos_invoice_items WHERE geopos_invoice_items.tid = '.$id.') AS tax,
+        
+        (SELECT SUM(geopos_purchase_items.price) FROM geopos_invoice_items
+        LEFT JOIN  geopos_purchase_items ON geopos_invoice_items.pid = geopos_purchase_items.pid
+        WHERE geopos_invoice_items.tid = '.$id.') AS pur_net_total,
+        
+        (SELECT group_concat(geopos_purchase_items.price) FROM geopos_invoice_items
+        LEFT JOIN  geopos_purchase_items ON geopos_invoice_items.pid = geopos_purchase_items.pid
+        WHERE geopos_invoice_items.tid = '.$id.') AS pur_price,
+
+
+
+        (SELECT group_concat(geopos_purchase_items.tax) FROM geopos_invoice_items
+        LEFT JOIN  geopos_purchase_items ON geopos_invoice_items.pid = geopos_purchase_items.pid
+        WHERE geopos_invoice_items.tid = '.$id.') AS pur_total_tax,
+        
+        (SELECT group_concat(product_name) FROM geopos_invoice_items
+        LEFT JOIN  geopos_purchase_items ON geopos_invoice_items.pid = geopos_purchase_items.pid
+        LEFT JOIN  geopos_products ON geopos_products.pid = geopos_purchase_items.pid
+        WHERE geopos_invoice_items.tid = '.$id.') AS product_name,
+        
+        (SELECT group_concat(product_code) FROM geopos_invoice_items
+        LEFT JOIN  geopos_purchase_items ON geopos_invoice_items.pid = geopos_purchase_items.pid
+        LEFT JOIN  geopos_products ON geopos_products.pid = geopos_purchase_items.pid
+        WHERE geopos_invoice_items.tid = '.$id.') AS product_code,
+
+        (SELECT group_concat(DISTINCT title) FROM geopos_invoice_items
+        LEFT JOIN  geopos_purchase_items ON geopos_invoice_items.pid = geopos_purchase_items.pid
+        LEFT JOIN  geopos_products ON geopos_products.pid = geopos_purchase_items.pid
+        LEFT JOIN  geopos_product_cat ON geopos_products.pcat = geopos_product_cat.id
+        WHERE geopos_invoice_items.tid = '.$id.') AS pro_cat
+
+        ');
+        $this->db->from('geopos_invoice_items');
+        $this->db->where('tid', $id);
+        $this->db->limit(1);
+        $query = $this->db->get();
+        //echo '<pre>'; print_r($query->result()); exit;
+        return $query->row();
+
+    } 
 }
