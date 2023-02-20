@@ -1183,6 +1183,11 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li data-menu="">
+                        <a class="dropdown-item" href="<?php echo base_url(); ?>pos_invoices/consolidated_report">
+                            <?php echo 'Consolidated Sale '. $this->lang->line('Report'); ?></a>
+                    </li>
+
+                    <li data-menu="">
                         <a class="dropdown-item" href="<?php echo base_url(); ?>customers/cus_report">
                             <?php echo $this->lang->line('Customer') .' '. $this->lang->line('Report'); ?></a>
                     </li>

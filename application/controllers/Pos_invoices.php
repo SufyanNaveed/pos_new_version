@@ -206,6 +206,15 @@ class Pos_invoices extends CI_Controller
         $this->load->view('fixed/footer');
     }
 
+    public function consolidated_report()
+    {
+        $head['title'] = "Consolidated Location Report";
+        $head['usernm'] = $this->aauth->get_user()->username;
+        $this->load->view('fixed/header', $head);
+        $this->load->view('pos/invoices_report');
+        $this->load->view('fixed/footer');
+    }
+
         //invoices list
     public function extended()
     {
@@ -968,7 +977,7 @@ class Pos_invoices extends CI_Controller
 
         $output = array(
             "draw" => $this->input->post('draw'),
-            "recordsTotal" => $this->invocies->count_all($this->limited),
+            "recordsTotal" => $this->invocies->count_filtered($this->limited),
             "recordsFiltered" => $this->invocies->count_filtered($this->limited),
             "data" => $data,
         );
