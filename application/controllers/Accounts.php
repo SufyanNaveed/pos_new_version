@@ -58,6 +58,13 @@ class Accounts extends CI_Controller
         $this->load->view('fixed/footer');
     }
 
+    public function details()
+    {
+        $acid = $this->input->get('account_id');
+        $account_res = $this->accounts->details($acid);
+        echo $account_res['bf_amount']; exit;
+    }
+
     public function add()
     {
         $head['usernm'] = $this->aauth->get_user()->username;

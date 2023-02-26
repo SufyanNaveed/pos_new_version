@@ -595,6 +595,7 @@ class Transactions extends CI_Controller
         $pay_acc = $this->input->post('pay_acc', true);
         $date = $this->input->post('date', true);
         $amount = numberClean($this->input->post('amount', true));
+        $bf_amount = numberClean($this->input->post('bf_amount', true));
         $pay_type = $this->input->post('pay_type', true);
         if ($pay_type == 'Income') {
             $credit = $amount;
@@ -609,6 +610,10 @@ class Transactions extends CI_Controller
             if ($this->transactions->addtrans($payer_id, $payer_name, $pay_acc, $date, $debit, $credit, $pay_type, $pay_cat, $paymethod, $note, $this->aauth->get_user()->id, $this->aauth->get_user()->loc, $payer_ty)) {
                 $lid = $this->db->insert_id();
 
+                $this->db->set(['bf_amount' => $bf_amount]);
+                $this->db->where('id', $pay_acc);
+                $this->db->update('geopos_accounts');
+                
                 if ($dual['key1']) {
                     $pay_acc = $this->input->post('f_pay_acc', true);
                     $pay_cat = $this->input->post('f_pay_cat');

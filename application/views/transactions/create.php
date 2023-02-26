@@ -39,29 +39,39 @@
                             </div>
 
                         </div>
-                        <div class="col-md-6"><input type="text" class="form-control" name="cst" id="trans-box"
-                                                     placeholder="Enter Person Name or Mobile Number to search (Optional)"
-                                                     autocomplete="off"/>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" name="cst" id="trans-box" placeholder="Enter Person Name or Mobile Number to search (Optional)" autocomplete="off"/>
                             <div id="trans-box-result" class="sbox-result"></div>
+                        </div>
+
+                        <div class="col-md-3 offset-md-1">
+                            <div class="pre_bf_amt" style="display:none;"><b>Previous Broad Forward Amount : <span id="previous_bf">0</span> (AED)</b></div>
+                            <div class=" custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="previous_bf_amt" id="previous_bf_amt" value="1">
+                                <label class="custom-control-label" for="previous_bf_amt"><?php echo 'Add Broad Forward Amount' ?> &nbsp;</label>
+                            </div>
                         </div>
 
                     </div>
                     <hr>
                     <div id="customerpanel" class="form-group row bg-blue bg-lighten-4 pb-1">
 
-                        <div class="col-sm-4"><label for="toBizName"
-                                                     class="caption col-form-label"><?php echo $this->lang->line('C/o') ?>
-                                <span
-                                        style="color: red;">*</span></label><input type="hidden" name="payer_id"
-                                                                                   id="customer_id" value="0">
+                        <div class="col-sm-3">
+                            <label for="toBizName" class="caption col-form-label"><?php echo $this->lang->line('C/o') ?>
+                                <span style="color: red;">*</span>
+                            </label>
+                            <input type="hidden" name="payer_id" id="customer_id" value="0">
                             <input type="text" class="form-control required" name="payer_name" id="customer_name">
                         </div>
 
 
-                        <div class="col-sm-4"><label class=" col-form-label"
-                                                     for="pay_cat"><?php echo $this->lang->line('To') . ' ' . $this->lang->line('Account') ?></label>
-                            <select name="pay_acc" class="form-control">
-                                <?php
+                        <div class="col-sm-3">
+                            <label class=" col-form-label" for="pay_cat"><?php echo $this->lang->line('To') . ' ' . $this->lang->line('Account') ?>
+                                <span style="color: red;">*</span>
+                            </label>
+                            <select name="pay_acc" class="form-control required pay_acc" id="pay_acc">
+                            <option value="">-- Select Account --</option>
+                            <?php
                                 foreach ($accounts as $row) {
                                     $cid = $row['id'];
                                     $acn = $row['acn'];
@@ -78,11 +88,14 @@
                         <input type="hidden" name="act" value="add_product">
 
 
-                        <div class="col-sm-4"><label class="col-form-label"
-                                                     for="amount"><?php echo $this->lang->line('Amount') ?></label>
-                            <input type="text" placeholder="Amount"
-                                   class="form-control margin-bottom  required" name="amount" value="0"
-                                   onkeypress="return isNumber(event)">
+                        <div class="col-sm-3">
+                            <label class="col-form-label" for="amount"><?php echo $this->lang->line('Amount') ?></label>
+                            <input type="text" id="org_amount" placeholder="Amount" class="form-control margin-bottom  required" name="amount" value="0" onkeypress="return isNumber(event)">
+                        </div>
+
+                        <div class="col-sm-3">
+                            <label class="col-form-label" for="bf_amount"><?php echo 'Broad Forward' .$this->lang->line('Amount') ?></label>
+                            <input type="text" placeholder="Enter Broad Forward Amount" class="form-control margin-bottom  required" name="bf_amount" value="0" onkeypress="return isNumber(event)">
                         </div>
                     </div>
                     <div class="form-group row ">
@@ -244,5 +257,35 @@
 
                     }
                 });
+            });
+
+            $(".pay_acc").change(function () {
+                var account_id = $(this).val();
+                $.ajax({
+                    type: "GET",
+                    url: baseurl + 'accounts/details',
+                    data: 'account_id=' + $(this).val(),
+                    success: function (data) {
+                        $(".pre_bf_amt").show();
+                        $("#previous_bf").html(data);
+
+                    }
+                });
+            });
+
+            $("#previous_bf_amt").click(function () {                
+                if($("#previous_bf_amt").is(':checked')){
+                    var org_amt = $('#org_amount').val();
+                    var previous_bf = $('#previous_bf').text();
+                    var sum_amt = parseInt(org_amt) + parseInt(previous_bf);
+                    $('#org_amount').val('');
+                    $('#org_amount').val(sum_amt);
+                } else {
+                    var org_amt = $('#org_amount').val();
+                    var previous_bf = $('#previous_bf').text();
+                    var sum_amt = parseInt(org_amt) - parseInt(previous_bf);
+                    $('#org_amount').val('');
+                    $('#org_amount').val(sum_amt);
+                }
             });
         </script>
