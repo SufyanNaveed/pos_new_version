@@ -41,7 +41,7 @@
                             <?php
                                 $achieved_target = 0;
                                 if($row['month_target']){
-                                    $achieved_target =  get_employee_target($row['id'], $row['month_target'],$row['year']);
+                                    $achieved_target =  get_employee_target($row['emp_id'], $row['month_target'],$row['year']);
                                     $achieved_target = $achieved_target['achieved_target'] ? $achieved_target['achieved_target'] : 0;
                                 }
                             ?>
