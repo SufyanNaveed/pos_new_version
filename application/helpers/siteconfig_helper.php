@@ -535,4 +535,17 @@ if (!function_exists('dd')) {
         print_r($var);
         exit;
     }
- }
+}
+
+function get_employee_target($id,$month_target,$year='')
+{
+    $ci =& get_instance();
+    $ci->load->database();
+    $year = $year ? $year : date('Y');
+    $start_month_date = '"'.$year.'-'.$month_target.'-01"';
+    $end_month_date = '"'.$year.'-'.$month_target.'-31"';
+    $where = 'eid = '.$id.' AND invoicedate BETWEEN '.$start_month_date.' AND '.$end_month_date;
+    $query2 = "SELECT SUM(subtotal) as achieved_target FROM geopos_invoices WHERE ".$where;
+    $query2 = $ci->db->query($query2);
+    return $query2->row_array();
+}

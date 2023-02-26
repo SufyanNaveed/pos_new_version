@@ -2,10 +2,7 @@
     <div class="card">
         <div class="card-header">
             <h5 class="title">
-                <?php echo $this->lang->line('Employee') ?> <a href="<?php echo base_url('employee/add') ?>"
-                                                               class="btn btn-primary btn-sm rounded">
-                    <?php echo $this->lang->line('Add new') ?>
-                </a>
+                <b><?php if($employee_target){ echo $employee_target[0]['name'].' ('.user_role($employee_target[0]['roleid']).')'; }?></b>
             </h5>
             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
             <div class="heading-elements">
@@ -30,66 +27,30 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th><?php echo $this->lang->line('Name') ?></th>
-                        <th>Role</th>
-                        <th><?php echo $this->lang->line('Status') ?></th>
-                        <th><?php echo 'Current Month Target (AED)'; ?></th>
-                        <th><?php echo 'Achieved Target (AED)'; ?></th>
-                        <th><?php echo $this->lang->line('Actions') ?></th>
-
-
+                        <th>Target (Month-Year)</th>
+                        <th>Set Target (AED)</th>
+                        <th>Achieved Target (AED)</th>
                     </tr>
                     </thead>
                     <tbody>
-                        <?php $i = 1;
-
-                        foreach ($employee as $row) {
-                            $aid = $row['id'];
-                            $username = $row['username'];
-                            $name = $row['name'];
-                            $role = user_role($row['roleid']);
-                            $status = $row['banned'];
-                            $target_val = $row['target'] ? $row['target'] : 0;
-                            $target = $row['target'] && $row['month_target'] == date('m') ? $row['target'].' ('.date('M', mktime(0, 0, 0, $row['month_target'], 10)).'-'. date('Y').')' : ' Last Month Target ('.$target_val.')';
-                            $achieved_target = get_employee_target($row['id'], $row['month_target']);
-                            $achieved_target = $achieved_target['achieved_target'] ? $achieved_target['achieved_target'] : 0;
-                            if ($status == 1) {
-                                $status = 'Deactive';
-                                $btn = "<a href='#' data-object-id='" . $aid . "'  data-object1-id='" . $aid . "'  class='btn btn-blue btn-xs delete-object' title='Enable'><i class='icon-eye-slash'></i> Enable</a>";
-                            } else {
-                                $status = 'Active';
-                                $btn = "<a href='#' data-object-id='" . $aid . "' class='btn btn-amber btn-xs delete-object' title='Disable'><i class='fa fa-chain-broken'></i> " . $this->lang->line('Disable') . "</a>";
-                            }
-
-                            echo "<tr>
-                        <td>$i</td>
-                        <td>$name</td>
-                        <td>$role</td>                 
-                        <td>$status</td>
-                        <td>$target</td>
-                        <td>$achieved_target</td>
-                        <td>
-                            <a href='" . base_url("employee/view?id=$aid") . "' class='btn btn-success btn-xs'><i class='fa fa-eye'></i> " . $this->lang->line('View') . "</a>&nbsp;&nbsp;$btn&nbsp;&nbsp;
-                            <a href='#pop_model' data-toggle='modal' data-remote='false' data-object-id='" . $aid . "' class='btn btn-danger btn-xs delemp' title='Delete'><i class='fa fa-trash'></i></a>
-                            
-                            <a href='" . base_url("employee/view_employee_target?id=$aid") . "' class='btn btn-info btn-xs'><i class='fa fa-eye'></i> " . $this->lang->line('View') . " Target</a>&nbsp;&nbsp;
-
-                        </td>
-                    </tr>";
-                        $i++;
-                    }
-                    ?>
+                        <?php $i = 1; if ($employee_target) { foreach ($employee_target as $row) { ?>
+                        <tr>
+                            <td><?= $i ?></td>
+                            <td><?= date('M', mktime(0, 0, 0, $row['month_target'], 10)).' - '.$row['year'] ?></td>
+                            <td><?= $row['target']?></td>
+                            <?php $achieved_target = get_employee_target($row['emp_id'], $row['month_target'],$row['year']);
+                                $achieved_target = $achieved_target['achieved_target'] ? $achieved_target['achieved_target'] : 0;?>
+                            <td><?= $achieved_target ?></td>
+                        </tr> 
+                        <?php $i++; } } ?> 
                     </tbody>
                     <tfoot>
-                    <tr>
-                        <th>#</th>
-                        <th><?php echo $this->lang->line('Name') ?></th>
-                        <th>Role</th>
-                        <th><?php echo $this->lang->line('Status') ?></th>
-                        <th><?php echo 'Current Month Target (AED)'; ?></th> 
-                        <th><?php echo 'Achieved Target (AED)'; ?></th>
-                        <th><?php echo $this->lang->line('Actions') ?></th>
-                    </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Target (Month-Year)</th>
+                            <th>Set Target (AED)</th> 
+                            <th>Achieved Target (AED)</th>
+                        </tr>
                     </tfoot>
                 </table>
             </div>

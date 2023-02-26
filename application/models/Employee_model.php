@@ -61,6 +61,17 @@ class Employee_model extends CI_Model
         return $query->row_array();
     }
 
+    public function employee_target_details($id)
+    {
+        $this->db->select('geopos_employees_month_target.*,geopos_employees.name,geopos_users.roleid');
+        $this->db->from('geopos_employees_month_target');
+        $this->db->join('geopos_users', 'geopos_employees_month_target.emp_id = geopos_users.id', 'left');
+        $this->db->join('geopos_employees', 'geopos_employees_month_target.emp_id = geopos_employees.id', 'left');
+        $this->db->where('geopos_employees_month_target.emp_id', $id);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     public function salary_history($id)
     {
         $this->db->select('*');
@@ -71,7 +82,7 @@ class Employee_model extends CI_Model
         return $query->result_array();
     }
 
-    public function update_employee($id, $name, $phone, $phonealt, $address, $city, $region, $country, $postbox, $location, $salary = 0, $target, $department = -1, $commission = 0, $roleid = false)
+    public function update_employee($id, $name, $phone, $phonealt, $address, $city, $region, $country, $postbox, $location, $salary = 0, $target, $month_target, $department = -1, $commission = 0, $roleid = false)
     {
         $this->db->select('salary');
         $this->db->from('geopos_employees');
@@ -83,22 +94,15 @@ class Employee_model extends CI_Model
         $this->db->where('id', $id);
         $query = $this->db->get();
         $role = $query->row_array();
+        
+        $this->db->from('geopos_employees_month_target');
+        $this->db->where('emp_id', $id);
+        $this->db->where('month_target', $month_target);
+        $this->db->where('year', date('Y'));
+        $target_res = $this->db->get()->row_array();            
+        //echo '<pre>'; print_r($target_res); exit;
 
-
-        $data = array(
-            'name' => $name,
-            'phone' => $phone,
-            'phonealt' => $phonealt,
-            'address' => $address,
-            'city' => $city,
-            'region' => $region,
-            'country' => $country,
-            'postbox' => $postbox,
-            'salary' => $salary,
-            'target' => $target,
-            'c_rate' => $commission
-        );
-        if ($department > -1) {
+        if($month_target == date('m')){
             $data = array(
                 'name' => $name,
                 'phone' => $phone,
@@ -110,9 +114,54 @@ class Employee_model extends CI_Model
                 'postbox' => $postbox,
                 'salary' => $salary,
                 'target' => $target,
-                'dept' => $department,
+                'month_target' => $month_target,
                 'c_rate' => $commission
             );
+            if ($department > -1) {
+                $data = array(
+                    'name' => $name,
+                    'phone' => $phone,
+                    'phonealt' => $phonealt,
+                    'address' => $address,
+                    'city' => $city,
+                    'region' => $region,
+                    'country' => $country,
+                    'postbox' => $postbox,
+                    'salary' => $salary,
+                    'target' => $target,
+                    'month_target' => $month_target,
+                    'dept' => $department,
+                    'c_rate' => $commission
+                );
+            }
+        }else{
+            $data = array(
+                'name' => $name,
+                'phone' => $phone,
+                'phonealt' => $phonealt,
+                'address' => $address,
+                'city' => $city,
+                'region' => $region,
+                'country' => $country,
+                'postbox' => $postbox,
+                'salary' => $salary,
+                'c_rate' => $commission
+            );
+            if ($department > -1) {
+                $data = array(
+                    'name' => $name,
+                    'phone' => $phone,
+                    'phonealt' => $phonealt,
+                    'address' => $address,
+                    'city' => $city,
+                    'region' => $region,
+                    'country' => $country,
+                    'postbox' => $postbox,
+                    'salary' => $salary,
+                    'dept' => $department,
+                    'c_rate' => $commission
+                );
+            }
         }
 
 
@@ -121,7 +170,20 @@ class Employee_model extends CI_Model
 
 
         if ($this->db->update('geopos_employees')) {
-
+            $target_data = array(
+                'emp_id' => $id,
+                'target' => $target,
+                'month_target' => $month_target,
+                'year' => date('Y')
+            );
+            if($target_res){
+                $this->db->set($target_data);
+                $this->db->where('id', $target_res['id']);
+                $this->db->update('geopos_employees_month_target');
+            }else{
+                $this->db->insert('geopos_employees_month_target', $target_data);
+            }
+            
             if ($roleid && $role['roleid'] != 5) {
                 $this->db->set('loc', $location);
                 $this->db->set('roleid', $roleid);
@@ -356,7 +418,7 @@ class Employee_model extends CI_Model
     }
 
 
-    public function add_employee($id, $username, $name, $roleid, $phone, $address, $city, $region, $country, $postbox, $location, $salary = 0, $target, $commission = 0, $department = 0)
+    public function add_employee($id, $username, $name, $roleid, $phone, $address, $city, $region, $country, $postbox, $location, $salary = 0, $target, $month_target, $commission = 0, $department = 0)
     {
         $data = array(
             'id' => $id,
@@ -371,11 +433,21 @@ class Employee_model extends CI_Model
             'dept' => $department,
             'salary' => $salary,
             'target' => $target,
+            'month_target' => $month_target,
             'c_rate' => $commission
         );
 
 
         if ($this->db->insert('geopos_employees', $data)) {
+            
+            $target_data = array(
+                'emp_id' => $id,
+                'target' => $target,
+                'month_target' => $month_target,
+                'year' => date('Y')
+            );
+            $this->db->insert('geopos_employees_month_target', $target_data);
+
             $data1 = array(
                 'roleid' => $roleid,
                 'loc' => $location

@@ -71,6 +71,19 @@ class Employee extends CI_Controller
 
     }
 
+    public function view_employee_target()
+    {
+        $id = $this->input->get('id');
+        $head['usernm'] = $this->aauth->get_user()->username;
+        $head['title'] = 'Employee Details';
+        $data['employee_target'] = $this->employee->employee_target_details($id);
+        $data['eid'] = intval($id);
+        $this->load->view('fixed/header', $head);
+        $this->load->view('employee/view_employee_target', $data);
+        $this->load->view('fixed/footer');
+
+    }
+
     public function history()
     {
         $id = $this->input->get('id');
@@ -132,6 +145,7 @@ class Employee extends CI_Controller
         $postbox = $this->input->post('postbox', true);
         $salary = numberClean($this->input->post('salary', true));
         $target = numberClean($this->input->post('target', true));
+        $month_target = $this->input->post('month_target', true);
         $commission = $this->input->post('commission', true);
         $department = $this->input->post('department', true);
 
@@ -143,7 +157,7 @@ class Employee extends CI_Controller
             if ($nuid > 0) {
 
 
-                $this->employee->add_employee($nuid, (string)$this->aauth->get_user($a)->username, $name, $roleid, $phone, $address, $city, $region, $country, $postbox, $location, $salary, $target, $commission, $department);
+                $this->employee->add_employee($nuid, (string)$this->aauth->get_user($a)->username, $name, $roleid, $phone, $address, $city, $region, $country, $postbox, $location, $salary, $target, $month_target, $commission, $department);
 
             }
 
@@ -395,10 +409,11 @@ class Employee extends CI_Controller
             $location = $this->input->post('location', true);
             $salary = numberClean($this->input->post('salary', true));
             $target = numberClean($this->input->post('target', true));
+            $month_target = $this->input->post('month_target', true);
             $department = $this->input->post('department', true);
             $commission = $this->input->post('commission', true);
             $roleid = $this->input->post('roleid', true);
-            $this->employee->update_employee($eid, $name, $phone, $phonealt, $address, $city, $region, $country, $postbox, $location, $salary,$target, $department, $commission, $roleid);
+            $this->employee->update_employee($eid, $name, $phone, $phonealt, $address, $city, $region, $country, $postbox, $location, $salary,$target,$month_target, $department, $commission, $roleid);
 
         } else {
             $head['usernm'] = $this->aauth->get_user($id)->username;

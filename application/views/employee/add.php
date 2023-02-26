@@ -173,7 +173,7 @@
                            value="0">
                 </div>
             </div>
-            <div class="form-group row">
+            <!-- <div class="form-group row">
 
                 <label class="col-sm-2 col-form-label"
                        for="phone"><?php echo 'Target' ?></label>
@@ -182,6 +182,31 @@
                     <input type="text" placeholder="Target" onkeypress="return isNumber(event)"
                            class="form-control margin-bottom" name="target"
                            value="0">
+                </div>
+            </div> -->
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label" for="city"><?php echo 'Monthly Target' ?></label>
+                <div class="col-sm-2">
+                    <?php $current_month = date('m'); ?>    
+                    <select name="month_target" class="form-control margin-bottom">
+                        <option value="">--Select Month--</option>
+                        <option value="01" <?php echo $current_month == '01' ? 'selected="selected"' : ''  ?>>January - <?= date('Y'); ?></option>
+                        <option value="02" <?php echo $current_month == '02' ? 'selected="selected"' : ''  ?>>February - <?= date('Y'); ?></option>
+                        <option value="03" <?php echo $current_month == '03' ? 'selected="selected"' : ''  ?>>March - <?= date('Y'); ?></option>
+                        <option value="04" <?php echo $current_month == '04' ? 'selected="selected"' : ''  ?>>April - <?= date('Y'); ?></option>
+                        <option value="05" <?php echo $current_month == '05' ? 'selected="selected"' : ''  ?>>May - <?= date('Y'); ?></option>
+                        <option value="06" <?php echo $current_month == '06' ? 'selected="selected"' : ''  ?>>June - <?= date('Y'); ?></option>
+                        <option value="07" <?php echo $current_month == '07' ? 'selected="selected"' : ''  ?>>July - <?= date('Y'); ?></option>
+                        <option value="08" <?php echo $current_month == '08' ? 'selected="selected"' : ''  ?>>August - <?= date('Y'); ?></option>
+                        <option value="09" <?php echo $current_month == '09' ? 'selected="selected"' : ''  ?>>September - <?= date('Y'); ?></option>
+                        <option value="10" <?php echo $current_month == '10' ? 'selected="selected"' : ''  ?>>October - <?= date('Y'); ?></option>
+                        <option value="11" <?php echo $current_month == '11' ? 'selected="selected"' : ''  ?>>November - <?= date('Y'); ?></option>
+                        <option value="12" <?php echo $current_month == '12' ? 'selected="selected"' : ''  ?>>December - <?= date('Y'); ?></option>
+                    </select>
+                </div>
+                                
+                <div class="col-sm-3">
+                    <input type="text" placeholder="Enter Target Amount" value="" class="form-control margin-bottom" name="target" onkeypress="return isNumber(event)">
                 </div>
             </div>
             <div class="form-group row">
@@ -271,7 +296,7 @@
             }
 
         });
-
-
     }
+
+    
 </script>
