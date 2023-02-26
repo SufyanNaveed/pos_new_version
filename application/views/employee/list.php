@@ -50,7 +50,7 @@
                             $role = user_role($row['roleid']);
                             $status = $row['banned'];
                             $target_val = $row['target'] ? $row['target'] : 0;
-                            $target = $row['target'] && $row['month_target'] == date('m') ? $row['target'].' ('.date('M', mktime(0, 0, 0, $row['month_target'], 10)).'-'. date('Y').')' : ' Last Month Target ('.$target_val.')';
+                            $target = $row['target'] && $row['month_target'] >= date('m') ? $row['target'].' ('.date('M', mktime(0, 0, 0, $row['month_target'], 10)).'-'. date('Y').')' : ' Last Month Target ('.$target_val.')';
                             $achieved_target = 0;
                             if($row['month_target']){
                                 $achieved_target =  get_employee_target($row['id'], $row['month_target']);
