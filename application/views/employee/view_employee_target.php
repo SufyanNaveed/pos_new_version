@@ -38,8 +38,13 @@
                             <td><?= $i ?></td>
                             <td><?= date('M', mktime(0, 0, 0, $row['month_target'], 10)).' - '.$row['year'] ?></td>
                             <td><?= $row['target']?></td>
-                            <?php $achieved_target = get_employee_target($row['emp_id'], $row['month_target'],$row['year']);
-                                $achieved_target = $achieved_target['achieved_target'] ? $achieved_target['achieved_target'] : 0;?>
+                            <?php
+                                $achieved_target = 0;
+                                if($row['month_target']){
+                                    $achieved_target =  get_employee_target($row['id'], $row['month_target'],$row['year']);
+                                    $achieved_target = $achieved_target['achieved_target'] ? $achieved_target['achieved_target'] : 0;
+                                }
+                            ?>
                             <td><?= $achieved_target ?></td>
                         </tr> 
                         <?php $i++; } } ?> 
