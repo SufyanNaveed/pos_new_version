@@ -45,10 +45,10 @@
                         </div>
 
                         <div class="col-md-3 offset-md-1">
-                            <div class="pre_bf_amt" style="display:none;"><b>Previous Broad Forward Amount : <span id="previous_bf">0</span> (AED)</b></div>
+                            <div class="pre_bf_amt" style="display:none;"><b>Previous Brought Forward Amount : <span id="previous_bf">0</span> (AED)</b></div>
                             <div class=" custom-checkbox">
                                 <input type="checkbox" class="custom-control-input" name="previous_bf_amt" id="previous_bf_amt" value="1">
-                                <label class="custom-control-label" for="previous_bf_amt"><?php echo 'Add Broad Forward Amount' ?> &nbsp;</label>
+                                <label class="custom-control-label" for="previous_bf_amt"><?php echo 'Add Brought Forward Amount' ?> &nbsp;</label>
                             </div>
                         </div>
 
@@ -94,8 +94,8 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <label class="col-form-label" for="bf_amount"><?php echo 'Broad Forward' .$this->lang->line('Amount') ?></label>
-                            <input type="text" placeholder="Enter Broad Forward Amount" class="form-control margin-bottom  required" name="bf_amount" value="0" onkeypress="return isNumber(event)">
+                            <label class="col-form-label" for="bf_amount"><?php echo 'Brought Forward' .$this->lang->line('Amount') ?></label>
+                            <input type="text" placeholder="Enter Brought Forward Amount" class="form-control margin-bottom  required" name="bf_amount" value="0" onkeypress="return isNumber(event)">
                         </div>
                     </div>
                     <div class="form-group row ">
