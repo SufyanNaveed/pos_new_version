@@ -94,7 +94,7 @@
                         </div>
 
                         <div class="col-sm-3">
-                            <label class="col-form-label" for="bf_amount"><?php echo 'Brought Forward' .$this->lang->line('Amount') ?></label>
+                            <label class="col-form-label" for="bf_amount"><?php echo 'Brought Forward ' .$this->lang->line('Amount') ?></label>
                             <input type="text" placeholder="Enter Brought Forward Amount" class="form-control margin-bottom  required" name="bf_amount" value="0" onkeypress="return isNumber(event)">
                         </div>
                     </div>
