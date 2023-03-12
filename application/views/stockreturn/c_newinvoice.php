@@ -60,8 +60,15 @@
 
                                     </select>
                                 </div>
+                                <br><br><br><br>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label for="cst" class="caption"><?php echo 'Enter Invoice No' ?> </label>
+                                        <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="Enter Invoice No" autocomplete="off"/>
+                                        <div id="customer-box-result"></div>
+                                    </div>
 
-
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-6 cmp-pnl">
@@ -315,7 +322,7 @@
 
                     <input type="hidden" value="stockreturn/action" id="action-url">
                     <input type="hidden" value="1" name="person_type">
-                    <input type="hidden" value="puchase_search" id="billtype">
+                    <input type="hidden" value="puchase_stock_search" id="billtype">
                     <input type="hidden" value="0" name="counter" id="ganak">
                     <input type="hidden" value="<?php echo $this->config->item('currency'); ?>" name="currency">
                     <input type="hidden" value="<?= $taxdetails['handle']; ?>" name="taxformat" id="tax_format">
@@ -339,5 +346,3 @@
         </div>
     </div>
 </div>
-
-

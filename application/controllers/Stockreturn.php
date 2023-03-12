@@ -264,11 +264,13 @@ class Stockreturn extends CI_Controller
         $data = array('tid' => $invocieno, 'invoicedate' => $bill_date, 'invoiceduedate' => $bill_due_date, 'subtotal' => $subtotal, 'shipping' => $shipping, 'ship_tax' => $shipping_tax, 'ship_tax_type' => $ship_taxtype, 'total' => $total, 'notes' => $notes, 'csd' => $customer_id, 'eid' => $this->aauth->get_user()->id, 'taxstatus' => $tax, 'discstatus' => $discstatus, 'format_discount' => $discountFormat, 'refer' => $refer, 'term' => $pterms, 'loc' => $this->aauth->get_user()->loc, 'i_class' => $person_type, 'multi' => $currency,);
         if ($this->db->insert('geopos_stock_r', $data)) {
             $invocieno = $this->db->insert_id();
+
             $pid = $this->input->post('pid');
             $productlist = array();
             $prodindex = 0;
             $itc = 0;
             $product_id = $this->input->post('pid');
+            $items_invocie_no = $this->input->post('invoice_no');
             $product_name1 = $this->input->post('product_name', true);
             $product_qty = $this->input->post('product_qty');
             $product_price = $this->input->post('product_price');
@@ -317,6 +319,17 @@ class Stockreturn extends CI_Controller
                     }
                     $itc += $amt;
                 }
+                
+                $this->db->select('geopos_invoice_items.id');
+                $this->db->from('geopos_invoice_items');
+                $this->db->join('geopos_invoices', 'geopos_invoices.id= geopos_invoice_items.tid');
+                $this->db->where('geopos_invoice_items.pid',$product_id[$key]);
+                $this->db->where('geopos_invoices.tid',$items_invocie_no);
+                $invoice_item_primary_id = $this->db->get()->row_array();
+
+                $this->db->set('stock_return_status',1);
+                $this->db->where('id',$invoice_item_primary_id['id']);
+                $this->db->update('geopos_invoice_items');
             }
 
             if ($prodindex > 0) {

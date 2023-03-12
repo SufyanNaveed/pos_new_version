@@ -1,3 +1,11 @@
+<style>
+.return_items{
+    background: #ff7588 !important;
+    color: white !important;
+}
+</style>
+
+
 <div class="content-body">
     <div class="card">
         <div class="card-content">
@@ -322,7 +330,8 @@
 
                                     foreach ($products as $row) {
                                         $sub_t += $row['price'] * $row['qty'];
-                                        echo '<tr>
+                                        $class = $row['stock_return_status'] > 0 ? 'class="return_items"' :'';
+                                        echo '<tr '.$class.' >
 <th scope="row">' . $c . '</th>
                             <td>' . $row['product'] . '</td>                           
                             <td>' . amountExchange($row['price'], 0, $this->aauth->get_user()->loc) . '</td>
