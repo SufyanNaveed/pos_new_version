@@ -33,6 +33,7 @@ class Dashboard extends CI_Controller
 
         $this->load->model('dashboard_model');
         $this->load->model('tools_model');
+        $this->load->model('employee_model');
 
 
     }
@@ -60,6 +61,7 @@ class Dashboard extends CI_Controller
             $data['goals'] = $this->tools_model->goals(1);
             $data['stock'] = $this->dashboard_model->stock();
             $head['usernm'] = $this->aauth->get_user()->username;
+            $data['employee_targets'] = $this->employee_model->list_employee_target();
             $head['title'] = 'Dashboard';
             $this->load->view('fixed/header', $head);
             $this->load->view('dashboard', $data);

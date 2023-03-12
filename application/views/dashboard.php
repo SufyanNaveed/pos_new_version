@@ -187,7 +187,7 @@
     <div class="col-xl-4 col-lg-12">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title"><?php echo $this->lang->line('Recent Buyers') ?></h4>
+                <h4 class="card-title"><?php echo 'Employees Target'; ?></h4>
                 <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
                 <div class="heading-elements">
                     <ul class="list-inline mb-0">
@@ -198,19 +198,19 @@
             <div class="card-content px-1">
                 <div id="recent-buyers" class="media-list height-450  mt-1 position-relative">
                     <?php
-                    if (isset($recent_buy[0]['csd'])) {
+                    if ($employee_targets) {
 
-                        foreach ($recent_buy as $item) {
-
-                            echo '       <a href="' . base_url('customers/view?id=' . $item['csd']) . '" class="media border-0">
+                        foreach ($employee_targets as $employee_target) {
+                            $achieved_target =  get_employee_target($employee_target['id'], date('m'));
+                            $achieved_target = $achieved_target['achieved_target'] ? $achieved_target['achieved_target'] : 0;
+                            echo '
                         <div class="media-left pr-1">
-                            <span class="avatar avatar-md avatar-online"><img class="media-object rounded-circle" src="' . base_url() . 'userfiles/customers/thumbnail/' . $item['picture'] . '">
+                            <span class="avatar avatar-md avatar-online"><img class="media-object rounded-circle" src="' . base_url() . 'userfiles/customers/thumbnail/default.png">
                             <i></i>
                             </span>
                         </div>
                         <div class="media-body w-100">
-                            <h6 class="list-group-item-heading">' . $item['name'] . ' <span class="font-medium-4 float-right pt-1">' . amountExchange($item['total'], 0, $this->aauth->get_user()->loc) . '</span></h6>
-                            <p class="list-group-item-text mb-0"><span class="badge  st-' . $item['status'] . '">' . $this->lang->line(ucwords($item['status'])) . '</span></p>
+                            <h6 class="list-group-item-heading">' . $employee_target['name'] . ' <span class="font-medium-4 float-right pt-1">' . amountExchange($employee_target['target'], 0, $this->aauth->get_user()->loc).' / '. amountExchange($achieved_target, 0, $this->aauth->get_user()->loc) . '</span></h6>
                         </div>
                     </a>';
 

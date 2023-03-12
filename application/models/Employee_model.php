@@ -38,6 +38,22 @@ class Employee_model extends CI_Model
         return $query->result_array();
     }
 
+    public function list_employee_target()
+    {
+        $this->db->select('geopos_employees.id,geopos_employees.name,geopos_employees.target');
+        $this->db->from('geopos_employees');
+        // $this->db->join('geopos_employees_month_target', 'geopos_employees_month_target.emp_id = geopos_employees.id', 'left');
+        // // if ($this->aauth->get_user()->loc) {
+        //     $this->db->group_start();
+        //     $this->db->where('geopos_employees.loc', $this->aauth->get_user()->loc);
+        //     if (BDATA) $this->db->or_where('loc', 0);
+        //     $this->db->group_end();
+        // }
+        $this->db->where('geopos_employees.month_target', date('m'));
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     public function list_project_employee($id)
     {
         $this->db->select('geopos_employees.*');
