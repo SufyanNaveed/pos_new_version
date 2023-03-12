@@ -393,7 +393,7 @@ if($flag_p) {
                                              src="' . base_url('userfiles/product/' . $row['image']) . '"  style="max-height: 100%;max-width: 100%">
                                         <div class="text-center" style="margin-top: 4px;">
                                        
-                                            <small style="white-space: pre-wrap;">' . $row['product_name'] . '</small>
+                                            <small style="white-space: pre-wrap;">' . $row['product_name'].' ('.number_format($row['qty']).')' . '</small>
 
                                             
                                         </div></a>
