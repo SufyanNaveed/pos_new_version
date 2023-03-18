@@ -20,7 +20,7 @@ $('#addproduct').on('click', function () {
                 url: baseurl + 'search_products/' + billtype,
                 dataType: "json",
                 method: 'post',
-                data: 'name_startsWith=' + request.term + '&type=product_list&row_num=' + row + '&wid=' + $("#s_warehouses option:selected").val() + '&' + d_csrf,
+                data: 'name_startsWith=' + request.term + '&type=product_list&row_num=' + row + '&invoice_no=' + $('#invoice_no').val() + '&wid=' + $("#s_warehouses option:selected").val() + '&' + d_csrf,
                 success: function (data) {
                     response($.map(data, function (item) {
                         var product_d = item[0];
@@ -693,12 +693,13 @@ $('#saman-row').on('click', '.removeProd', function () {
     return false;
 });
 $('#productname-0').autocomplete({
+
     source: function (request, response) {
         $.ajax({
             url: baseurl + 'search_products/' + billtype,
             dataType: "json",
             method: 'post',
-            data: 'name_startsWith=' + request.term + '&type=product_list&row_num=1&wid=' + $("#s_warehouses option:selected").val() + '&' + d_csrf,
+            data: 'name_startsWith=' + request.term + '&type=product_list&row_num=1&invoice_no='+ $('#invoice_no').val() + '&wid=' + $("#s_warehouses option:selected").val() + '&' + d_csrf,
             success: function (data) {
                 response($.map(data, function (item) {
                     var product_d = item[0];
