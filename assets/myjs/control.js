@@ -51,6 +51,16 @@ function PselectCustomer(cid, cname, discount) {
     $('#customer_name').html('<strong>' + cname + '</strong>');
     $("#customer-box-result").hide();
     $("#customer").show();
+
+    jQuery.ajax({
+        type: "POST",
+        url: baseurl + 'pos_invoices/check_last_invoice_date',
+        data: 'cid=' + cid + '&' + crsf_token + '=' + crsf_hash,
+        dataType: 'html',
+        success: function (data) {
+            $('.clientinfo').append('<input type="hidden" name="last_invoice_date" id="last_invoice_date" value="'+ data +'">');
+        }
+    });
 }
 
 function selectSupplier(cid, cname, cadd1, cadd2, ph, email) {

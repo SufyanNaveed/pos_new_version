@@ -1058,8 +1058,20 @@ class Pos_invoices extends CI_Controller
     }
 
 
-    public function printinvoice()
+    public function check_last_invoice_date()
     {
+        $cid = $this->input->post('cid');
+        $get_invoice = $this->invocies->last_invoice_date($cid);
+        $current_date = date('Y-m-d');
+        $last_invoice_date = $get_invoice['invoicedate'];
+        $date1=date_create($last_invoice_date);
+        $date2=date_create($current_date);
+        $diff = date_diff($date1,$date2);
+        echo $diff->format("%a"); 
+    }
+        
+    public function printinvoice()
+        {
         $tid = $this->input->get('id');
         $data['id'] = $tid;
         $data['round_off'] = $this->custom->api_config(4);

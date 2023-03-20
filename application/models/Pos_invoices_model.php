@@ -45,6 +45,18 @@ class Pos_invoices_model extends CI_Model
         }
     }
 
+    public function last_invoice_date($cid)
+    {
+        $this->db->select('invoicedate');
+        $this->db->from('geopos_invoices');
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit(1);
+        $this->db->where('i_class', 1);
+        $this->db->where('csd', $cid);
+        $query = $this->db->get()->row_array();
+        return $query;
+    }
+
 
     public function invoice_details($id, $eid = '',$loc=null)
     {

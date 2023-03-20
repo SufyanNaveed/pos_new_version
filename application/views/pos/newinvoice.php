@@ -1030,9 +1030,16 @@
     $('#pos_basic_pay').on("click", function (e) {
         var credit_setting = $('#credit_setting').val();
         var balance1 = $('#balance1').val();
+        var last_invoice_days = $('#last_invoice_date').val();
         if(credit_setting == 1 && parseInt(balance1) > 0 ){
             $('#balance1').css('border','2px solid red');
             $('#credit_msg').html('<b>Your balance due is greater then zero.</b>');
+            $('#credit_msg').css('color','red');
+            $('#pos_basic_pay #pos_basic_print').attr('disabled','disabled');
+            return false;
+        }else if(last_invoice_days > 30){
+            $('#balance1').css('border','2px solid red');
+            $('#credit_msg').html('<b>Your last invoice is more than 30 days. Please pay your last dues.</b>');
             $('#credit_msg').css('color','red');
             $('#pos_basic_pay #pos_basic_print').attr('disabled','disabled');
             return false;
