@@ -363,7 +363,7 @@ class Pos_invoices extends CI_Controller
             'eid' => $emp, 'pamnt' => 0, 'taxstatus' => $tax, 'discstatus' => $discstatus, 
             'format_discount' => $discountFormat, 'refer' => $refer, 'term' => $pterms, 
             'multi' => $currency, 'i_class' => 1, 'loc' => $this->aauth->get_user()->loc,
-            'wholesale' => $wholesale_check);
+            'wholesale' => $wholesale_check ? $wholesale_check : 0);
 
 
             if ($this->db->insert('geopos_invoices', $data)) {
