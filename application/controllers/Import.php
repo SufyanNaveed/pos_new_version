@@ -90,9 +90,24 @@ class Import extends CI_Controller
             $this->load->view('import/wizard', $data);
         } else {
 
+            $data['pc'] = '0';
+            $data['wid'] = '0';
+            $config['upload_path'] = './userfiles';
+            $config['allowed_types'] = 'csv';
+            $config['max_size'] = 6000;
+            $this->load->library('upload', $config);
 
-            echo ' error';
+            if (!$this->upload->do_upload('userfile')) {
+                $data['response'] = 0;
+                $data['responsetext'] = 'File Upload Error';
 
+            } else {
+                $data['response'] = 1;
+                $data['responsetext'] = 'Document Uploaded Successfully.';
+                $data['filename'] = $this->upload->data()['file_name'];
+
+            }
+            $this->load->view('import/wizard', $data);
 
         }
         $this->load->view('fixed/footer');
@@ -112,17 +127,35 @@ class Import extends CI_Controller
 
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, false);
-//print_r($sheetData);
+        
+        
+        // print_r($sheetData); exit;
 
         $products = array();
 
-        foreach ($sheetData as $row) {
-            $barcode = rand(100, 999) . '-' . rand(0, 9) . '-' . rand(1000000, 9999999) . '-' . rand(0, 9);
+        foreach ($sheetData as $key=>$row) { if($key >0){
+            //echo '<pre>'; print_r($row); exit;
+            $barcode = $barcode = rand(100, 999) . rand(0, 9) . rand(1000000, 9999999) . rand(0, 9);
+
+            if($this->input->post('pc') == 0){
+                $this->db->select('*');
+                $this->db->from('geopos_product_cat');
+                $this->db->where('geopos_product_cat.title',$row[7]);
+                $cat = $this->db->get()->row_array();
+                
+                if($cat){
+                    $pcat = $cat['id'];
+                }else{
+                    $this->db->insert('geopos_product_cat', array('title'=>$row[7]));
+                    $pcat = $this->db->insert_id(); 
+                }
+            }
+            //echo $pcat; exit;
 
             $products[] = array(
                 'pid' => null,
                 'pcat' => $pcat,
-                'warehouse' => $warehouse,
+                'warehouse' => 1,
                 'product_name' => $row[0],
                 'product_code' => $row[1],
                 'product_price' => $row[2],
@@ -130,12 +163,13 @@ class Import extends CI_Controller
                 'taxrate' => $row[4],
                 'disrate' => $row[5],
                 'qty' => $row[6],
-                'product_des' => $row[7],
+                'product_des' => '', //$row[7],
                 'alert' => $row[8],
                 'barcode' => $barcode
             );
 
 
+        }
         }
         unlink(FCPATH . 'userfiles/' . $name);
         if (count($sheetData[0]) == 9) {
