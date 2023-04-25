@@ -57,6 +57,7 @@
 
                     <div class="col-sm-6">
                         <select name="product_cat" class="form-control">
+                            <option value="">-- Select Product Category --</option>
                             <?php
                             foreach ($cat as $row) {
                                 $cid = $row['id'];
