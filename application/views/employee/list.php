@@ -8,7 +8,7 @@
                 </a>
             </h5>
 
-            <form action="<?php echo base_url('Employee/import');?>" method="post" enctype="multipart/form-data">
+            <!-- <form action="<?php echo base_url('employee/import');?>" method="post" enctype="multipart/form-data">
 				<div class="form-group mb-3">
 					<div class="mb-3">
 						<input type="file" name="file" class="form-control" id="file">
@@ -17,7 +17,7 @@
 				<div class="d-grid">
                 <input type="submit" class="btn btn-primary" name="importSubmit" value="IMPORT">
 				</div>
-			</form>
+			</form> -->
 
 
             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
