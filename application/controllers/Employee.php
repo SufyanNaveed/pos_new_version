@@ -173,8 +173,7 @@ class Employee extends CI_Controller
                             $this->db->insert('geopos_transactions', $data);
 
 
-
-                            exit;
+ 
                              
                         } 
                     }
