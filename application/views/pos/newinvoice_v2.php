@@ -126,14 +126,17 @@
                 <?php if ($emp['key1']) { ?>
                     <div class="col">
                         <div class="form-group form-group-sm text-g">
-                            <label for="employee"><?php echo $this->lang->line('Employee') ?></label>
+                            <label for="employee"><?php echo $this->lang->line('Employee');  ?>
+                             </label>
 
-                            <select id="employee" name="employee" class="form-control form-control-sm">
+                            <select id="employee" name="employee" class="form-control form-control-sm" <?php echo $this->session->userdata()['s_role'] == 'r_2' ? 'disabled' : '' ?>>
+                                <option value="">-- Select Employee --</option>
                                 <?php
                                 foreach ($employee as $row) {
                                     $cid = $row['id'];
                                     $title = $row['name'];
-                                    echo "<option value='$cid'>$title</option>";
+                                    $selected = $this->session->userdata()['id'] == $cid ? 'selected' : '';
+                                    echo "<option value='$cid' $selected>$title</option>";
                                 }
                                 ?>
                             </select></div>
