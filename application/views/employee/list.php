@@ -7,6 +7,19 @@
                     <?php echo $this->lang->line('Add new') ?>
                 </a>
             </h5>
+
+            <form action="<?php echo base_url('Employee/import');?>" method="post" enctype="multipart/form-data">
+				<div class="form-group mb-3">
+					<div class="mb-3">
+						<input type="file" name="file" class="form-control" id="file">
+					</div>					   
+				</div>
+				<div class="d-grid">
+                <input type="submit" class="btn btn-primary" name="importSubmit" value="IMPORT">
+				</div>
+			</form>
+
+
             <a class="heading-elements-toggle"><i class="fa fa-ellipsis-v font-medium-3"></i></a>
             <div class="heading-elements">
                 <ul class="list-inline mb-0">

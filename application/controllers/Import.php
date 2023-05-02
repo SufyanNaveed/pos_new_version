@@ -124,12 +124,13 @@ class Import extends CI_Controller
         $pcat = $this->input->post('pc');
         $warehouse = $this->input->post('wid');
         $inputFileName = FCPATH . 'userfiles/' . $name;
+        print_r($inputFileName); exit;
 
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, false);
         
         
-        // print_r($sheetData); exit;
+        print_r($sheetData); exit;
 
         $products = array();
 

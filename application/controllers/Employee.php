@@ -47,6 +47,171 @@ class Employee extends CI_Controller
         $this->load->view('fixed/footer');
     }
 
+    public function import(){
+        $this->load->library('form_validation');
+        $this->load->helper('file');
+        if($this->input->post('importSubmit')){
+            $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
+            if($this->form_validation->run() == true){
+                if(is_uploaded_file($_FILES['file']['tmp_name'])){
+                    $this->load->library('CSVReader');
+                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+                    if(!empty($csvData)){
+                        // echo '<pre>'; print_r($csvData); exit;
+
+                        foreach($csvData as $row){ 
+                            
+                            $name =  explode("(",$row['Staff']);
+                            $email =  strtolower($name[0]).'@gmail.com';
+                            //echo '<pre>'; print_r($email); exit;
+                            $invoiceno = str_replace("Inv","",$row['Invoice Number']);
+
+                            $id = $this->aauth->create_user($email, '123456', $name[0]);
+                            if(!$id){
+                                $this->db->select('*');
+                                $this->db->from('geopos_users');
+                                $this->db->where('username', $name[0]);
+                                $id = $this->db->get()->row()->id; 
+                            }else{
+                                $data = array(
+                                    'id' => $id,
+                                    'username' => $name[0],
+                                    'name' => $name[0],
+                                    'address' => '',
+                                    'city' => '',
+                                    'region' => '',
+                                    'country' => '',
+                                    'postbox' => '',
+                                    'phone' => '',
+                                    'dept' => '',
+                                    'salary' => '',
+                                    'target' => '',
+                                    'month_target' => '',
+                                    'c_rate' => '',
+                                );
+                                if ($this->db->insert('geopos_employees', $data)) {
+                                    
+                                    $target_data = array(
+                                        'emp_id' => $id,
+                                        'target' => 0,
+                                        'month_target' => 0,
+                                        'year' => date('Y')
+                                    );
+                                    $this->db->insert('geopos_employees_month_target', $target_data);
+                        
+                                    $data1 = array(
+                                        'roleid' => 2,
+                                        'loc' => 2
+                                    );
+                        
+                                    $this->db->set($data1);
+                                    $this->db->where('id', $id);
+                        
+                                    $this->db->update('geopos_users');
+                                }
+                            }
+                            $sale_date = date("Y-m-d", strtotime($row['Sale Date']));
+                            $data1 = array('tid' => $invoiceno, 'invoicedate' => $sale_date, 'invoiceduedate' => $sale_date, 
+                            'subtotal' => $row['Grand Total.'], 'shipping' => '0.00', 'ship_tax' => $row['Total VAT'], 
+                            'ship_tax_type' => 'incl', 'discount_rate' => '0.00', 'total' => $row['Grand Total.'], 
+                            'pmethod' => 'Cash', 'notes' => '', 'status' => 'paid', 'csd' => 1, 
+                            'eid' => $id, 'pamnt' => 0, 'taxstatus' => 'yes', 'discstatus' => 1, 
+                            'format_discount' => '%', 'refer' => $refer, 'term' => 1, 
+                            'multi' => NULL, 'i_class' => 1, 'loc' => 2,
+                            'wholesale' => 0);
+                            $this->db->insert('geopos_invoices', $data1);
+                            $invoice_id = $this->db->insert_id();
+
+                            
+                            $this->db->select('*');
+                            $this->db->from('geopos_products');
+                            $this->db->where('product_name', $row['Product Name']);
+                            $res = $this->db->get()->row_array();
+                            //decho '<pre>'; print_r($res); exit;
+                            if($res){
+                                $data2 = array(
+                                    'tid' => $invoiceno,
+                                    'pid' => $res['pid'],
+                                    'product' => $row['Product Name'],
+                                    'code' => $row['Article Number'],
+                                    'qty' => $row['Total Qnty'],
+                                    'price' => $row['Unit Price'],
+                                    'tax' => $row['Total VAT'],
+                                    'discount' => 0,
+                                    'subtotal' => $row['Grand Total.'],
+                                    'totaltax' => $row['Total VAT'],
+                                    'totaldiscount' => 0,
+                                    'product_des' => '',
+                                    'i_class' => 1,
+                                    'unit' => '',
+                                    'serial' => ''
+                                );
+                                $this->db->insert('geopos_invoice_items', $data2);
+                                $invoice_id = $this->db->insert_id();
+                            }
+
+
+                            $data = array(
+                                'payerid' => 1,
+                                'payer' => 'Walk-in Client',
+                                'acid' => 1,
+                                'account' => 'Sales Account',
+                                'date' => $sale_date,
+                                'debit' => 0,
+                                'credit' => $row['Grand Total.'],
+                                'type' => 'Income',
+                                'cat' => '',
+                                'method' => 'Transfer',
+                                'eid' => $id,
+                                'note' => '#-Cash',
+                                'loc' => 2
+                            );
+                            $amount = $row['Grand Total.'];
+                            $this->db->set('lastbal', "lastbal+$amount", FALSE);
+                            $this->db->where('id', 1);
+                            $this->db->update('geopos_accounts');
+                            $this->db->insert('geopos_transactions', $data);
+
+
+
+                            exit;
+                             
+                        } 
+                    }
+                }else{
+                    $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
+                }
+            }else{
+                $this->session->set_userdata('error_msg', 'Invalid file, please select only CSV file.');
+            }
+        }
+        redirect('employee');
+    }
+    
+    /*
+     * Callback function to check file value and type during validation
+     */
+    public function file_check($str){
+        $allowed_mime_types = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain');
+        if(isset($_FILES['file']['name']) && $_FILES['file']['name'] != ""){
+            $mime = get_mime_by_extension($_FILES['file']['name']);
+            $fileAr = explode('.', $_FILES['file']['name']);
+            $ext = end($fileAr);
+            if(($ext == 'csv') && in_array($mime, $allowed_mime_types)){
+                return true;
+            }else{
+                $this->form_validation->set_message('file_check', 'Please select only CSV file to upload.');
+                return false;
+            }
+        }else{
+            $this->form_validation->set_message('file_check', 'Please select a CSV file to upload.');
+            return false;
+        }
+    }
+
+    
+    
+    
     public function salaries()
     {
         $head['usernm'] = $this->aauth->get_user()->username;
