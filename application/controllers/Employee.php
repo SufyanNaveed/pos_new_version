@@ -101,7 +101,7 @@ class Employee extends CI_Controller
                         
                                     $data1 = array(
                                         'roleid' => 2,
-                                        'loc' => 2
+                                        'loc' => 3
                                     );
                         
                                     $this->db->set($data1);
@@ -117,7 +117,7 @@ class Employee extends CI_Controller
                             'pmethod' => 'Cash', 'notes' => '', 'status' => 'paid', 'csd' => 1, 
                             'eid' => $id, 'pamnt' => 0, 'taxstatus' => 'yes', 'discstatus' => 1, 
                             'format_discount' => '%', 'refer' => $refer, 'term' => 1, 
-                            'multi' => NULL, 'i_class' => 1, 'loc' => 2,
+                            'multi' => NULL, 'i_class' => 1, 'loc' => 3,
                             'wholesale' => 0);
                             $this->db->insert('geopos_invoices', $data1);
                             $invoice_id = $this->db->insert_id();
