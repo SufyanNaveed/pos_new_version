@@ -145,7 +145,7 @@ class Import extends CI_Controller
             if($product){
                 $qty = $product['qty'] + $row[6];
                 $this->db->where('geopos_products.pid',$product['pid']);
-                $this->db->update('geopos_products', array('qty'=>$qty));
+                $this->db->update('geopos_products', array('qty'=>$qty, 'fproduct_price'=>$row[3]));
             }else{
             
                 if($this->input->post('pc') == 0){
