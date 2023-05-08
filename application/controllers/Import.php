@@ -124,13 +124,13 @@ class Import extends CI_Controller
         $pcat = $this->input->post('pc');
         $warehouse = $this->input->post('wid');
         $inputFileName = FCPATH . 'userfiles/' . $name;
-        print_r($inputFileName); exit;
+        //print_r($inputFileName); exit;
 
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, false);
         
         
-        print_r($sheetData); exit;
+        //print_r($sheetData); exit;
 
         $products = array();
 
@@ -138,37 +138,50 @@ class Import extends CI_Controller
             //echo '<pre>'; print_r($row); exit;
             $barcode = $barcode = rand(100, 999) . rand(0, 9) . rand(1000000, 9999999) . rand(0, 9);
 
-            if($this->input->post('pc') == 0){
-                $this->db->select('*');
-                $this->db->from('geopos_product_cat');
-                $this->db->where('geopos_product_cat.title',$row[7]);
-                $cat = $this->db->get()->row_array();
-                
-                if($cat){
-                    $pcat = $cat['id'];
-                }else{
-                    $this->db->insert('geopos_product_cat', array('title'=>$row[7]));
-                    $pcat = $this->db->insert_id(); 
+            $this->db->select('*');
+            $this->db->from('geopos_products');
+            $this->db->where('geopos_products.product_code',$row[1]);
+            $product = $this->db->get()->row_array();
+            if($product){
+                $qty = $product['qty'] + $row[6];
+                $this->db->where('geopos_products.pid',$product['pid']);
+                $this->db->update('geopos_products', array('qty'=>$qty));
+            }else{
+            
+                if($this->input->post('pc') == 0){
+                    $this->db->select('*');
+                    $this->db->from('geopos_product_cat');
+                    $this->db->where('geopos_product_cat.title',$row[7]);
+                    $cat = $this->db->get()->row_array();
+                    
+                    if($cat){
+                        $pcat = $cat['id'];
+                    }else{
+                        $this->db->insert('geopos_product_cat', array('title'=>$row[7]));
+                        $pcat = $this->db->insert_id(); 
+                    }
                 }
+                //echo $pcat; exit;
+
+                $products[] = array(
+                    'pid' => null,
+                    'pcat' => $pcat,
+                    'warehouse' => 1,
+                    'product_name' => $row[0],
+                    'product_code' => $row[1],
+                    'product_price' => $row[2],
+                    'fproduct_price' => $row[3],
+                    'taxrate' => $row[4],
+                    'disrate' => $row[5],
+                    'qty' => $row[6],
+                    'product_des' => '', //$row[7],
+                    'alert' => $row[8],
+                    'barcode' => $barcode
+                );
+
             }
-            //echo $pcat; exit;
 
-            $products[] = array(
-                'pid' => null,
-                'pcat' => $pcat,
-                'warehouse' => 1,
-                'product_name' => $row[0],
-                'product_code' => $row[1],
-                'product_price' => $row[2],
-                'fproduct_price' => $row[3],
-                'taxrate' => $row[4],
-                'disrate' => $row[5],
-                'qty' => $row[6],
-                'product_des' => '', //$row[7],
-                'alert' => $row[8],
-                'barcode' => $barcode
-            );
-
+            
 
         }
         }
