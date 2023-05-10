@@ -41,7 +41,7 @@ class Transactions_model extends CI_Model
                 break;
         }
         if ($this->aauth->get_user()->loc) {
-            $this->db->where('loc', $this->aauth->get_user()->loc);
+            $this->db->where('geopos_transactions.loc', $this->aauth->get_user()->loc);
         }
 
         $i = 0;
