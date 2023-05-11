@@ -130,6 +130,7 @@ class Products_model extends CI_Model
         if ($this->input->post('length') != -1)
             $this->db->limit($this->input->post('length'), $this->input->post('start'));
         $query = $this->db->get();
+        // echo '<pre>'; print
         return $query->result();
     }
 
@@ -797,11 +798,81 @@ FROM geopos_products $whr");
     }
 
     public function get_pro_report_datatables(){
+        $this->db->select('geopos_products.*, geopos_product_cat.title as pro_cat, geopos_warehouse.title as product_warehouse
+        ');
+        $this->db->from('geopos_products');
+        $this->db->join('geopos_product_cat', 'geopos_product_cat.id = geopos_products.pcat', 'left');
+        $this->db->join('geopos_warehouse', 'geopos_products.warehouse = geopos_warehouse.id', 'left');
+        
+        $linksArray = isset($_POST['locations']) ? $_POST['locations'] : array();
+        $locs_array = $linksArray ? array_filter($linksArray, fn($var) => $var !== NULL && $var !== FALSE && $var !== "") : array();
+        if(isset($_POST['locations']) && !empty($locs_array)) {
+            $this->db->where_in('geopos_warehouse.id',$locs_array);
+        }
+        
+        $i = 0;
+        foreach ($this->column_search as $item) // loop column 
+        {
+            $search = $this->input->post('search');
+            $value = $search['value'];
+            if ($value) // if datatable send POST for search
+            {
+
+                if ($i === 0) // first loop
+                {
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $value);
+                } else {
+                    $this->db->or_like($item, $value);
+                }
+
+                if (count($this->column_search) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+            }
+            $i++;
+        }
+        $search = $this->input->post('order');
+        if ($search) // here order processing
+        {
+            $this->db->order_by($this->column_order[$search['0']['column']], $search['0']['dir']);
+        } else if (isset($this->order)) {
+            $order = $this->order;
+            $this->db->order_by(key($order), $order[key($order)]);
+        }
+        
+        if ($this->input->post('length') != -1)
+            $this->db->limit($this->input->post('length'), $this->input->post('start'));
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+
+    function count_filtered_report()
+    {
         $this->db->select('geopos_products.*, geopos_product_cat.title as pro_cat
         ');
         $this->db->from('geopos_products');
         $this->db->join('geopos_product_cat', 'geopos_product_cat.id = geopos_products.pcat', 'left');
+        // if ($this->input->post('length') != -1)
+        //     $this->db->limit($this->input->post('length'), $this->input->post('start'));
         $query = $this->db->get();
-        return $query->result();
+        return $query->num_rows();
+    }
+
+    public function count_all_report()
+    {
+        // $this->db->from($this->table);
+        // $this->db->join('geopos_warehouse', 'geopos_warehouse.id = geopos_products.warehouse');
+        // if ($this->aauth->get_user()->loc) {
+
+        //     $this->db->where('geopos_warehouse.loc', $this->aauth->get_user()->loc);
+        //     if (BDATA) $this->db->or_where('geopos_warehouse.loc', 0);
+        // } elseif (!BDATA) {
+        //     $this->db->where('geopos_warehouse.loc', 0);
+        // }
+         
+        $this->db->from('geopos_products');
+        $this->db->join('geopos_product_cat', 'geopos_product_cat.id = geopos_products.pcat', 'left');
+        return $this->db->count_all_results();
     }
 }

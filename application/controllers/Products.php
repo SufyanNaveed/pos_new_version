@@ -807,6 +807,7 @@ class Products extends CI_Controller
             $row[] = $product->product_code;
             $row[] = $product->pro_cat;
             $row[] = $product->product_name;
+            $row[] = $product->product_warehouse;
             $row[] = $product->qty;
             $row[] = amountExchange($product->fproduct_price, 0, $this->aauth->get_user()->loc);
             $row[] = amountExchange($product->fproduct_price * $product->qty, 0, $this->aauth->get_user()->loc);
@@ -821,9 +822,9 @@ class Products extends CI_Controller
             $data[] = $row;
         }
         $output = array(
-            // "draw" => $this->input->post('draw'),
-            // "recordsTotal" => $this->customers->count_all(),
-            // "recordsFiltered" => $this->customers->count_filtered(),
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->products->count_all_report(),
+            "recordsFiltered" => $this->products->count_filtered_report(),
             "data" => $data,
         ); 
         echo json_encode($output);
