@@ -111,6 +111,7 @@ class Employee extends CI_Controller
                                 }
                             }
                             $sale_date = date("Y-m-d", strtotime($row['Sale Date']));
+                            
                             $data1 = array('tid' => $invoiceno, 'invoicedate' => $sale_date, 'invoiceduedate' => $sale_date, 
                             'subtotal' => $row['Grand Total.'], 'shipping' => '0.00', 'ship_tax' => $row['Total VAT'], 
                             'ship_tax_type' => 'incl', 'discount_rate' => '0.00', 'total' => $row['Grand Total.'], 
@@ -125,12 +126,13 @@ class Employee extends CI_Controller
                             
                             $this->db->select('*');
                             $this->db->from('geopos_products');
-                            $this->db->where('product_name', $row['Product Name']);
+                            $this->db->where('product_code', $row['Article Number']);
+                            $this->db->or_where('product_name', $row['Product Name']);
                             $res = $this->db->get()->row_array();
                             //decho '<pre>'; print_r($res); exit;
                             if($res){
                                 $data2 = array(
-                                    'tid' => $invoiceno,
+                                    'tid' => $invoice_id,
                                     'pid' => $res['pid'],
                                     'product' => $row['Product Name'],
                                     'code' => $row['Article Number'],
@@ -147,7 +149,7 @@ class Employee extends CI_Controller
                                     'serial' => ''
                                 );
                                 $this->db->insert('geopos_invoice_items', $data2);
-                                $invoice_id = $this->db->insert_id();
+                                // $invoice_id = $this->db->insert_id();
                             }
 
 
@@ -162,18 +164,35 @@ class Employee extends CI_Controller
                                 'type' => 'Income',
                                 'cat' => '',
                                 'method' => 'Transfer',
+                                'tid' => $invoice_id,
                                 'eid' => $id,
-                                'note' => '#-Cash',
-                                'loc' => 2
+                                'note' => '#'.$invoiceno.'-Cash',
+                                'loc' => 3
                             );
                             $amount = $row['Grand Total.'];
                             $this->db->set('lastbal', "lastbal+$amount", FALSE);
-                            $this->db->where('id', 1);
+                            $this->db->where('id', 5);
                             $this->db->update('geopos_accounts');
                             $this->db->insert('geopos_transactions', $data);
 
 
- 
+                            //profit calculation
+                            $t_profit = 0;
+                            $this->db->select('geopos_invoice_items.pid, geopos_invoice_items.price, geopos_invoice_items.qty, geopos_products.fproduct_price');
+                            $this->db->from('geopos_invoice_items');
+                            $this->db->join('geopos_products', 'geopos_products.pid = geopos_invoice_items.pid', 'left');
+                            $this->db->where('geopos_invoice_items.tid', $invoice_id);
+                            $query = $this->db->get();
+                            $pids = $query->result_array();
+                            foreach ($pids as $profit) {
+                                $t_cost = $profit['fproduct_price'] * $profit['qty'];
+                                $s_cost = $profit['price'] * $profit['qty'];
+
+                                $t_profit += $s_cost - $t_cost;
+                            }
+                            $data = array('type' => 9, 'rid' => $invoice_id, 'col1' => $t_profit, 'd_date' => $sale_date);
+
+                            $this->db->insert('geopos_metadata', $data);
                              
                         } 
                     }

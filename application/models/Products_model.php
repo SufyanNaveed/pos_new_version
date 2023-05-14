@@ -840,7 +840,7 @@ FROM geopos_products $whr");
         
         if ($this->input->post('length') != -1)
             $this->db->limit($this->input->post('length'), $this->input->post('start'));
-        $query = $this->db->get();
+        $query = $this->db->get(); 
         return $query->result();
     }
 
@@ -866,5 +866,15 @@ FROM geopos_products $whr");
         $this->db->join('geopos_product_cat', 'geopos_product_cat.id = geopos_products.pcat', 'left');
         $count = $this->db->count_all_results();
         return $count; 
+    }
+
+    public function get_location_qty($pid, $warehouse)
+    {
+        $this->db->select('qty as loc_qty');
+        $this->db->from('geopos_products'); 
+        $this->db->where('geopos_products.warehouse', $warehouse); 
+        $this->db->where('geopos_products.pid', $pid); 
+        $res = $this->db->get()->row(); 
+        return $res->loc_qty; 
     }
 }

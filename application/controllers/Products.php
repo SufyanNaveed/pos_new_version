@@ -807,8 +807,10 @@ class Products extends CI_Controller
             $row[] = $product->product_code;
             $row[] = $product->pro_cat;
             $row[] = $product->product_name;
-            $row[] = $product->product_warehouse;
-            $row[] = $product->qty;
+            $qty = $this->products->get_location_qty($product->pid,4);
+            $row[] = $qty ? $qty : 0;
+            $loc_qty = $this->products->get_location_qty($product->pid,5); 
+            $row[] = $loc_qty ? $loc_qty : 0;
             $row[] = amountExchange($product->fproduct_price, 0, $this->aauth->get_user()->loc);
             $row[] = amountExchange($product->fproduct_price * $product->qty, 0, $this->aauth->get_user()->loc);
             $row[] = amountExchange($product->product_price, 0, $this->aauth->get_user()->loc);
@@ -819,7 +821,7 @@ class Products extends CI_Controller
             $no_of_days =  abs(round($datediff / 86400));
             $row[] = $no_of_days. ' Days';
             $row[] = $product->qty > 0 ? 'Active' : 'DeActive';
-            $data[] = $row;
+            $data[] = $row; 
         }
         $output = array(
             "draw" => $this->input->post('draw'),

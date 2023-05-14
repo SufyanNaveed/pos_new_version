@@ -53,9 +53,9 @@
                         <th><?php echo $this->lang->line('serialNO') ?></th> 
                         <th><?php echo 'Article No' ?></th>
                         <th><?php echo $this->lang->line('product').' '.$this->lang->line('Category') ?></th>
-                        <th><?php echo $this->lang->line('product').' '.$this->lang->line('Name') ?></th>
-                        <th><?php echo $this->lang->line('Warehouse') ?></th>
-                        <th><?php echo 'Total Stock' ?></th>
+                        <th><?php echo $this->lang->line('product').' '.$this->lang->line('Name') ?></th> 
+                        <th><?php echo 'Sharjah Stock' ?></th>
+                        <th><?php echo 'Ajman Stock' ?></th>
                         <th><?php echo 'Net Purchase Amount' ?></th>
                         <th><?php echo 'Total Purchase Amount' ?></th>
                         <th><?php echo 'Net Sale Amount' ?></th>
@@ -72,9 +72,9 @@
                         <th><?php echo $this->lang->line('serialNO') ?></th> 
                         <th><?php echo 'Article No' ?></th>
                         <th><?php echo $this->lang->line('product').' '.$this->lang->line('Category') ?></th>
-                        <th><?php echo $this->lang->line('product').' '.$this->lang->line('Name') ?></th>
-                        <th><?php echo $this->lang->line('Warehouse') ?></th>
-                        <th><?php echo 'Total Stock' ?></th>
+                        <th><?php echo $this->lang->line('product').' '.$this->lang->line('Name') ?></th> 
+                        <th><?php echo 'Sharjah Stock' ?></th>
+                        <th><?php echo 'Ajman Stock' ?></th>
                         <th><?php echo 'Net Purchase Amount' ?></th>
                         <th><?php echo 'Total Purchase Amount' ?></th>
                         <th><?php echo 'Net Sale Amount' ?></th>
