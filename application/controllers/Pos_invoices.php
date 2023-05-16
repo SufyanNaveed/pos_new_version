@@ -2165,14 +2165,14 @@ echo 6;
             
             $pur_prices = explode(',', $product->pur_price);
             $pur_taxes = explode(',', $product->pur_total_tax);
-            $values = '';
-            $SUM = '';
+            $values = 0;
+            $SUM = 0;
             foreach($pur_prices as $key=>$price) {
-                $val = (($price *  $pur_taxes[$key]) /100); 
-                $values .= number_format((($price *  $pur_taxes[$key]) /100),2); 
+                $val = ((intval($price) *  intval($pur_taxes[$key])) /100); 
+                $values .= number_format(((intval($price) *  intval($pur_taxes[$key])) /100),2); 
                 if($key < count($pur_taxes)-1)
                     $values .= ' + ';
-                $SUM += $val;
+                $SUM += intval($val);
             }
 
             $row[] = $values;

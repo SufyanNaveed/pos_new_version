@@ -455,7 +455,7 @@ class Pos_invoices_model extends CI_Model
     public function get_inv_report_datatables(){
 //        geopos_product_cat.title as pro_cat, geopos_products.product_name, geopos_products.product_code,
 
-        $this->db->select('geopos_invoices.id, geopos_invoices.items, geopos_invoices.tid as invoice_no, geopos_invoices.tid as invoicedate, geopos_employees.name as emp_name');
+        $this->db->select('geopos_invoices.id, geopos_invoices.items, geopos_invoices.tid as invoice_no, geopos_invoices.invoicedate as invoicedate, geopos_employees.name as emp_name');
         $this->db->from('geopos_invoices');
         $this->db->join('geopos_employees', 'geopos_employees.id = geopos_invoices.eid', 'left');
         if ($this->aauth->get_user()->loc) {
@@ -493,18 +493,15 @@ class Pos_invoices_model extends CI_Model
         WHERE geopos_invoice_items.tid = '.$id.') AS pur_total_tax,
         
         (SELECT group_concat(product_name) FROM geopos_invoice_items
-        LEFT JOIN  geopos_purchase_items ON geopos_invoice_items.pid = geopos_purchase_items.pid
-        LEFT JOIN  geopos_products ON geopos_products.pid = geopos_purchase_items.pid
+        LEFT JOIN  geopos_products ON geopos_products.pid = geopos_invoice_items.pid
         WHERE geopos_invoice_items.tid = '.$id.') AS product_name,
         
         (SELECT group_concat(product_code) FROM geopos_invoice_items
-        LEFT JOIN  geopos_purchase_items ON geopos_invoice_items.pid = geopos_purchase_items.pid
-        LEFT JOIN  geopos_products ON geopos_products.pid = geopos_purchase_items.pid
+        LEFT JOIN  geopos_products ON geopos_products.pid = geopos_invoice_items.pid
         WHERE geopos_invoice_items.tid = '.$id.') AS product_code,
 
         (SELECT group_concat(DISTINCT title) FROM geopos_invoice_items
-        LEFT JOIN  geopos_purchase_items ON geopos_invoice_items.pid = geopos_purchase_items.pid
-        LEFT JOIN  geopos_products ON geopos_products.pid = geopos_purchase_items.pid
+        LEFT JOIN  geopos_products ON geopos_products.pid = geopos_invoice_items.pid
         LEFT JOIN  geopos_product_cat ON geopos_products.pcat = geopos_product_cat.id
         WHERE geopos_invoice_items.tid = '.$id.') AS pro_cat
 
@@ -513,7 +510,8 @@ class Pos_invoices_model extends CI_Model
         $this->db->where('tid', $id);
         $this->db->limit(1);
         $query = $this->db->get();
-        //echo '<pre>'; print_r($query->result()); exit;
+        // echo '<pre>'; print_r($query->result()); exit;
+        // echo '<pre>'; print_r($this->db->last_query()); exit;
         return $query->row();
 
     } 
