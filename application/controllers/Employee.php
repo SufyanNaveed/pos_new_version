@@ -101,7 +101,7 @@ class Employee extends CI_Controller
                         
                                     $data1 = array(
                                         'roleid' => 2,
-                                        'loc' => 3
+                                        'loc' => 2
                                     );
                         
                                     $this->db->set($data1);
@@ -116,9 +116,9 @@ class Employee extends CI_Controller
                             'subtotal' => $row['Grand Total.'], 'shipping' => '0.00', 'ship_tax' => $row['Total VAT'], 
                             'ship_tax_type' => 'incl', 'discount_rate' => '0.00', 'total' => $row['Grand Total.'], 
                             'pmethod' => 'Cash', 'notes' => '', 'status' => 'paid', 'csd' => 1, 
-                            'eid' => $id, 'pamnt' => 0, 'taxstatus' => 'yes', 'discstatus' => 1, 
+                            'eid' => $id, 'pamnt' => 0, 'items' => $row['Total Qnty'],'taxstatus' => 'yes', 'discstatus' => 1, 
                             'format_discount' => '%', 'refer' => $refer, 'term' => 1, 
-                            'multi' => NULL, 'i_class' => 1, 'loc' => 3,
+                            'multi' => NULL, 'i_class' => 1, 'loc' => 2,
                             'wholesale' => 0);
                             $this->db->insert('geopos_invoices', $data1);
                             $invoice_id = $this->db->insert_id();
@@ -129,7 +129,7 @@ class Employee extends CI_Controller
                             $this->db->where('product_code', $row['Article Number']);
                             $this->db->or_where('product_name', $row['Product Name']);
                             $res = $this->db->get()->row_array();
-                            //decho '<pre>'; print_r($res); exit;
+                            // echo '<pre>'; print_r($res); exit;
                             if($res){
                                 $data2 = array(
                                     'tid' => $invoice_id,
@@ -150,6 +150,59 @@ class Employee extends CI_Controller
                                 );
                                 $this->db->insert('geopos_invoice_items', $data2);
                                 // $invoice_id = $this->db->insert_id();
+                            }else{
+                                
+                                $barcode = $barcode = rand(100, 999) . rand(0, 9) . rand(1000000, 9999999) . rand(0, 9);
+                                $this->db->select('*');
+                                $this->db->from('geopos_product_cat');
+                                $this->db->where('geopos_product_cat.title',$row['Product Category']);
+                                $cat = $this->db->get()->row_array();                                
+                                if($cat){
+                                    $pcat = $cat['id'];
+                                }else{
+                                    $this->db->insert('geopos_product_cat', array('title'=>$row['Product Category']));
+                                    $pcat = $this->db->insert_id(); 
+                                } 
+                                // echo $pcat; exit;
+                
+                                $products = array(
+                                    'pid' => null,
+                                    'pcat' => $pcat,
+                                    'warehouse' => 4,
+                                    'product_name' => $row['Product Name'],
+                                    'product_code' => $row['Article Number'],
+                                    'product_price' => $row['Unit Price'],
+                                    'fproduct_price' => 0,
+                                    'taxrate' => 0,
+                                    'disrate' => 0,
+                                    'qty' => 0,
+                                    'product_des' => '',
+                                    'alert' => 5,
+                                    'barcode' => $barcode
+                                );   
+                                // echo '<pre>'; print_r($products); exit;
+
+                                $this->db->insert('geopos_products', $products);
+                                $products_id = $this->db->insert_id();
+                                
+                                $data2 = array(
+                                    'tid' => $invoice_id,
+                                    'pid' => $products_id,
+                                    'product' => $row['Product Name'],
+                                    'code' => $row['Article Number'],
+                                    'qty' => $row['Total Qnty'],
+                                    'price' => $row['Unit Price'],
+                                    'tax' => $row['Total VAT'],
+                                    'discount' => 0,
+                                    'subtotal' => $row['Grand Total.'],
+                                    'totaltax' => $row['Total VAT'],
+                                    'totaldiscount' => 0,
+                                    'product_des' => '',
+                                    'i_class' => 1,
+                                    'unit' => '',
+                                    'serial' => ''
+                                );
+                                $this->db->insert('geopos_invoice_items', $data2);
                             }
 
 
@@ -167,7 +220,7 @@ class Employee extends CI_Controller
                                 'tid' => $invoice_id,
                                 'eid' => $id,
                                 'note' => '#'.$invoiceno.'-Cash',
-                                'loc' => 3
+                                'loc' => 2
                             );
                             $amount = $row['Grand Total.'];
                             $this->db->set('lastbal', "lastbal+$amount", FALSE);

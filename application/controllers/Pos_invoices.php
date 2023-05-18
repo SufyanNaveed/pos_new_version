@@ -2174,22 +2174,14 @@ echo 6;
                     $values .= ' + ';
                 $SUM += intval($val);
             }
-
             $row[] = $values;
-            
-            
-            $row[] = amountExchange($product->pur_net_total + $SUM, 0, $this->aauth->get_user()->loc);
-            
-            // $row[] = amountExchange($product->price, 0, $this->aauth->get_user()->loc);
-            // $row[] = amountExchange($product->price * $purchase->qty, 0, $this->aauth->get_user()->loc);
-            // $row[] = amountExchange($product->tax, 0, $this->aauth->get_user()->loc);
-            // $row[] = amountExchange($product->subtotal, 0, $this->aauth->get_user()->loc);
+            $row[] = amountExchange($product->pur_net_total + $SUM, 0, $this->aauth->get_user()->loc); 
             $data[] = $row;
         }
         $output = array(
-            // "draw" => $this->input->post('draw'),
-            // "recordsTotal" => $this->customers->count_all(),
-            // "recordsFiltered" => $this->customers->count_filtered(),
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->invocies->count_all_report(),
+            "recordsFiltered" => $this->invocies->count_filtered_report(),
             "data" => $data,
         ); 
         echo json_encode($output);
