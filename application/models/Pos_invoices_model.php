@@ -294,10 +294,10 @@ class Pos_invoices_model extends CI_Model
             $this->db->limit($_POST['length'], $_POST['start']);
         
         $this->db->where('geopos_invoices.i_class', 1);
-        if ($this->aauth->get_user()->loc) {
-            $this->db->where('geopos_invoices.loc', $this->aauth->get_user()->loc);
-        }
-          elseif(!BDATA) { $this->db->where('geopos_invoices.loc', 0); }
+        // if ($this->aauth->get_user()->loc) {
+        //     $this->db->where('geopos_invoices.loc', $this->aauth->get_user()->loc);
+        // }
+        //   elseif(!BDATA) { $this->db->where('geopos_invoices.loc', 0); }
         $query = $this->db->get();
         // echo '<pre>'; print_r($this->db->last_query()); exit;
         return $query->result();
