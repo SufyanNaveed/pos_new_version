@@ -28,7 +28,7 @@ if ($this->input->get('due')) {
                        width="100%">
                     <thead>
                         <tr>
-                            <th><?php echo $this->lang->line('serialNO') ?></th>
+                            <!-- <th><?php echo $this->lang->line('serialNO') ?></th>
                             <th>#</th>
                             <th><?php echo $this->lang->line('Date') ?></th>
                             <th><?php echo $this->lang->line('Name') ?></th>
@@ -41,7 +41,26 @@ if ($this->input->get('due')) {
                             <th><?php echo $this->lang->line('Grand Total') ?></th>
                             <th><?php echo $this->lang->line('Cash') ?></th>
                             <th><?php echo $this->lang->line('Card') ?></th>
-                            <th><?php echo $this->lang->line('Credit Note') ?></th>
+                            <th><?php echo $this->lang->line('Credit Note') ?></th> -->
+                            
+                            <th><?php echo $this->lang->line('No') ?></th>
+                            <th> #</th>
+                            <th> Staff</th>
+                            <th><?php echo $this->lang->line('Date') ?></th>
+                            <th><?php echo $this->lang->line('Customer') ?></th>
+                            <th><?php echo $this->lang->line('Phone') ?></th>
+                            <th><?php echo $this->lang->line('Address') ?></th>
+                            <th><?php echo $this->lang->line('Product Code') ?></th>
+                            <th><?php echo $this->lang->line('Product Name') ?></th>
+                            <th><?php echo $this->lang->line('Category') ?></th>
+                            <th><?php echo $this->lang->line('Quantity') ?></th>
+                            <th><?php echo 'Net amount' ?></th>
+                            <th><?php echo 'VAT' ?></th>
+                            <th><?php echo 'Grand Total' ?></th>
+                            <th><?php echo 'Payment Method' ?></th>
+                            <th><?php echo $this->lang->line('Location') ?></th>
+                            <th><?php echo $this->lang->line('Status') ?></th>
+                        <!-- <th class="no-sort"><?php echo $this->lang->line('Settings') ?></th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -49,20 +68,23 @@ if ($this->input->get('due')) {
 
                     <tfoot>
                         <tr>
-                            <th><?php echo $this->lang->line('serialNO') ?></th>
-                            <th>#</th>
+                        <th><?php echo $this->lang->line('No') ?></th>
+                            <th> #</th>
+                            <th> Staff</th>
                             <th><?php echo $this->lang->line('Date') ?></th>
-                            <th><?php echo $this->lang->line('Name') ?></th>
-                            <th><?php echo $this->lang->line('Address') ?></th>
+                            <th><?php echo $this->lang->line('Customer') ?></th>
                             <th><?php echo $this->lang->line('Phone') ?></th>
-                            <th><?php echo $this->lang->line('Email') ?></th>
-                            <th><?php echo $this->lang->line('Qty') ?></th>
-                            <th><?php echo $this->lang->line('Net_amount') ?></th>
-                            <th><?php echo $this->lang->line('total_Vat') ?></th>
-                            <th><?php echo $this->lang->line('Grand Total') ?></th>
-                            <th><?php echo $this->lang->line('Cash') ?></th>
-                            <th><?php echo $this->lang->line('Card') ?></th>
-                            <th><?php echo $this->lang->line('Credit Note') ?></th>
+                            <th><?php echo $this->lang->line('Address') ?></th>
+                            <th><?php echo $this->lang->line('Product Code') ?></th>
+                            <th><?php echo $this->lang->line('Product Name') ?></th>
+                            <th><?php echo $this->lang->line('Category') ?></th>
+                            <th><?php echo $this->lang->line('Quantity') ?></th>
+                            <th><?php echo 'Net amount' ?></th>
+                            <th><?php echo 'VAT' ?></th>
+                            <th><?php echo 'Grand Total' ?></th>
+                            <th><?php echo 'Payment Method' ?></th>
+                            <th><?php echo $this->lang->line('Location') ?></th>
+                            <th><?php echo $this->lang->line('Status') ?></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -116,7 +138,7 @@ if ($this->input->get('due')) {
                     extend: 'excelHtml5',
                     footer: true,
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4]
+                        //columns: [0, 1, 2, 3, 4]
                     }
                 }
             ],

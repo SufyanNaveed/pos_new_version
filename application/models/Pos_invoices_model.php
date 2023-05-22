@@ -227,7 +227,7 @@ class Pos_invoices_model extends CI_Model
         geopos_invoices.invoiceduedate,geopos_invoices.total,geopos_invoices.status,geopos_invoices.pmethod, 
         geopos_invoice_items.code as pcode, geopos_invoice_items.product as product_name, geopos_customers.name,
         geopos_customers.phone, geopos_product_cat.title as product_category,geopos_employees.name as staff_name,
-        geopos_invoices.items as qty, geopos_invoices.subtotal, geopos_invoices.tax');
+        geopos_invoices.items as qty, geopos_invoices.subtotal, geopos_invoices.tax, geopos_customers.address ');
         $this->db->from($this->table);
         $this->db->where('geopos_invoices.i_class', 1);
         if ($opt) {
