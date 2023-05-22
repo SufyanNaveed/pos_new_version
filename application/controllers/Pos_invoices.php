@@ -211,9 +211,56 @@ class Pos_invoices extends CI_Controller
         $head['title'] = "Consolidated Location Report";
         $head['usernm'] = $this->aauth->get_user()->username;
         $this->load->view('fixed/header', $head);
-        $this->load->view('pos/invoices_report');
+        $this->load->view('reports/consolidated_report');
         $this->load->view('fixed/footer');
     }
+
+    public function consolidated_ajax_list()
+    {
+
+        $list = $this->invocies->get_datatables($this->limited);
+
+        $data = array();
+
+        $no = $this->input->post('start');
+        foreach ($list as $invoices) {
+            $no++;
+            $row = array();
+            $row[] = $no;
+            $row[] = '<a href="' . base_url("pos_invoices/view?id=$invoices->id") . '">&nbsp; ' . $invoices->tid . '</a>';
+            $row[] = $invoices->staff_name;
+            $row[] = dateformat($invoices->invoicedate);
+            $row[] = $invoices->name;
+            $row[] = $invoices->phone;
+            $row[] = $invoices->pcode;
+            $row[] = $invoices->product_name;
+            $row[] = $invoices->product_category;
+            $row[] = $invoices->qty;
+            $row[] = $invoices->subtotal;
+            $row[] = $invoices->tax;
+            $row[] = $invoices->total;
+            $row[] = $invoices->pmethod;
+            // $row[] = amountExchange($invoices->total, 0, $this->aauth->get_user()->loc);
+            $row[] = location($invoices->loc)['cname'];
+            $row[] = '<span class="st-' . $invoices->status . '">' . $this->lang->line(ucwords($invoices->status)) . '</span>';
+            $row[] = '<a href="' . base_url("pos_invoices/view?id=$invoices->id") . '" class="btn btn-success btn-sm" title="View"><i class="fa fa-eye"></i></a>&nbsp;<a href="' . base_url("pos_invoices/thermal_pdf?id=$invoices->id") . '&d=1" class="btn btn-info btn-sm"  title="Download"><span class="fa fa-download"></span></a>&nbsp;<a href="#" data-object-id="' . $invoices->id . '" class="btn btn-danger btn-sm delete-object"><span class="fa fa-trash"></span></a>';
+
+            $data[] = $row;
+        }
+
+
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->invocies->count_filtered($this->limited),
+            "recordsFiltered" => $this->invocies->count_filtered($this->limited),
+            "data" => $data,
+        );
+
+        //output to json format
+        echo json_encode($output);
+
+    }
+
 
         //invoices list
     public function extended()

@@ -223,7 +223,11 @@ class Pos_invoices_model extends CI_Model
     
     private function _get_datatables_query($opt = '')
     {
-        $this->db->select('geopos_invoices.id,geopos_invoices.tid,geopos_invoices.invoicedate,geopos_invoices.loc,geopos_invoices.invoiceduedate,geopos_invoices.total,geopos_invoices.status,geopos_customers.name');
+        $this->db->select('geopos_invoices.id,geopos_invoices.tid,geopos_invoices.invoicedate,geopos_invoices.loc,
+        geopos_invoices.invoiceduedate,geopos_invoices.total,geopos_invoices.status,geopos_invoices.pmethod, 
+        geopos_invoice_items.code as pcode, geopos_invoice_items.product as product_name, geopos_customers.name,
+        geopos_customers.phone, geopos_product_cat.title as product_category,geopos_employees.name as staff_name,
+        geopos_invoices.items as qty, geopos_invoices.subtotal, geopos_invoices.tax');
         $this->db->from($this->table);
         $this->db->where('geopos_invoices.i_class', 1);
         if ($opt) {
@@ -248,6 +252,10 @@ class Pos_invoices_model extends CI_Model
         
         
         $this->db->join('geopos_customers', 'geopos_invoices.csd=geopos_customers.id', 'left');
+        $this->db->join('geopos_invoice_items', 'geopos_invoices.id=geopos_invoice_items.tid', 'left');
+        $this->db->join('geopos_products', 'geopos_products.pid=geopos_invoice_items.pid', 'left');
+        $this->db->join('geopos_product_cat', 'geopos_product_cat.id=geopos_products.pcat', 'left');
+        $this->db->join('geopos_employees', 'geopos_employees.id=geopos_invoices.eid', 'left');
 
         $i = 0;
 
@@ -285,12 +293,13 @@ class Pos_invoices_model extends CI_Model
         if ($_POST['length'] != -1)
             $this->db->limit($_POST['length'], $_POST['start']);
         
-        $query = $this->db->get();
         $this->db->where('geopos_invoices.i_class', 1);
         if ($this->aauth->get_user()->loc) {
             $this->db->where('geopos_invoices.loc', $this->aauth->get_user()->loc);
         }
           elseif(!BDATA) { $this->db->where('geopos_invoices.loc', 0); }
+        $query = $this->db->get();
+        // echo '<pre>'; print_r($this->db->last_query()); exit;
         return $query->result();
     }
 
