@@ -63,8 +63,8 @@ class Employee extends CI_Controller
                             
                             $name =  explode("(",$row['Staff']);
                             $email =  strtolower($name[0]).'@gmail.com';
-                            //echo '<pre>'; print_r($email); exit;
-                            $invoiceno = str_replace("Inv","",$row['Invoice Number']);
+                            // //echo '<pre>'; print_r($email); exit;
+                            $invoiceno = str_replace("Inv#","",$row['Invoice Number']);
 
                             $id = $this->aauth->create_user($email, '123456', $name[0]);
                             if(!$id){
@@ -101,7 +101,7 @@ class Employee extends CI_Controller
                         
                                     $data1 = array(
                                         'roleid' => 2,
-                                        'loc' => 2
+                                        'loc' => 3
                                     );
                         
                                     $this->db->set($data1);
@@ -118,12 +118,26 @@ class Employee extends CI_Controller
                             'pmethod' => 'Cash', 'notes' => '', 'status' => 'paid', 'csd' => 1, 
                             'eid' => $id, 'pamnt' => 0, 'items' => $row['Total Qnty'],'taxstatus' => 'yes', 'discstatus' => 1, 
                             'format_discount' => '%', 'refer' => $refer, 'term' => 1, 
-                            'multi' => NULL, 'i_class' => 1, 'loc' => 2,
+                            'multi' => NULL, 'i_class' => 1, 'loc' => 3,
                             'wholesale' => 0);
                             $this->db->insert('geopos_invoices', $data1);
                             $invoice_id = $this->db->insert_id();
 
+                            // $this->db->select('id');
+                            // $this->db->from('geopos_invoices');
+                            // $this->db->where('tid', $invoiceno);
+                            // $this->db->where('eid', 60);
+                            // $this->db->where('loc', 2);
+                            // $Invoice_id = $this->db->get()->row()->id;
+                            // echo '<pre>'; print_r($this->db->last_query()); exit;
+                            // echo '<pre>'; print_r($Invoice_id); exit;
                             
+                            // $data1 = array('subtotal' => $row['Grand Total.'],'tax' => $row['Total VAT'], 
+                            // 'total' => $row['Grand Total.'],'items' => $row['Total Qnty']);
+                            // $this->db->where('geopos_invoices.id', $Invoice_id);
+                            // $this->db->where('eid', 60);
+                            // $this->db->update('geopos_invoices', $data1);
+
                             $this->db->select('*');
                             $this->db->from('geopos_products');
                             $this->db->where('product_code', $row['Article Number']);
@@ -168,7 +182,7 @@ class Employee extends CI_Controller
                                 $products = array(
                                     'pid' => null,
                                     'pcat' => $pcat,
-                                    'warehouse' => 4,
+                                    'warehouse' => 5,
                                     'product_name' => $row['Product Name'],
                                     'product_code' => $row['Article Number'],
                                     'product_price' => $row['Unit Price'],
@@ -209,8 +223,8 @@ class Employee extends CI_Controller
                             $data = array(
                                 'payerid' => 1,
                                 'payer' => 'Walk-in Client',
-                                'acid' => 1,
-                                'account' => 'Sales Account',
+                                'acid' => 4,
+                                'account' => 'Sharjah Sales Account',
                                 'date' => $sale_date,
                                 'debit' => 0,
                                 'credit' => $row['Grand Total.'],
@@ -220,11 +234,11 @@ class Employee extends CI_Controller
                                 'tid' => $invoice_id,
                                 'eid' => $id,
                                 'note' => '#'.$invoiceno.'-Cash',
-                                'loc' => 2
+                                'loc' => 3
                             );
                             $amount = $row['Grand Total.'];
                             $this->db->set('lastbal', "lastbal+$amount", FALSE);
-                            $this->db->where('id', 5);
+                            $this->db->where('loc', 3);
                             $this->db->update('geopos_accounts');
                             $this->db->insert('geopos_transactions', $data);
 
