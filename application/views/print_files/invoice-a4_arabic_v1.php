@@ -296,7 +296,8 @@
             }
             if ($invoice['discount'] > 0) {
                 $cols++;
-                echo ' <td style="width:16%;">' . amountExchange($row['totaldiscount'], $invoice['multi'], $invoice['loc']) . '</td>';
+                $discount = $row['totaldiscount'] > 0 ?  amountExchange($row['totaldiscount'], $invoice['multi'], $invoice['loc']) : amountExchange($invoice['discount'], $invoice['multi'], $invoice['loc']);
+                echo ' <td style="width:16%;">' .  $discount  . '</td>';
             }
             echo '<td class="t_center">' . amountExchange($row['subtotal'], $invoice['multi'], $invoice['loc']) . '</td></tr>';
 
