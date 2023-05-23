@@ -2223,6 +2223,7 @@ echo 6;
             }
             $row[] = $values;
             $row[] = amountExchange($product->pur_net_total + $SUM, 0, $this->aauth->get_user()->loc); 
+            $row[] = location($invoice->loc)['cname'];
             $data[] = $row;
         }
         $output = array(

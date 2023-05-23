@@ -237,6 +237,10 @@ class Pos_invoices_model extends CI_Model
         {
             $this->db->where('DATE(geopos_invoices.invoicedate) >=', datefordatabase($this->input->post('start_date')));
             $this->db->where('DATE(geopos_invoices.invoicedate) <=', datefordatabase($this->input->post('end_date')));
+        }else if ($this->input->post('start_date')) {
+            $this->db->where('DATE(geopos_invoices.invoicedate) >=', datefordatabase($this->input->post('start_date')));
+        }else if ($this->input->post('end_date')) {
+            $this->db->where('DATE(geopos_invoices.invoicedate) <=', datefordatabase($this->input->post('end_date')));
         }
         
         $linksArray = isset($_POST['locations']) ? $_POST['locations'] : array();
@@ -462,14 +466,30 @@ class Pos_invoices_model extends CI_Model
     }
 
     public function get_inv_report_datatables(){
-        $this->db->select('geopos_invoices.id, geopos_invoices.items, geopos_invoices.tid as invoice_no, geopos_invoices.invoicedate as invoicedate, geopos_employees.name as emp_name');
+        $this->db->select('geopos_invoices.id, geopos_invoices.items, geopos_invoices.tid as invoice_no, 
+        geopos_invoices.invoicedate as invoicedate, geopos_employees.name as emp_name, geopos_invoices.loc');
         $this->db->from('geopos_invoices');
         $this->db->join('geopos_employees', 'geopos_employees.id = geopos_invoices.eid', 'left');
-        if ($this->aauth->get_user()->loc) {
-            $this->db->where('geopos_invoices.loc', $this->aauth->get_user()->loc);
-        } elseif (!BDATA) {
-            $this->db->where('geopos_invoices.loc', 0);
+        
+        if ($this->input->post('start_date') && $this->input->post('end_date')) {
+            $this->db->where('DATE(geopos_invoices.invoicedate) >=', datefordatabase($this->input->post('start_date')));
+            $this->db->where('DATE(geopos_invoices.invoicedate) <=', datefordatabase($this->input->post('end_date')));
+        }else if ($this->input->post('start_date')) {
+            $this->db->where('DATE(geopos_invoices.invoicedate) >=', datefordatabase($this->input->post('start_date')));
+        }else if ($this->input->post('end_date')) {
+            $this->db->where('DATE(geopos_invoices.invoicedate) <=', datefordatabase($this->input->post('end_date')));
         }
+        
+        $linksArray = isset($_POST['locations']) ? $_POST['locations'] : array();
+        $locs_array = $linksArray ? array_filter($linksArray, fn($var) => $var !== NULL && $var !== FALSE && $var !== "") : array();
+        if(isset($_POST['locations']) && !empty($locs_array)) {
+            $this->db->where_in('geopos_invoices.loc',$locs_array);
+        }else{        
+            if ($this->aauth->get_user()->loc) {
+                $this->db->where('geopos_invoices.loc', $this->aauth->get_user()->loc);
+            }
+            elseif(!BDATA) { $this->db->where('geopos_invoices.loc', 0); }
+        } 
         if ($_POST['length'] != -1)
             $this->db->limit($_POST['length'], $_POST['start']);
         
