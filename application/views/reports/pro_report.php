@@ -27,7 +27,7 @@
                         <input type="text" name="end_date" id="end_date" class="form-control"
                             data-toggle="datepicker" autocomplete="off"/>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <select id="loc" class="form-control select-box" multiple="multiple">
                             <?php $loc = location($this->aauth->get_user()->loc);
                                 $current_loc =  $loc['id'];
