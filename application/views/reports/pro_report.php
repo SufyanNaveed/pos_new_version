@@ -19,14 +19,14 @@
             <div class="card-body"> 
                 <div class="row">
                     <div class="col-md-2"><?php echo 'Select Location' ?></div>
-                    <!-- <div class="col-md-2">
+                    <div class="col-md-2">
                         <input type="text" name="start_date" id="start_date"
                             class="date30 form-control" autocomplete="off"/>
                     </div>
                     <div class="col-md-2">
                         <input type="text" name="end_date" id="end_date" class="form-control"
                             data-toggle="datepicker" autocomplete="off"/>
-                    </div> -->
+                    </div>
                     <div class="col-md-6">
                         <select id="loc" class="form-control select-box" multiple="multiple">
                             <?php $loc = location($this->aauth->get_user()->loc);

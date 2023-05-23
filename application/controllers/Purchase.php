@@ -560,12 +560,13 @@ class Purchase extends CI_Controller
             $row[] = amountExchange($purchase->price * $purchase->qty, 0, $this->aauth->get_user()->loc);
             $row[] = amountExchange($purchase->tax, 0, $this->aauth->get_user()->loc);
             $row[] = amountExchange($purchase->subtotal, 0, $this->aauth->get_user()->loc);
+            $row[] = location($purchase->loc)['cname'];
             $data[] = $row;
         }
         $output = array(
-            // "draw" => $this->input->post('draw'),
-            // "recordsTotal" => $this->customers->count_all(),
-            // "recordsFiltered" => $this->customers->count_filtered(),
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->purchase->count_filtered_report(),
+            "recordsFiltered" => $this->purchase->count_all_report(),
             "data" => $data,
         ); 
         echo json_encode($output);

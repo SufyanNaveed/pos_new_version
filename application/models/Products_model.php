@@ -803,6 +803,15 @@ FROM geopos_products $whr");
         $this->db->join('geopos_product_cat', 'geopos_product_cat.id = geopos_products.pcat', 'left');
         $this->db->join('geopos_warehouse', 'geopos_products.warehouse = geopos_warehouse.id', 'left');
         
+        if ($this->input->post('start_date') && $this->input->post('end_date')) {
+            $this->db->where('DATE(geopos_invoices.invoicedate) >=', datefordatabase($this->input->post('start_date')));
+            $this->db->where('DATE(geopos_invoices.invoicedate) <=', datefordatabase($this->input->post('end_date')));
+        }else if ($this->input->post('start_date')) {
+            $this->db->where('DATE(geopos_invoices.invoicedate) >=', datefordatabase($this->input->post('start_date')));
+        }else if ($this->input->post('end_date')) {
+            $this->db->where('DATE(geopos_invoices.invoicedate) <=', datefordatabase($this->input->post('end_date')));
+        }
+        
         $linksArray = isset($_POST['locations']) ? $_POST['locations'] : array();
         $locs_array = $linksArray ? array_filter($linksArray, fn($var) => $var !== NULL && $var !== FALSE && $var !== "") : array();
         if(isset($_POST['locations']) && !empty($locs_array)) {

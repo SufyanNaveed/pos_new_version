@@ -16,7 +16,37 @@
 
                 <div class="message"></div>
             </div>
-            <div class="card-body"> 
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2"><?php echo $this->lang->line('Invoice Date') ?></div>
+                    <div class="col-md-2">
+                        <input type="text" name="start_date" id="start_date"
+                            class="date30 form-control" autocomplete="off"/>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="end_date" id="end_date" class="form-control"
+                            data-toggle="datepicker" autocomplete="off"/>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="loc" class="form-control select-box" multiple="multiple">
+                            <?php $loc = location($this->aauth->get_user()->loc);
+                                $current_loc =  $loc['id'];
+                                //echo ' <option value="' . $loc['id'] . '" selected > *' . $loc['cname'] . '*</option>';
+                            $loc = locations();
+                            foreach ($loc as $row) { 
+                                // if($row['id'] != $current_loc){
+                                    echo ' <option value="' . $row['id'] . '"> ' . $row['cname'] . '</option>';
+                                // }
+                            }
+                            echo ' <option value="0">Master/Default</option>';
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <input type="button" name="search" id="search" value="Search" class="btn btn-info"/>
+                    </div>
+                </div>
                 <table id="po" class="table table-striped table-bordered zero-configuration">
                     <thead>
                     <tr>
@@ -32,6 +62,7 @@
                         <th><?php echo 'Net Amount' ?></th>
                         <th><?php echo 'Total VAT' ?></th>
                         <th><?php echo 'Grand Total' ?></th>
+                        <th><?php echo 'Location' ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -51,6 +82,7 @@
                         <th><?php echo 'Net Amount' ?></th>
                         <th><?php echo 'Total VAT' ?></th>
                         <th><?php echo 'Grand Total' ?></th>
+                        <th><?php echo 'Location' ?></th>
                     </tr>
                     </tfoot>
                 </table>
@@ -85,7 +117,7 @@
         $(document).ready(function () {
             draw_data();
 
-            function draw_data(start_date = '', end_date = '') {
+            function draw_data(start_date = '', end_date = '', loc) {
                 $('#po').DataTable({
                     'processing': true,
                     'serverSide': true,
@@ -100,7 +132,8 @@
                         'data': {
                             '<?=$this->security->get_csrf_token_name()?>': crsf_hash,
                             start_date: start_date,
-                            end_date: end_date
+                            end_date: end_date,
+                            locations: loc
                         }
                     },
                     'columnDefs': [
@@ -125,12 +158,16 @@
             $('#search').click(function () {
                 var start_date = $('#start_date').val();
                 var end_date = $('#end_date').val();
+                var locs = $('#loc').val();
+                console.log(locs);
                 if (start_date != '' && end_date != '') {
                     $('#po').DataTable().destroy();
-                    draw_data(start_date, end_date);
+                    draw_data(start_date, end_date,locs);
                 } else {
                     alert("Date range is Required");
                 }
             });
+
+            $("#loc").select2({});
         });
     </script>
