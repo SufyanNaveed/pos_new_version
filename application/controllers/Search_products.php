@@ -118,7 +118,22 @@ class Search_products extends CI_Controller
 
     }
 
-    
+    public function find_invoice_products(){
+        $invoice_id = $this->input->post('invoice_no', true);
+
+        $query = $this->db->query("SELECT GROUP_CONCAT(geopos_invoice_items.pid) as product_ids, geopos_customers.name as customer_name
+            FROM geopos_invoice_items 
+            LEFT JOIN geopos_invoices ON geopos_invoice_items.tid = geopos_invoices.id
+            LEFT JOIN geopos_customers ON geopos_customers.id = geopos_invoices.csd
+            WHERE geopos_invoices.tid = ". $invoice_id);
+            // echo $this->db->last_query(); exit;
+            $result = $query->row_array();
+            $res = array('product_ids' => $result['product_ids'], 'customer_name' => $result['customer_name']);
+            // echo '<pre>'; print_r($result); exit;
+            echo json_encode($res);
+    }
+
+
     public function puchase_stock_search()
     {
         $result = array();
@@ -126,6 +141,7 @@ class Search_products extends CI_Controller
         $row_num = $this->input->post('row_num', true);
         $invoice_id = $this->input->post('invoice_no', true);
         $name = $this->input->post('name_startsWith', true);
+        $product_id_search = $this->input->post('product_id_search', true);
         $barcode =  $name;
         $wid = $this->input->post('wid', true);
         $qw = '';
@@ -157,8 +173,75 @@ class Search_products extends CI_Controller
                 $name = array($row['product_name'], amountExchange_s($row['product_price'], 0, $this->aauth->get_user()->loc), $row['pid'], amountFormat_general($row['taxrate']), amountFormat_general($row['disrate']), $row['product_des'], $row['unit'], $row['product_code'], $row_num);
                 array_push($out, $name);
             }
-
             echo json_encode($out);
+        }else if($product_id_search){
+            $query = $this->db->query("SELECT geopos_products.pid,geopos_products.product_name,geopos_products.product_code,geopos_products.product_price,
+            geopos_products.taxrate,geopos_products.disrate,geopos_products.product_des,geopos_products.unit, geopos_invoice_items.qty 
+            FROM geopos_invoices 
+            LEFT JOIN geopos_invoice_items ON geopos_invoice_items.tid = geopos_invoices.id
+            LEFT JOIN geopos_products ON geopos_products.pid = geopos_invoice_items.pid
+            WHERE geopos_invoices.tid = ". $invoice_id ." AND
+            geopos_invoice_items.pid IN (".$product_id_search.")");
+            // echo $this->db->last_query(); exit;
+            $result = $query->result_array();
+            // echo '<pre>'; print_r($result); exit;
+            
+            $html = '';
+            $totaltax = 0;
+            $totaldiscount = 0;
+            $grandtotal = 0;
+            foreach ($result as $key => $row) {
+                // $name = array($row['product_name'], amountExchange_s($row['product_price'], 0, $this->aauth->get_user()->loc), $row['pid'], amountFormat_general($row['taxrate']), amountFormat_general($row['disrate']), $row['product_des'], $row['unit'], $row['product_code'], $row_num);
+                $sub_total = number_format($row['product_price'] * $row['qty'],2);
+                $tax = $row['taxrate'] ? $row['taxrate'] : '0.00';
+                $disrate = $row['disrate'] ? $row['disrate'] : '0.00';
+
+                $totaltax += $tax * $row['qty'];
+                $totaldiscount += $disrate * $row['qty'];
+                $grandtotal += $sub_total;
+                $html .= '<tr>
+                    <td>
+                        <input type="text" class="form-control" name="product_name[]" placeholder="'. $this->lang->line('Enter Product name').'" id="productname-'.$key.'" value="'.$row['product_name'].'">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control req amnt" name="product_qty[]" id="amount-'.$key.'" onkeypress="return isNumber(event)" onkeyup="rowTotal(0), billUpyog()" autocomplete="off" value="'.$row['qty'].'">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control req prc" name="product_price[]" id="price-'.$key.'" onkeypress="return isNumber(event)" onkeyup="rowTotal(0), billUpyog()" autocomplete="off" value="'.amountExchange_s($row['product_price'], 0, $this->aauth->get_user()->loc).'">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control vat " name="product_tax[]" id="vat-'.$key.'" onkeypress="return isNumber(event)" onkeyup="rowTotal(0), billUpyog()" autocomplete="off" value="'. $tax .'">
+                    </td>
+                    <td class="text-center" id="texttaxa-'.$key.'">0.00</td>
+                    <td>
+                        <input type="text" class="form-control discount" name="product_discount[]" onkeypress="return isNumber(event)" id="discount-0" onkeyup="rowTotal(0), billUpyog()" autocomplete="off" value="'. $disrate .'">
+                    </td>
+                    <td>
+                        <span class="currenty">'.$this->config->item('currency') .'</span>
+                        <strong><span class="ttlText" id="result-'.$key.'">'. $sub_total .'</span></strong>
+                    </td>
+                    <td class="text-center">
+                        <button type="button" data-rowid="'. $key .'" class="btn btn-danger removeProd" title="Remove"> <i class="fa fa-minus-square"></i> </button>
+                    </td>
+                    <input type="hidden" name="taxa[]" id="taxa-'.$key.'" value="'. $tax .'">
+                    <input type="hidden" name="disca[]" id="disca-'.$key.'" value="'. $disrate .'">
+                    <input type="hidden" class="ttInput" name="product_subtotal[]" id="total-'.$key.'" value="'. $subtotal.'">
+                    <input type="hidden" class="pdIn" name="pid[]" id="pid-'.$key.'" value="'. $row['pid'] .'">
+                    <input type="hidden" name="unit[]" id="unit-'.$key.'" value="'. $row['unit'] .'">
+                    <input type="hidden" name="hsn[]" id="hsn-'.$key.'" value="'. $row['product_code'] .'">
+                </tr>
+                <tr>
+                    <td colspan="8">
+                        <textarea id="dpid-'.$key.'" class="form-control" name="product_description[]" placeholder="'. $this->lang->line('Enter Product description'). '" autocomplete="off">
+                        '. $row['product_des'] .'
+                        </textarea><br>
+                    </td>
+                </tr>'; 
+            } 
+
+            $response = array('html' => $html, 'totaltax' => $totaltax, 'totaldiscount' => $totaldiscount, 'grandtotal' => $grandtotal);
+            echo json_encode($response);
+
         }
 
     }
@@ -182,7 +265,7 @@ class Search_products extends CI_Controller
             $i = 1;
             foreach ($result as $row) {
 
-                echo "<li onClick=\"selectCustomer('" . $row['id'] . "','" . $row['name'] . " ','" . $row['address'] . "','" . $row['city'] . "','" . $row['phone'] . "','" . $row['email'] . "','" . amountFormat_general($row['discount_c']) . "')\"><span>$i</span><p>" . $row['name'] . " &nbsp; &nbsp  " . $row['phone'] . "</p></li>";
+                echo "<li id='selectCustomer' onClick=\"selectCustomer('" . $row['id'] . "','" . $row['name'] . " ','" . $row['address'] . "','" . $row['city'] . "','" . $row['phone'] . "','" . $row['email'] . "','" . amountFormat_general($row['discount_c']) . "')\"><span>$i</span><p>" . $row['name'] . " &nbsp; &nbsp  " . $row['phone'] . "</p></li>";
                 $i++;
             }
             echo '</ol>';

@@ -1,11 +1,33 @@
 <div class="content-body">
     <div class="card">
-        <div class="card-content">
+        
+        <div class="card-content" >
             <div id="notify" class="alert alert-success" style="display:none;">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
                 <div class="message"></div>
             </div>
-            <div class="card-body">
+
+            <div class="card-body invoice_stock_search">
+                <h3 class="title"> <?php echo 'Search Return Invoice' ?> 
+                
+                <div class="form-group row">
+                    <div class="col-sm-3 offset-sm-3 ">
+                        <label for="cst" class="caption"><?php echo 'Enter Invoice No' ?> </label>
+                        <input type="number" class="form-control" name="invoice_no" id="invoice_no" placeholder="Enter Invoice No" autocomplete="off" required />
+                    </div>
+                    <div class="col-sm-1">
+                        <label for="cst" class="caption">&nbsp;</label>
+                        <input type="button" class="form-control btn btn-primary" name="search_invoice" id="search_invoice" value="Search">
+                    </div>
+                    <!-- <div class="col-sm-2">
+                        <label class="caption">&nbsp;</label>
+                        <input type="button" class="btn btn-primary" name="search_invoice" id="search_invoice" value="Search">
+                    </div> -->
+                </div>
+                
+            </div>
+
+            <div class="card-body return_stock_form" style="display:none">
                 <form method="post" id="data_form">
                     <div class="row">
                         <div class="col-sm-4">
@@ -26,12 +48,9 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <div class="frmSearch col-sm-12"><label for="cst"
-                                                                            class="caption"><?php echo $this->lang->line('Search Customer') ?> </label>
-                                        <input type="text" class="form-control" name="cst" id="customer-box"
-                                               placeholder="Enter Customer Name or Mobile Number to search"
-                                               autocomplete="off"/>
-
+                                    <div class="frmSearch col-sm-12">
+                                        <label for="cst" class="caption"><?php echo $this->lang->line('Search Customer') ?> </label>
+                                        <input type="text" class="form-control" name="cst" id="customer-box" placeholder="Enter Customer Name or Mobile Number to search" autocomplete="off" value="" />
                                         <div id="customer-box-result"></div>
                                     </div>
 
@@ -59,15 +78,6 @@
                                         } ?>
 
                                     </select>
-                                </div>
-                                <br><br><br><br>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <label for="cst" class="caption"><?php echo 'Enter Invoice No' ?> </label>
-                                        <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="Enter Invoice No" autocomplete="off"/>
-                                        <div id="customer-box-result"></div>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
@@ -170,152 +180,143 @@
                     <div id="saman-row">
                         <table class="table-responsive tfr my_stripe">
                             <thead>
-
-                            <tr class="item_header bg-gradient-directional-pink white">
-                                <th width="30%" class="text-center"><?php echo $this->lang->line('Item Name') ?></th>
-                                <th width="8%" class="text-center"><?php echo $this->lang->line('Quantity') ?></th>
-                                <th width="10%" class="text-center"><?php echo $this->lang->line('Rate') ?></th>
-                                <th width="10%" class="text-center"><?php echo $this->lang->line('Tax') ?>(%)</th>
-                                <th width="10%" class="text-center"><?php echo $this->lang->line('Tax') ?></th>
-                                <th width="7%" class="text-center"><?php echo $this->lang->line('Discount') ?></th>
-                                <th width="10%" class="text-center">
-                                    <?php echo $this->lang->line('Amount') ?>
-                                    (<?php echo $this->config->item('currency'); ?>)
-                                </th>
-                                <th width="5%" class="text-center"><?php echo $this->lang->line('Action') ?></th>
-                            </tr>
+                                <tr class="item_header bg-gradient-directional-pink white">
+                                    <th width="30%" class="text-center"><?php echo $this->lang->line('Item Name') ?></th>
+                                    <th width="8%" class="text-center"><?php echo $this->lang->line('Quantity') ?></th>
+                                    <th width="10%" class="text-center"><?php echo $this->lang->line('Rate') ?></th>
+                                    <th width="10%" class="text-center"><?php echo $this->lang->line('Tax') ?>(%)</th>
+                                    <th width="10%" class="text-center"><?php echo $this->lang->line('Tax') ?></th>
+                                    <th width="7%" class="text-center"><?php echo $this->lang->line('Discount') ?></th>
+                                    <th width="10%" class="text-center">
+                                        <?php echo $this->lang->line('Amount') ?>
+                                        (<?php echo $this->config->item('currency'); ?>)
+                                    </th>
+                                    <th width="5%" class="text-center"><?php echo $this->lang->line('Action') ?></th>
+                                </tr>
                             </thead>
-                            <tbody>
-                            <tr>
-                                <td><input type="text" class="form-control" name="product_name[]"
-                                           placeholder="<?php echo $this->lang->line('Enter Product name') ?>"
-                                           id='productname-0'>
-                                </td>
-                                <td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-0"
-                                           onkeypress="return isNumber(event)" onkeyup="rowTotal('0'), billUpyog()"
-                                           autocomplete="off" value="1"></td>
-                                <td><input type="text" class="form-control req prc" name="product_price[]" id="price-0"
-                                           onkeypress="return isNumber(event)" onkeyup="rowTotal('0'), billUpyog()"
-                                           autocomplete="off"></td>
-                                <td><input type="text" class="form-control vat " name="product_tax[]" id="vat-0"
-                                           onkeypress="return isNumber(event)" onkeyup="rowTotal('0'), billUpyog()"
-                                           autocomplete="off"></td>
-                                <td class="text-center" id="texttaxa-0">0</td>
-                                <td><input type="text" class="form-control discount" name="product_discount[]"
-                                           onkeypress="return isNumber(event)" id="discount-0"
-                                           onkeyup="rowTotal('0'), billUpyog()" autocomplete="off"></td>
-                                <td><span class="currenty"><?php echo $this->config->item('currency'); ?></span>
-                                    <strong><span class='ttlText' id="result-0">0</span></strong></td>
-                                <td class="text-center">
+                            <tbody id="tbody"> 
+                                <tr id="frst_child">
+                                    <td>
+                                        <input type="text" class="form-control" name="product_name[]" placeholder="<?php echo $this->lang->line('Enter Product name') ?>" id='productname-0'>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control req amnt" name="product_qty[]" id="amount-0" onkeypress="return isNumber(event)" onkeyup="rowTotal('0'), billUpyog()" autocomplete="off" value="1">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control req prc" name="product_price[]" id="price-0" onkeypress="return isNumber(event)" onkeyup="rowTotal('0'), billUpyog()" autocomplete="off">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control vat " name="product_tax[]" id="vat-0" onkeypress="return isNumber(event)" onkeyup="rowTotal('0'), billUpyog()" autocomplete="off">
+                                    </td>
+                                    <td class="text-center" id="texttaxa-0">0</td>
+                                    <td>
+                                        <input type="text" class="form-control discount" name="product_discount[]" onkeypress="return isNumber(event)" id="discount-0" onkeyup="rowTotal('0'), billUpyog()" autocomplete="off">
+                                    </td>
+                                    <td>
+                                        <span class="currenty"><?php echo $this->config->item('currency'); ?></span>
+                                        <strong><span class='ttlText' id="result-0">0</span></strong>
+                                    </td>
+                                    <td class="text-center"></td>
+                                    <input type="hidden" name="taxa[]" id="taxa-0" value="0">
+                                    <input type="hidden" name="disca[]" id="disca-0" value="0">
+                                    <input type="hidden" class="ttInput" name="product_subtotal[]" id="total-0" value="0">
+                                    <input type="hidden" class="pdIn" name="pid[]" id="pid-0" value="0">
+                                    <input type="hidden" name="unit[]" id="unit-0" value="">
+                                    <input type="hidden" name="hsn[]" id="hsn-0" value="">
+                                </tr>
+                                <tr id="scnd_child">
+                                    <td colspan="8">
+                                        <textarea id="dpid-0" class="form-control" name="product_description[]" placeholder="<?php echo $this->lang->line('Enter Product description'); ?>" autocomplete="off"></textarea><br>
+                                    </td>
+                                </tr> 
 
-                                </td>
-                                <input type="hidden" name="taxa[]" id="taxa-0" value="0">
-                                <input type="hidden" name="disca[]" id="disca-0" value="0">
-                                <input type="hidden" class="ttInput" name="product_subtotal[]" id="total-0" value="0">
-                                <input type="hidden" class="pdIn" name="pid[]" id="pid-0" value="0">
-                                <input type="hidden" name="unit[]" id="unit-0" value="">
-                                <input type="hidden" name="hsn[]" id="hsn-0" value="">
-                            </tr>
-                            <tr>
-                                <td colspan="8"><textarea id="dpid-0" class="form-control" name="product_description[]"
-                                                          placeholder="<?php echo $this->lang->line('Enter Product description'); ?>"
-                                                          autocomplete="off"></textarea><br></td>
-                            </tr>
+                                <tr class="last-item-row">
+                                    <td class="add-row">
+                                        <button type="button" class="btn btn-success" id="addproduct">
+                                            <i class="fa fa-plus-square"></i> <?php echo $this->lang->line('Add Row') ?>
+                                        </button>
+                                    </td>
+                                    <td colspan="7"></td>
+                                </tr>
 
-                            <tr class="last-item-row">
-                                <td class="add-row">
-                                    <button type="button" class="btn btn-success" id="addproduct">
-                                        <i class="fa fa-plus-square"></i> <?php echo $this->lang->line('Add Row') ?>
-                                    </button>
-                                </td>
-                                <td colspan="7"></td>
-                            </tr>
+                                <tr class="sub_c" style="display: table-row;">
+                                    <td colspan="6" align="right">
+                                        <input type="hidden" value="0" id="subttlform" name="subtotal"><strong><?php echo $this->lang->line('Total Tax') ?></strong>
+                                    </td>
+                                    <td align="left" colspan="2">
+                                        <span class="currenty lightMode"><?php echo $this->config->item('currency'); ?></span>
+                                        <span id="taxr" class="lightMode">0</span>
+                                    </td>
+                                </tr>
+                                <tr class="sub_c" style="display: table-row;">
+                                    <td colspan="6" align="right">
+                                        <strong><?php echo $this->lang->line('Total Discount') ?></strong
+                                    </td>
+                                    <td align="left" colspan="2">
+                                        <span class="currenty lightMode"><?php echo $this->config->item('currency'); ?></span>
+                                        <span id="discs" class="lightMode">0</span>
+                                    </td>
+                                </tr>
 
-                            <tr class="sub_c" style="display: table-row;">
-                                <td colspan="6" align="right"><input type="hidden" value="0" id="subttlform"
-                                                                     name="subtotal"><strong><?php echo $this->lang->line('Total Tax') ?></strong>
-                                </td>
-                                <td align="left" colspan="2"><span
-                                            class="currenty lightMode"><?php echo $this->config->item('currency'); ?></span>
-                                    <span id="taxr" class="lightMode">0</span></td>
-                            </tr>
-                            <tr class="sub_c" style="display: table-row;">
-                                <td colspan="6" align="right">
-                                    <strong><?php echo $this->lang->line('Total Discount') ?></strong></td>
-                                <td align="left" colspan="2"><span
-                                            class="currenty lightMode"><?php echo $this->config->item('currency'); ?></span>
-                                    <span id="discs" class="lightMode">0</span></td>
-                            </tr>
+                                <tr class="sub_c" style="display: table-row;">
+                                    <td colspan="6" align="right">
+                                        <strong><?php echo $this->lang->line('Shipping') ?></strong></td>
+                                    <td align="left" colspan="2">
+                                        <input type="text" class="form-control shipVal" onkeypress="return isNumber(event)" placeholder="Value" name="shipping" autocomplete="off" onkeyup="billUpyog();">
+                                        ( <?php echo $this->lang->line('Tax') ?> <?= $this->config->item('currency'); ?>
+                                        <span id="ship_final">0</span> )
+                                    </td>
+                                </tr>
 
-                            <tr class="sub_c" style="display: table-row;">
-                                <td colspan="6" align="right">
-                                    <strong><?php echo $this->lang->line('Shipping') ?></strong></td>
-                                <td align="left" colspan="2"><input type="text" class="form-control shipVal"
-                                                                    onkeypress="return isNumber(event)"
-                                                                    placeholder="Value"
-                                                                    name="shipping" autocomplete="off"
-                                                                    onkeyup="billUpyog();">
-                                    ( <?php echo $this->lang->line('Tax') ?> <?= $this->config->item('currency'); ?>
-                                    <span id="ship_final">0</span> )
-                                </td>
-                            </tr>
-
-                            <tr class="sub_c" style="display: table-row;">
-                                <td colspan="2"><?php if ($exchange['active'] == 1){
-                                    echo $this->lang->line('Payment Currency client') . ' <small>' . $this->lang->line('based on live market') ?></small>
-                                    <select name="mcurrency"
-                                            class="selectpicker form-control">
-                                        <option value="0">Default</option>
-                                        <?php foreach ($currency as $row) {
-                                            echo '<option value="' . $row['id'] . '">' . $row['symbol'] . ' (' . $row['code'] . ')</option>';
-                                        } ?>
-
-                                    </select><?php } ?></td>
-                                <td colspan="4" align="right"><strong><?php echo $this->lang->line('Grand Total') ?>
-                                        (<span
-                                                class="currenty lightMode"><?php echo $this->config->item('currency'); ?></span>)</strong>
-                                </td>
-                                <td align="left" colspan="2"><input type="text" name="total" class="form-control"
-                                                                    id="invoiceyoghtml" readonly="">
-
-                                </td>
-                            </tr>
-                            <tr class="sub_c" style="display: table-row;">
-                                <td colspan="2"><?php echo $this->lang->line('Payment Terms') ?> <select name="pterms"
-                                                                                                         class="selectpicker form-control"><?php foreach ($terms as $row) {
-                                            echo '<option value="' . $row['id'] . '">' . $row['title'] . '</option>';
-                                        } ?>
-
-                                    </select></td>
-                                <td colspan="2">
-                                    <div>
-                                        <label><?php echo $this->lang->line('Update Stock') ?></label>
-                                        <fieldset class="right-radio">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" name="update_stock"
-                                                       id="customRadioRight1" value="yes" checked="">
-                                                <label class="custom-control-label"
-                                                       for="customRadioRight1"><?php echo $this->lang->line('Yes') ?></label>
-                                            </div>
-                                        </fieldset>
-                                        <fieldset class="right-radio">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" name="update_stock"
-                                                       id="customRadioRight2" value="no">
-                                                <label class="custom-control-label"
-                                                       for="customRadioRight2"><?php echo $this->lang->line('No') ?></label>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                </td>
-                                <td align="right" colspan="4"><input type="submit" class="btn btn-success sub-btn"
-                                                                     value="<?php echo $this->lang->line('Generate Order') ?>"
-                                                                     id="submit-data" data-loading-text="Creating...">
-
-                                </td>
-                            </tr>
-
-
+                                <tr class="sub_c" style="display: table-row;">
+                                    <td colspan="2">
+                                        <?php if ($exchange['active'] == 1){
+                                        echo $this->lang->line('Payment Currency client') . ' <small>' . $this->lang->line('based on live market') ?></small>
+                                            <select name="mcurrency" class="selectpicker form-control">
+                                                <option value="0">Default</option>
+                                                <?php foreach ($currency as $row) {
+                                                    echo '<option value="' . $row['id'] . '">' . $row['symbol'] . ' (' . $row['code'] . ')</option>';
+                                                } ?>
+                                            </select>
+                                        <?php } ?>
+                                    </td>
+                                    <td colspan="4" align="right">
+                                        <strong>
+                                            <?php echo $this->lang->line('Grand Total') ?>
+                                            (<span class="currenty lightMode"><?php echo $this->config->item('currency'); ?></span>)
+                                        </strong>
+                                    </td>
+                                    <td align="left" colspan="2">
+                                        <input type="text" name="total" class="form-control" id="invoiceyoghtml" readonly="">
+                                    </td>
+                                </tr>
+                                <tr class="sub_c" style="display: table-row;">
+                                    <td colspan="2"><?php echo $this->lang->line('Payment Terms') ?> 
+                                        <select name="pterms" class="selectpicker form-control"><?php foreach ($terms as $row) {
+                                            echo '<option value="' . $row['id'] . '">' . $row['title'] . '</option>'; } ?>
+                                        </select>
+                                    </td>
+                                    <td colspan="2">
+                                        <div>
+                                            <label><?php echo $this->lang->line('Update Stock') ?></label>
+                                            <fieldset class="right-radio">
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" class="custom-control-input" name="update_stock" id="customRadioRight1" value="yes" checked="">
+                                                    <label class="custom-control-label" for="customRadioRight1"><?php echo $this->lang->line('Yes') ?></label>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset class="right-radio">
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" class="custom-control-input" name="update_stock" id="customRadioRight2" value="no">
+                                                    <label class="custom-control-label" for="customRadioRight2"><?php echo $this->lang->line('No') ?></label>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </td>
+                                    <td align="right" colspan="4">
+                                        <input type="submit" class="btn btn-success sub-btn" value="<?php echo $this->lang->line('Generate Order') ?>" id="submit-data" data-loading-text="Creating...">
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -337,7 +338,8 @@
                            id="ship_rate">
                     <input type="hidden" value="<?= $this->common->disc_status()['ship_tax']; ?>" name="ship_taxtype"
                            id="ship_taxtype">
-                    <input type="hidden" value="0" name="ship_tax" id="ship_tax">
+                    <input type="hidden" value="0.00" name="ship_tax" id="ship_tax">
+                    <input type="hidden" value="" id="product_id_search">
 
 
                 </form>
@@ -346,3 +348,57 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    $('#search_invoice').click(function(){
+        var invoice_no = $('#invoice_no').val();
+        console.log(invoice_no);
+        if(invoice_no){
+            $.ajax({
+                url: baseurl + 'search_products/find_invoice_products',
+                dataType: "json",
+                method: 'post',
+                data: 'invoice_no='+ invoice_no +'&' + d_csrf,
+                success: function (data) {
+                    $('.invoice_stock_search').hide();
+                    $('.return_stock_form').show();
+                    $("#customer-box").val(data.customer_name);
+                    $("#customer-box").trigger('keyup'); 
+                    $("#product_id_search").val(data.product_ids);
+
+                    get_product_details();
+                }
+            });
+        
+            $('.invoice_stock_search').hide();
+            $('.return_stock_form').show();
+            $("#customer-box").val('walk-in-customer');
+            $("#customer-box").trigger('keyup'); 
+
+        } else {
+            $('.invoice_stock_search').show();
+            $('.return_stock_form').hide();
+        }
+        
+        function get_product_details(){
+            var product_id_search = $('#product_id_search').val(); 
+            $.ajax({
+                url: baseurl + 'search_products/' + billtype,
+                dataType: "json",
+                method: 'post',
+                data: 'product_id_search='+ product_id_search +'&type=product_list&row_num=1&invoice_no='+ $('#invoice_no').val() + '&wid=' + $("#s_warehouses option:selected").val() + '&' + d_csrf,
+                success: function (data) {
+                    console.log(data);
+                    $("#frst_child").remove();
+                    $("#scnd_child").remove();
+                    $("#tbody").prepend(data.html);
+                    $('#taxr').val(data.totaltax);
+                    $('#discs').val(data.totaldiscount);
+                    $('#invoiceyoghtml').val(data.grandtotal);
+                }
+            });
+        }
+    });
+
+</script>

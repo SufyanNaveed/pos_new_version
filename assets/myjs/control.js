@@ -100,6 +100,8 @@ $(document).ready(function () {
                 $("#customer-box-result").show();
                 $("#customer-box-result").html(data);
                 $("#customer-box").css("background", "none");
+                $("#selectCustomer").trigger("click")
+
 
             }
         });
