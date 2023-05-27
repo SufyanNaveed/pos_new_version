@@ -241,7 +241,8 @@
 
                                 <tr class="sub_c" style="display: table-row;">
                                     <td colspan="6" align="right">
-                                        <input type="hidden" value="0" id="subttlform" name="subtotal"><strong><?php echo $this->lang->line('Total Tax') ?></strong>
+                                        <input type="hidden" value="0" id="subttlform" name="subtotal">
+                                        <strong><?php echo $this->lang->line('Total Tax') ?></strong>
                                     </td>
                                     <td align="left" colspan="2">
                                         <span class="currenty lightMode"><?php echo $this->config->item('currency'); ?></span>
@@ -340,6 +341,7 @@
                            id="ship_taxtype">
                     <input type="hidden" value="0.00" name="ship_tax" id="ship_tax">
                     <input type="hidden" value="" id="product_id_search">
+                    <input type="hidden" name="return_invoice_no" value="" id="return_invoice_no">
 
 
                 </form>
@@ -353,7 +355,7 @@
 <script>
     $('#search_invoice').click(function(){
         var invoice_no = $('#invoice_no').val();
-        console.log(invoice_no);
+        $('#return_invoice_no').val(invoice_no);
         if(invoice_no){
             $.ajax({
                 url: baseurl + 'search_products/find_invoice_products',
@@ -396,6 +398,7 @@
                     $('#taxr').val(data.totaltax);
                     $('#discs').val(data.totaldiscount);
                     $('#invoiceyoghtml').val(data.grandtotal);
+                    $('#subttlform').val(data.grandtotal);
                 }
             });
         }

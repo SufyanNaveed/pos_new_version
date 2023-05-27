@@ -227,6 +227,7 @@ class Stockreturn extends CI_Controller
                 exit('<h3>Sorry! You have insufficient permissions to access this section</h3>');
             }
         }
+        $return_invoice_no = $this->input->post('return_invoice_no');
         $invocieno = $this->input->post('invocieno');
         $invoicedate = $this->input->post('invoicedate');
         $invocieduedate = $this->input->post('invocieduedate');
@@ -261,7 +262,12 @@ class Stockreturn extends CI_Controller
         $bill_date = datefordatabase($invoicedate);
         $bill_due_date = datefordatabase($invocieduedate);
         if (!$currency) $currency = 0;
-        $data = array('tid' => $invocieno, 'invoicedate' => $bill_date, 'invoiceduedate' => $bill_due_date, 'subtotal' => $subtotal, 'shipping' => $shipping, 'ship_tax' => $shipping_tax, 'ship_tax_type' => $ship_taxtype, 'total' => $total, 'notes' => $notes, 'csd' => $customer_id, 'eid' => $this->aauth->get_user()->id, 'taxstatus' => $tax, 'discstatus' => $discstatus, 'format_discount' => $discountFormat, 'refer' => $refer, 'term' => $pterms, 'loc' => $this->aauth->get_user()->loc, 'i_class' => $person_type, 'multi' => $currency,);
+        $data = array('tid' => $invocieno, 'return_invoice_no' => $return_invoice_no, 'invoicedate' => $bill_date, 
+        'invoiceduedate' => $bill_due_date, 'subtotal' => $subtotal, 'shipping' => $shipping, 'ship_tax' => $shipping_tax,
+         'ship_tax_type' => $ship_taxtype, 'total' => $total, 'notes' => $notes, 'csd' => $customer_id, 
+         'eid' => $this->aauth->get_user()->id, 'taxstatus' => $tax, 'discstatus' => $discstatus, 
+         'format_discount' => $discountFormat, 'refer' => $refer, 'term' => $pterms, 
+         'loc' => $this->aauth->get_user()->loc, 'i_class' => $person_type, 'multi' => $currency,);
         if ($this->db->insert('geopos_stock_r', $data)) {
             $invocieno = $this->db->insert_id();
 
@@ -841,6 +847,64 @@ class Stockreturn extends CI_Controller
                     $paid_amount = $amount;
                 }
             }
+
+            // $this->db->select('tid');
+            // $this->db->from('geopos_invoices');
+            // $this->db->order_by('desc','tid');
+            // $tid = $this->db->get()->row()->tid;
+            
+            $this->db->select('*');
+            $this->db->from('geopos_stock_r');
+            // $this->db->join('geopos_stock_r_items as gsi','geopos_stock_r.id = gsi.tid','left');
+            $this->db->where('status','accepted');
+            $this->db->where('return_invoice_no',$this->input->post('return_invoice_no'));
+            $res = $this->db->get()->row_array();
+            $invoice_id_get = $res['id'];
+            unset($res['id']);
+            $res['tid'] = $res['return_invoice_no'];
+            $res['items'] = -$res['items'];
+            $res['subtotal'] = -$res['subtotal'];
+            $res['total'] = -$res['total'];
+            $res['pamnt'] = -$res['total'];
+            $res['wholesale'] = 0;
+            $res['discount_rate'] = 0.00;
+            $res['status'] = 'paid';
+            $res['multi'] = NULL;
+            unset($res['return_invoice_no']);
+            $this->db->insert('geopos_invoices', $res);
+            
+            $invoice_id = $this->db->insert_id();
+            // echo '<pre>'; print_r($invoice_id); exit;
+
+            $this->db->select('gsi.*');
+            $this->db->from('geopos_stock_r');
+            $this->db->join('geopos_stock_r_items as gsi','geopos_stock_r.id = gsi.tid','left');
+            $this->db->where('status','accepted');
+            $this->db->where('geopos_stock_r.id',$invoice_id_get);
+            $this->db->where('return_invoice_no',$this->input->post('return_invoice_no'));
+            $resp = $this->db->get();
+            // echo '<pre>'; print_r($this->db->last_query()); exit;
+            $response = $resp->result_array();
+            
+            foreach($response as $key=>$row){
+                unset($response[$key]['id']);
+                $response[$key]['tid'] = $invoice_id;
+                $response[$key]['tax'] = - $response[$key]['tax'];
+                $response[$key]['discount'] = - $response[$key]['discount'];
+                $response[$key]['qty'] = - $response[$key]['qty'];
+                $response[$key]['price'] = - $response[$key]['price'];
+                $response[$key]['subtotal'] = - $response[$key]['subtotal'];
+                $response[$key]['totaltax'] = - $response[$key]['totaltax'];
+                $response[$key]['totaldiscount'] = - $response[$key]['totaldiscount'];
+                $response[$key]['totaldiscount'] = - $response[$key]['totaldiscount'];
+                $response[$key]['stock_return_status'] = 1;
+
+                // echo '<pre>'; print_r($response); exit;
+
+            }
+            $this->db->insert_batch('geopos_invoice_items', $response);
+            
+
 
 
             $activitym = "<tr><td>" . substr($paydate, 0, 10) . "</td><td>$pmethod</td><td>$amount</td><td>$note</td></tr>";

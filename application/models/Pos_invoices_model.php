@@ -34,7 +34,7 @@ class Pos_invoices_model extends CI_Model
     {
         $this->db->select('tid');
         $this->db->from($this->table);
-        $this->db->order_by('id', 'DESC');
+        $this->db->order_by('tid', 'DESC');
         $this->db->limit(1);
         $this->db->where('i_class', 1);
         $query = $this->db->get();

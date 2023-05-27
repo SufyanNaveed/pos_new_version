@@ -176,7 +176,7 @@ class Search_products extends CI_Controller
             echo json_encode($out);
         }else if($product_id_search){
             $query = $this->db->query("SELECT geopos_products.pid,geopos_products.product_name,geopos_products.product_code,geopos_products.product_price,
-            geopos_products.taxrate,geopos_products.disrate,geopos_products.product_des,geopos_products.unit, geopos_invoice_items.qty 
+            geopos_products.taxrate,geopos_products.disrate,geopos_products.product_des,geopos_products.unit, geopos_invoice_items.qty, geopos_invoice_items.price 
             FROM geopos_invoices 
             LEFT JOIN geopos_invoice_items ON geopos_invoice_items.tid = geopos_invoices.id
             LEFT JOIN geopos_products ON geopos_products.pid = geopos_invoice_items.pid
@@ -207,7 +207,7 @@ class Search_products extends CI_Controller
                         <input type="text" class="form-control req amnt" name="product_qty[]" id="amount-'.$key.'" onkeypress="return isNumber(event)" onkeyup="rowTotal(0), billUpyog()" autocomplete="off" value="'.$row['qty'].'">
                     </td>
                     <td>
-                        <input type="text" class="form-control req prc" name="product_price[]" id="price-'.$key.'" onkeypress="return isNumber(event)" onkeyup="rowTotal(0), billUpyog()" autocomplete="off" value="'.amountExchange_s($row['product_price'], 0, $this->aauth->get_user()->loc).'">
+                        <input type="text" class="form-control req prc" name="product_price[]" id="price-'.$key.'" onkeypress="return isNumber(event)" onkeyup="rowTotal(0), billUpyog()" autocomplete="off" value="'.amountExchange_s($row['price'], 0, $this->aauth->get_user()->loc).'">
                     </td>
                     <td>
                         <input type="text" class="form-control vat " name="product_tax[]" id="vat-'.$key.'" onkeypress="return isNumber(event)" onkeyup="rowTotal(0), billUpyog()" autocomplete="off" value="'. $tax .'">
@@ -225,7 +225,7 @@ class Search_products extends CI_Controller
                     </td>
                     <input type="hidden" name="taxa[]" id="taxa-'.$key.'" value="'. $tax .'">
                     <input type="hidden" name="disca[]" id="disca-'.$key.'" value="'. $disrate .'">
-                    <input type="hidden" class="ttInput" name="product_subtotal[]" id="total-'.$key.'" value="'. $subtotal.'">
+                    <input type="hidden" class="ttInput" name="product_subtotal[]" id="total-'.$key.'" value="'. $sub_total.'">
                     <input type="hidden" class="pdIn" name="pid[]" id="pid-'.$key.'" value="'. $row['pid'] .'">
                     <input type="hidden" name="unit[]" id="unit-'.$key.'" value="'. $row['unit'] .'">
                     <input type="hidden" name="hsn[]" id="hsn-'.$key.'" value="'. $row['product_code'] .'">

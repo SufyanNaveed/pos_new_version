@@ -536,8 +536,8 @@
                                    value="Payment refund for purchase #<?php echo $invoice['tid'] ?>"></div>
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" class="form-control required"
-                               name="tid" id="invoiceid" value="<?php echo $invoice['iid'] ?>">
+                        <input type="hidden" class="form-control required" name="tid" id="invoiceid" value="<?php echo $invoice['iid'] ?>">
+                        <input type="hidden" class="form-control required" name="return_invoice_no" id="return_invoice_no" value="<?php echo $invoice['return_invoice_no'] ?>">
                         <button type="button" class="btn btn-default"
                                 data-dismiss="modal"><?php echo $this->lang->line('Close') ?></button>
                         <input type="hidden" name="cid" value="<?php echo $invoice['cid'] ?>"><input type="hidden"
