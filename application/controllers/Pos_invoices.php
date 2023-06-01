@@ -471,18 +471,18 @@ class Pos_invoices extends CI_Controller
 
                         $amt = numberClean($product_qty[$key]);
 
-                        if ($product_id[$key] > 0 and $this->common->zero_stock()) {
+                        // if ($product_id[$key] > 0 and $this->common->zero_stock()) {
 
-                            if ((numberClean($product_alert[$key]) - $amt) < 0 and $st_c == 0) {
-                                echo json_encode(array('status' => 'Error', 'message' => 'Product - <strong>' . $product_name1[$key] . "</strong> - Low quantity. Available stock is  " . $product_alert[$key]));
-                                $transok = false;
-                                $st_c = 1;
-                            } else {
+                        //     if ((numberClean($product_alert[$key]) - $amt) < 0 and $st_c == 0) {
+                        //         echo json_encode(array('status' => 'Error', 'message' => 'Product - <strong>' . $product_name1[$key] . "</strong> - Low quantity. Available stock is  " . $product_alert[$key]));
+                        //         $transok = false;
+                        //         $st_c = 1;
+                        //     } else {
                                 $this->db->set('qty', "qty-$amt", FALSE);
                                 $this->db->where('pid', $product_id[$key]);
                                 $this->db->update('geopos_products');
-                            }
-                        }
+                        //     }
+                        // }
 
 
                         $itc += $amt;

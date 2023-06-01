@@ -472,10 +472,12 @@ class Search_products extends CI_Controller
 
         if ($this->aauth->get_user()->loc) {
             $join = 'LEFT JOIN geopos_warehouse ON geopos_warehouse.id=geopos_products.warehouse';
-            if (BDATA) $qw .= '(geopos_warehouse.loc=' . $this->aauth->get_user()->loc . ' OR geopos_warehouse.loc=0) AND '; else $qw .= '(geopos_warehouse.loc=' . $this->aauth->get_user()->loc . ' ) AND ';
+            // if (BDATA) $qw .= '(geopos_warehouse.loc=' . $this->aauth->get_user()->loc . ' OR geopos_warehouse.loc=0) AND '; 
+            // else $qw .= '(geopos_warehouse.loc=' . $this->aauth->get_user()->loc . ' ) AND ';
         } elseif (!BDATA) {
             $join = 'LEFT JOIN geopos_warehouse ON geopos_warehouse.id=geopos_products.warehouse';
-            $qw .= '(geopos_warehouse.loc=0) AND ';
+            // $qw .= '(geopos_warehouse.loc=0) AND ';
+            $qw .= ' AND ';
         }
 
         $e = '';
@@ -491,31 +493,38 @@ class Search_products extends CI_Controller
         $flag_p=true;
             $bar = " (geopos_products.barcode = '" . (substr($name, 0, -1)) . "' OR geopos_products.barcode LIKE '" . $name . "%')";
 
-               $query = "SELECT geopos_products.*  FROM geopos_products $join WHERE " . $qw . "$bar AND (geopos_products.qty>0) ORDER BY geopos_products.product_name LIMIT 6";
+               $query = "SELECT geopos_products.*  FROM geopos_products $join WHERE " . $qw . "$bar 
+                ORDER BY geopos_products.product_name LIMIT 6";
                $p_class='v2_select_pos_item_bar';
 
         } elseif ($enable_bar=='false' OR !$enable_bar ) {
             $flag_p=true;
             if ($billing_settings['key1'] == 2) {
 
-                $query = "SELECT geopos_products.*,geopos_product_serials.serial FROM geopos_product_serials  LEFT JOIN geopos_products  ON geopos_products.pid=geopos_product_serials.product_id $join WHERE " . $qw . "geopos_product_serials.serial LIKE '" . strtoupper($name) . "%'  AND (geopos_products.qty>0) LIMIT 18";
+                $query = "SELECT geopos_products.*,geopos_product_serials.serial FROM geopos_product_serials 
+                 LEFT JOIN geopos_products  ON geopos_products.pid=geopos_product_serials.product_id $join 
+                 WHERE " . $qw . "geopos_product_serials.serial LIKE '" . strtoupper($name) . "%'  
+                  LIMIT 18";
 
             } else {
 
-                $query = "SELECT geopos_products.* $e FROM geopos_products $join WHERE " . $qw . "(UPPER(geopos_products.product_name) LIKE '%" . strtoupper($name) . "%' $bar OR geopos_products.product_code LIKE '" . strtoupper($name) . "%') AND (geopos_products.qty>0) ORDER BY geopos_products.product_name LIMIT 18";
+                $query = "SELECT geopos_products.* $e FROM geopos_products $join 
+                WHERE " . $qw . "(UPPER(geopos_products.product_name) LIKE '%" . strtoupper($name) . "%' $bar 
+                OR geopos_products.product_code LIKE '" . strtoupper($name) . "%')  
+                 ORDER BY geopos_products.product_name LIMIT 18";
             }
 
 
         }
 
-if($flag_p) {
-    $query = $this->db->query($query);
-    $result = $query->result_array();
-    $i = 0;
-    $out = '<div class="row match-height">';
-    foreach ($result as $row) {
-        if ($bar) $bar = $row['barcode'];
-        $out .= '    <div class="col-2 border mb-1"  ><div class=" rounded" >
+        if($flag_p) {
+        $query = $this->db->query($query);
+        $result = $query->result_array();
+        $i = 0;
+        $out = '<div class="row match-height">';
+        foreach ($result as $row) {
+            if ($bar) $bar = $row['barcode'];
+            $out .= '    <div class="col-2 border mb-1"  ><div class=" rounded" >
                                  <a  id="posp' . $i . '"  class="' . $p_class . ' round"   data-name="' . $row['product_name'] . '"  data-price="' . amountExchange_s($row['product_price'], 0, $this->aauth->get_user()->loc). '"  data-wholesale_price="' . amountExchange_s($row['product_wholesale_price'], 0, $this->aauth->get_user()->loc) . '"  data-tax="' . amountFormat_general($row['taxrate']) . '"  data-discount="' . amountFormat_general($row['disrate']) . '" data-pcode="' . $row['product_code'] . '"   data-pid="' . $row['pid'] . '"  data-stock="' . amountFormat_general($row['qty']) . '" data-unit="' . $row['unit'] . '" data-serial="' . @$row['serial'] . '" data-bar="' . $bar . '">
                                         <img class="round"
                                              src="' . base_url('userfiles/product/' . $row['image']) . '"  style="max-height: 100%;max-width: 100%">
@@ -528,15 +537,11 @@ if($flag_p) {
                                   
                                 </div></div>';
 
-        $i++;
-
-    }
-
-
-    $out .= '</div>';
-
-    echo $out;
-}
+                $i++;
+            }
+            $out .= '</div>';
+            echo $out;
+        }
 
 
     }
