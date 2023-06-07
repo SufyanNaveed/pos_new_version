@@ -332,7 +332,8 @@ class Products extends CI_Controller
             $this->products->transfer($from_warehouse, $products_l, $to_warehouse, $qty);
         } else {
             $data['cat'] = $this->categories_model->category_list();
-            $data['warehouse'] = $this->categories_model->warehouse_list();
+            $data['warehouse'] = $this->categories_model->warehouse_list(1);
+            $data['all_warehouse'] = $this->categories_model->warehouse_list();
             $head['title'] = "Stock Transfer";
             $head['usernm'] = $this->aauth->get_user()->username;
             $this->load->view('fixed/header', $head);

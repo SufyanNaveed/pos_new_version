@@ -74,7 +74,7 @@
                         <div class="col-sm-6">
                             <select name="to_warehouse" class="form-control">
                                 <?php
-                                foreach ($warehouse as $row) {
+                                foreach ($all_warehouse as $row) {
                                     $cid = $row['id'];
                                     $title = $row['title'];
                                     echo "<option value='$cid'>$title</option>";

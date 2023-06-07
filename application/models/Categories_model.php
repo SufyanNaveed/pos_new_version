@@ -30,22 +30,26 @@ ORDER BY id DESC");
         return $query->result_array();
     }
 
-    public function warehouse_list()
+    public function warehouse_list($loc = '')
     {
         $where = '';
 
-
-        if (!BDATA) $where = "WHERE  (loc=0) ";
-        if ($this->aauth->get_user()->loc) {
-            $where = "WHERE  (loc=" . $this->aauth->get_user()->loc . " ) ";
-            if (BDATA) $where = "WHERE  (loc=" . $this->aauth->get_user()->loc . " OR geopos_warehouse.loc=0) ";
+        if($loc == 1){
+            if (!BDATA) $where = "WHERE  (loc=0) ";
+            if ($this->aauth->get_user()->loc) {
+                $where = "WHERE  (loc=" . $this->aauth->get_user()->loc . " ) ";
+                if (BDATA) $where = "WHERE  (loc=" . $this->aauth->get_user()->loc . " OR geopos_warehouse.loc=0) ";
+            }
+        }else{
+            if ($this->aauth->get_user()->loc) {
+                $where = "WHERE  (loc != " . $this->aauth->get_user()->loc . " ) ";
+            }
         }
 
 
         $query = $this->db->query("SELECT id,title
-FROM geopos_warehouse $where 
-
-ORDER BY id DESC");
+        FROM geopos_warehouse $where 
+        ORDER BY id DESC");
         return $query->result_array();
     }
 
