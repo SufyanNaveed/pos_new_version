@@ -89,7 +89,7 @@ ORDER BY id DESC");
 
             if (BDATA) $where = ' WHERE c.loc=' . $this->aauth->get_user()->loc . ' OR c.loc=0';
         } elseif (!BDATA) {
-            $where = ' WHERE  c.loc=0';
+            //$where = ' WHERE  c.loc=0';
         }
         $query = $this->db->query("SELECT c.*,p.pc,p.salessum,p.worthsum,p.qty FROM geopos_warehouse AS c LEFT JOIN ( SELECT warehouse,COUNT(pid) AS pc,SUM(product_price*qty) AS salessum, SUM(fproduct_price*qty) AS worthsum,SUM(qty) AS qty FROM  geopos_products GROUP BY warehouse ) AS p ON c.id=p.warehouse  $where");
         return $query->result_array();
