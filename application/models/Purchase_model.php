@@ -266,11 +266,12 @@ class Purchase_model extends CI_Model
     public function get_pur_report_datatables(){
         $this->db->select('geopos_purchase.tid as invoice_no, geopos_purchase.refer,geopos_purchase.invoicedate,geopos_purchase_items.*,
         geopos_products.pcat, geopos_products.product_name, geopos_products.product_code, geopos_product_cat.title as pcat,
-        geopos_purchase.loc');
+        geopos_purchase.loc,geopos_supplier.name as supplier_name');
         $this->db->from('geopos_purchase');
         $this->db->join('geopos_purchase_items', 'geopos_purchase_items.tid = geopos_purchase.id', 'left');
         $this->db->join('geopos_products', 'geopos_products.pid = geopos_purchase_items.pid', 'left');
         $this->db->join('geopos_product_cat', 'geopos_product_cat.id = geopos_products.pcat', 'left');
+        $this->db->join('geopos_supplier', 'geopos_supplier.id = geopos_purchase.csd', 'left');
         
         if ($this->input->post('start_date') && $this->input->post('end_date')) {
             $this->db->where('DATE(geopos_purchase.invoicedate) >=', datefordatabase($this->input->post('start_date')));
@@ -294,6 +295,7 @@ class Purchase_model extends CI_Model
         if ($_POST['length'] != -1)
             $this->db->limit($_POST['length'], $_POST['start']);
         $query = $this->db->get();
+        // echo '<pre>'; print_r($this->db->last_query()); exit;
         return $query->result();
     }
 

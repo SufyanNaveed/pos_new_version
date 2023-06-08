@@ -53,6 +53,7 @@
                         <th><?php echo $this->lang->line('serialNO') ?></th>
                         <th>#</th>
                         <th><?php echo 'Vender Invoice #' ?></th>
+                        <th><?php echo 'Vender Name' ?></th>
                         <th><?php echo $this->lang->line('Purchase').' '.$this->lang->line('Date') ?></th>
                         <th><?php echo 'Article No' ?></th>
                         <th><?php echo $this->lang->line('product').' '.$this->lang->line('Name') ?></th>
@@ -73,6 +74,7 @@
                         <th><?php echo $this->lang->line('serialNO') ?></th>
                         <th>#</th>
                         <th><?php echo 'Vender Invoice #' ?></th>
+                        <th><?php echo 'Vender Name' ?></th>
                         <th><?php echo $this->lang->line('Purchase').' '.$this->lang->line('Date') ?></th>
                         <th><?php echo 'Article No' ?></th>
                         <th><?php echo $this->lang->line('product').' '.$this->lang->line('Name') ?></th>
@@ -148,7 +150,7 @@
                             extend: 'excelHtml5',
                             footer: true,
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5]
+                                //columns: []
                             }
                         }
                     ],

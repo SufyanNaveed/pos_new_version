@@ -551,6 +551,7 @@ class Purchase extends CI_Controller
             $row[] = $key+1;
             $row[] = $purchase->invoice_no;
             $row[] = $purchase->refer;
+            $row[] = $purchase->supplier_name;
             $row[] = $purchase->invoicedate;
             $row[] = $purchase->product_code;
             $row[] = $purchase->product_name;
