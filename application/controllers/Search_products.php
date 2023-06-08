@@ -477,7 +477,7 @@ class Search_products extends CI_Controller
         } elseif (!BDATA) {
             $join = 'LEFT JOIN geopos_warehouse ON geopos_warehouse.id=geopos_products.warehouse';
             // $qw .= '(geopos_warehouse.loc=0) AND ';
-            $qw .= ' AND ';
+            // $qw .= ' AND ';
         }
 
         $e = '';
