@@ -34,17 +34,17 @@ ORDER BY id DESC");
     {
         $where = '';
 
-        if($loc == 1){
-            if (!BDATA) $where = "WHERE  (loc=0) ";
-            if ($this->aauth->get_user()->loc) {
-                $where = "WHERE  (loc=" . $this->aauth->get_user()->loc . " ) ";
-                if (BDATA) $where = "WHERE  (loc=" . $this->aauth->get_user()->loc . " OR geopos_warehouse.loc=0) ";
-            }
-        }else{
-            if ($this->aauth->get_user()->loc) {
-                $where = "WHERE  (loc != " . $this->aauth->get_user()->loc . " ) ";
-            }
-        }
+        // if($loc == 1){
+        //     if (!BDATA) $where = "WHERE  (loc=0) ";
+        //     if ($this->aauth->get_user()->loc) {
+        //         $where = "WHERE  (loc=" . $this->aauth->get_user()->loc . " ) ";
+        //         if (BDATA) $where = "WHERE  (loc=" . $this->aauth->get_user()->loc . " OR geopos_warehouse.loc=0) ";
+        //     }
+        // }else{
+        //     if ($this->aauth->get_user()->loc) {
+        //         $where = "WHERE  (loc != " . $this->aauth->get_user()->loc . " ) ";
+        //     }
+        // }
 
 
         $query = $this->db->query("SELECT id,title
