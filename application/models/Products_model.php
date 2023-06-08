@@ -39,7 +39,8 @@ class Products_model extends CI_Model
         if ($sub) {
             $this->db->join('geopos_product_cat', 'geopos_product_cat.id = geopos_products.sub_id');
 
-            if ($this->input->post('group') != 'yes') $this->db->where('geopos_products.merge', 0);
+            if ($this->input->post('group') != 'yes') 
+                $this->db->where_in('geopos_products.merge', [0]);
             if ($this->aauth->get_user()->loc) {
                 $this->db->group_start();
                 $this->db->where('geopos_warehouse.loc', $this->aauth->get_user()->loc);
@@ -72,7 +73,8 @@ class Products_model extends CI_Model
 
             } else {
 
-                if ($this->input->post('group') != 'yes') $this->db->where('geopos_products.merge', 0);
+                if ($this->input->post('group') != 'yes') 
+                    $this->db->where_in('geopos_products.merge', [0,2]);
                 if ($this->aauth->get_user()->loc) {
                     $this->db->group_start();
                     $this->db->where('geopos_warehouse.loc', $this->aauth->get_user()->loc);
@@ -130,7 +132,7 @@ class Products_model extends CI_Model
         if ($this->input->post('length') != -1)
             $this->db->limit($this->input->post('length'), $this->input->post('start'));
         $query = $this->db->get();
-        // echo '<pre>'; print
+        // echo '<pre>'; print_r($this->db->last_query()); exit;
         return $query->result();
     }
 

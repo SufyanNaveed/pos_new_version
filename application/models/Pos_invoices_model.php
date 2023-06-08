@@ -113,13 +113,15 @@ class Pos_invoices_model extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('geopos_warehouse');
-       if ($this->aauth->get_user()->loc) {
+        if ($this->aauth->get_user()->loc) {
             $this->db->where('loc', $this->aauth->get_user()->loc);
-          if(BDATA)  $this->db->or_where('loc', 0);
-        }  elseif(!BDATA) { $this->db->where('loc', 0); }
+            $this->db->or_where('loc', 0);
+            // if(BDATA)  $this->db->or_where('loc', 0);
+        }  //elseif(!BDATA) { $this->db->where('loc', 0); }
 
         $query = $this->db->get();
-
+        // echo '<pre>'; print_r($this->aauth->get_user()->loc);
+        // echo '<pre>'; print_r($query->result_array());exit;
         return $query->result_array();
 
     }

@@ -192,12 +192,14 @@
                                 <div class="tab-pane" id="tab2" role="tabpanel" aria-labelledby="base-tab2">
                                     <div class="row">
                                         <div class="col-4 blue text-xs-center"><?php echo $this->lang->line('Warehouse') ?>
-                                            <select
-                                                    id="v2_warehouses"
-                                                    class="selectpicker form-control round teal">
-                                                <?php echo $this->common->default_warehouse();
-                                                echo '<option value="0">' . $this->lang->line('All') ?></option><?php foreach ($warehouse as $row) {
-                                                    echo '<option value="' . $row['id'] . '">' . $row['title'] . '</option>';
+                                            <select id="v2_warehouses" class="selectpicker form-control round teal">
+                                                <?php //echo $this->common->default_warehouse();
+                                                    //echo '<option value="0">' . $this->lang->line('All') ?>
+                                                    <!-- </option> -->
+                                                <option value="">Select Warehouse</option>
+                                                <?php foreach ($warehouse as $row) {
+                                                    $selected = $this->aauth->get_user()->loc == $row['loc'] ? 'selected' : '';
+                                                    echo '<option value="' . $row['id'] . '"'. $selected .'>' . $row['title'] . '</option>';
                                                 } ?>
 
                                             </select></div>
