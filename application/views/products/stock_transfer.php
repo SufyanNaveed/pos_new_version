@@ -73,6 +73,7 @@
 
                         <div class="col-sm-6">
                             <select name="to_warehouse" class="form-control">
+                                <option value='0'>Select</option>
                                 <?php
                                 foreach ($all_warehouse as $row) {
                                     $cid = $row['id'];
