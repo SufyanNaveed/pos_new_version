@@ -166,7 +166,7 @@ class Import extends CI_Controller
                 $products[] = array(
                     'pid' => null,
                     'pcat' => $pcat,
-                    'warehouse' => 1,
+                    'warehouse' => $warehouse,
                     'product_name' => $row[0],
                     'product_code' => $row[1],
                     'product_price' => $row[2],
