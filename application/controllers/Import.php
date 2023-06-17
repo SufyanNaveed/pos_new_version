@@ -140,6 +140,7 @@ class Import extends CI_Controller
 
             $this->db->select('*');
             $this->db->from('geopos_products');
+            $this->db->where('geopos_products.warehouse',$warehouse);
             $this->db->where('geopos_products.product_code',$row[1]);
             $product = $this->db->get()->row_array();
             if($product){
