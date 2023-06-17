@@ -806,12 +806,12 @@ FROM geopos_products $whr");
         $this->db->join('geopos_warehouse', 'geopos_products.warehouse = geopos_warehouse.id', 'left');
         
         if ($this->input->post('start_date') && $this->input->post('end_date')) {
-            $this->db->where('DATE(geopos_invoices.invoicedate) >=', datefordatabase($this->input->post('start_date')));
-            $this->db->where('DATE(geopos_invoices.invoicedate) <=', datefordatabase($this->input->post('end_date')));
+            $this->db->where('DATE(geopos_products.created_date) >=', datefordatabase($this->input->post('start_date')));
+            $this->db->where('DATE(geopos_products.created_date) <=', datefordatabase($this->input->post('end_date')));
         }else if ($this->input->post('start_date')) {
-            $this->db->where('DATE(geopos_invoices.invoicedate) >=', datefordatabase($this->input->post('start_date')));
+            $this->db->where('DATE(geopos_products.created_date) >=', datefordatabase($this->input->post('start_date')));
         }else if ($this->input->post('end_date')) {
-            $this->db->where('DATE(geopos_invoices.invoicedate) <=', datefordatabase($this->input->post('end_date')));
+            $this->db->where('DATE(geopos_products.created_date) <=', datefordatabase($this->input->post('end_date')));
         }
         
         $linksArray = isset($_POST['locations']) ? $_POST['locations'] : array();
@@ -852,6 +852,7 @@ FROM geopos_products $whr");
         if ($this->input->post('length') != -1)
             $this->db->limit($this->input->post('length'), $this->input->post('start'));
         $query = $this->db->get(); 
+        echo '<pre>'; print_r($this->db->last_query()); exit;
         return $query->result();
     }
 
