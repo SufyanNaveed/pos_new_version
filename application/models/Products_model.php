@@ -852,7 +852,7 @@ FROM geopos_products $whr");
         if ($this->input->post('length') != -1)
             $this->db->limit($this->input->post('length'), $this->input->post('start'));
         $query = $this->db->get(); 
-        echo '<pre>'; print_r($this->db->last_query()); exit;
+        //echo '<pre>'; print_r($this->db->last_query()); exit;
         return $query->result();
     }
 
