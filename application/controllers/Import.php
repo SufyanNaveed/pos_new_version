@@ -91,7 +91,7 @@ class Import extends CI_Controller
         } else {
 
             $data['pc'] = '0';
-            $data['wid'] = '0';
+            $data['wid'] = $this->input->post('product_warehouse', true);
             $config['upload_path'] = './userfiles';
             $config['allowed_types'] = 'csv';
             $config['max_size'] = 6000;
@@ -124,7 +124,7 @@ class Import extends CI_Controller
         $pcat = $this->input->post('pc');
         $warehouse = $this->input->post('wid');
         $inputFileName = FCPATH . 'userfiles/' . $name;
-        //print_r($inputFileName); exit;
+        // echo '<pre>'; print_r($_POST); exit;
 
         $spreadsheet = IOFactory::load($inputFileName);
         $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, false);
