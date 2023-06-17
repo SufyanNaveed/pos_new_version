@@ -97,6 +97,7 @@ $(document).ready(function () {
                 $("#customer-box").css("background", "#FFF url(" + baseurl + "assets/custom/load-ring.gif) no-repeat 165px");
             },
             success: function (data) {
+                console.log(data);
                 $("#customer-box-result").show();
                 $("#customer-box-result").html(data);
                 $("#customer-box").css("background", "none");

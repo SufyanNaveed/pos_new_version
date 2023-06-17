@@ -252,12 +252,12 @@ class Search_products extends CI_Controller
         $out = array();
         $name = $this->input->get('keyword', true);
         $whr = '';
-        if ($this->aauth->get_user()->loc) {
-            $whr = ' (loc=' . $this->aauth->get_user()->loc . ' OR loc=0) AND ';
-            if (!BDATA) $whr = ' (loc=' . $this->aauth->get_user()->loc . ' ) AND ';
-        } elseif (!BDATA) {
-            $whr = ' (loc=0) AND ';
-        }
+        // if ($this->aauth->get_user()->loc) {
+        //     $whr = ' (loc=' . $this->aauth->get_user()->loc . ' OR loc=0) AND ';
+        //     if (!BDATA) $whr = ' (loc=' . $this->aauth->get_user()->loc . ' ) AND ';
+        // } elseif (!BDATA) {
+        //     $whr = ' (loc=0) AND ';
+        // }
         if ($name) {
             $query = $this->db->query("SELECT id,name,address,city,phone,email,discount_c FROM geopos_customers WHERE $whr (UPPER(name)  LIKE '%" . strtoupper($name) . "%' OR UPPER(phone)  LIKE '" . strtoupper($name) . "%') LIMIT 6");
             $result = $query->result_array();
