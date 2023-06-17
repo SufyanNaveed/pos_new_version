@@ -373,10 +373,10 @@
                 }
             });
         
-            $('.invoice_stock_search').hide();
-            $('.return_stock_form').show();
-            $("#customer-box").val('walk-in-customer');
-            $("#customer-box").trigger('keyup'); 
+            // $('.invoice_stock_search').hide();
+            // $('.return_stock_form').show();
+            // $("#customer-box").val('Walk-in Client');
+            // $("#customer-box").trigger('keyup'); 
 
         } else {
             $('.invoice_stock_search').show();
