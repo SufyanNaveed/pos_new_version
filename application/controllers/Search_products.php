@@ -261,6 +261,7 @@ class Search_products extends CI_Controller
         if ($name) {
             $query = $this->db->query("SELECT id,name,address,city,phone,email,discount_c FROM geopos_customers WHERE $whr (UPPER(name)  LIKE '%" . strtoupper($name) . "%' OR UPPER(phone)  LIKE '" . strtoupper($name) . "%') LIMIT 6");
             $result = $query->result_array();
+            echo '<pre>'; print_r($result); exit;
             echo '<ol>';
             $i = 1;
             foreach ($result as $row) {
