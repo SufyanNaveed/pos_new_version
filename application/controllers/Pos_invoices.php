@@ -1001,7 +1001,7 @@ class Pos_invoices extends CI_Controller
     public function ajax_list()
     {
 
-        $list = $this->invocies->get_datatables($this->limited);
+        $list = $this->invocies->get_datatables($this->limited, 'ajax_list');
 
         $data = array();
 
