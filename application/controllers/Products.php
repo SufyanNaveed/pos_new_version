@@ -43,7 +43,7 @@ class Products extends CI_Controller
     {
         $head['title'] = "Products";
         $head['usernm'] = $this->aauth->get_user()->username;
-        $update_barcode = $this->products->update_barcode();
+        //$update_barcode = $this->products->update_barcode();
         $this->load->view('fixed/header', $head);
         $this->load->view('products/products');
         $this->load->view('fixed/footer');
