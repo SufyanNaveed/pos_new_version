@@ -203,7 +203,7 @@ class Products_model extends CI_Model
 
                 } else {
 
-                    $barcode = rand(100, 999) . rand(0, 9) . rand(1000000, 9999999) . rand(0, 9);
+                    $barcode = $this->genrate_bar_code();//rand(100, 999) . rand(0, 9) . rand(1000000, 9999999) . rand(0, 9);
 
                     $data = array(
                         'pcat' => $catid,
@@ -312,7 +312,7 @@ class Products_model extends CI_Model
                     'b_id' => $b_id
                 );
             } else {
-                $barcode = rand(100, 999) . rand(0, 9) . rand(1000000, 9999999) . rand(0, 9);
+                $barcode = $this->genrate_bar_code();//rand(100, 999) . rand(0, 9) . rand(1000000, 9999999) . rand(0, 9);
                 $data = array(
                     'pcat' => $catid,
                     'warehouse' => $warehouse,
@@ -399,6 +399,40 @@ class Products_model extends CI_Model
         }
     }
 
+    public function genrate_bar_code(){
+        
+        $barcode = rand(100, 999) . rand(0, 9) . rand(1000000, 9999999) . rand(0, 9);
+
+        $digits =(string)$barcode;
+        // 1. Add the values of the digits in the even-numbered positions: 2, 4, 6, etc.
+        $even_sum = $digits[1] + $digits[3] + $digits[5] + $digits[7] + $digits[9] + $digits[11];
+        // 2. Multiply this result by 3.
+        $even_sum_three = $even_sum * 3;
+        // 3. Add the values of the digits in the odd-numbered positions: 1, 3, 5, etc.
+        $odd_sum = $digits[0] + $digits[2] + $digits[4] + $digits[6] + $digits[8] + $digits[10];
+        // 4. Sum the results of steps 2 and 3.
+        $total_sum = $even_sum_three + $odd_sum;
+        // 5. The check character is the smallest number which, when added to the result in step 4,  produces a multiple of 10.
+        $next_ten = (ceil($total_sum/10))*10;
+        $check_digit = $next_ten - $total_sum;
+        return $digits . $check_digit;
+    }
+    
+    public function update_barcode()
+    {
+        $this->db->select('pid,barcode');
+        $this->db->from('geopos_products'); 
+        $this->db->order_by('pid','asc');
+        $query = $this->db->get();
+        $all_products = $query->result_array();
+        foreach($all_products as $product){
+            $data['barcode'] = $this->update_genrate_bar_code($product['barcode']);
+            
+            $this->db->set($data);
+            $this->db->where('pid', $product['pid']);
+            $this->db->update('geopos_products'); //exit;
+        }
+    }
     public function edit($pid, $catid, $warehouse, $product_name, $product_code, $product_price, $product_wholesale_price, $factoryprice, $taxrate, $disrate, $product_qty, $product_qty_alert, $product_desc, $image, $unit, $barcode, $code_type, $sub_cat = '', $b_id = '', $vari = null, $serial = null)
     {
         $this->db->select('qty');
@@ -408,6 +442,7 @@ class Products_model extends CI_Model
         $r_n = $query->row_array();
         $ware_valid = $this->valid_warehouse($warehouse);
         $this->db->trans_start();
+        //$barcode = $this->update_genrate_bar_code($barcode);
         if ($this->aauth->get_user()->loc) {
             if ($ware_valid['loc'] == $this->aauth->get_user()->loc OR $ware_valid['loc'] == '0' OR $warehouse == 0) {
                 $data = array(
@@ -555,6 +590,25 @@ class Products_model extends CI_Model
 
     }
 
+    public function update_genrate_bar_code($barcode){
+        
+        //$barcode = rand(100, 999) . rand(0, 9) . rand(1000000, 9999999) . rand(0, 9);
+
+        $digits =(string)$barcode;
+        // 1. Add the values of the digits in the even-numbered positions: 2, 4, 6, etc.
+        $even_sum = $digits[1] + $digits[3] + $digits[5] + $digits[7] + $digits[9] + $digits[11];
+        // 2. Multiply this result by 3.
+        $even_sum_three = $even_sum * 3;
+        // 3. Add the values of the digits in the odd-numbered positions: 1, 3, 5, etc.
+        $odd_sum = $digits[0] + $digits[2] + $digits[4] + $digits[6] + $digits[8] + $digits[10];
+        // 4. Sum the results of steps 2 and 3.
+        $total_sum = $even_sum_three + $odd_sum;
+        // 5. The check character is the smallest number which, when added to the result in step 4,  produces a multiple of 10.
+        $next_ten = (ceil($total_sum/10))*10;
+        $check_digit = $next_ten - $total_sum;
+        return $digits . $check_digit;
+    }
+    
     public function prd_stats()
     {
 
