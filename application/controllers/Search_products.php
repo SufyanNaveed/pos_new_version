@@ -273,6 +273,25 @@ class Search_products extends CI_Controller
 
     }
 
+    public function product_price_search()
+    {
+        $pid = $this->input->post('pid', true); 
+        $price = $this->input->post('price', true);
+        if ($pid) {
+            $this->db->select('fproduct_price');
+            $this->db->from('geopos_products');
+            $this->db->where('pid', $pid);
+            $result = $this->db->get()->row_array();
+            
+            if($price >= $result['fproduct_price']){
+                echo true;
+            }else{
+                false;
+            }
+        }
+
+    }
+
     public function party_search()
     {
         $result = array();
