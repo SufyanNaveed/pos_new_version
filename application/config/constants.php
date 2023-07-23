@@ -26,7 +26,7 @@ defined('EXIT__AUTO_MAX') OR define('EXIT__AUTO_MAX', 225); // highest automatic
 require_once('define_pre.php');
 define('LTR', 'ltr');
 define('GST_INCL', 'yes');
-define('POSV', '1');
+define('POSV', '2');
 define('INVV', '1');
 define('BDATA', '0');
 define('CUSTOM', '1');

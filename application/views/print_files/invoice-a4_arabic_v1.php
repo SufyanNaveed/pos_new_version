@@ -187,14 +187,14 @@
     <table class="party">
         <thead>
         <tr class="heading">
-            <?php  if ($invoice['tax'] > 0) { ?> <td> <?php echo $this->lang->line('Our Info') ?> / معلوماتنا  :</td> <?php } ?>
+            <?php  //if ($invoice['tax'] > 0) { ?> <td> <?php echo $this->lang->line('Our Info') ?> / معلوماتنا  :</td> <?php //} ?>
             <td><?= $general['person'] ?> /عميل   :</td>
             <td>QR Scan / مسح QR  :</td>
         </tr>
         </thead>
         <tbody>
         <tr>
-            <?php  if ($invoice['tax'] > 0) { ?>
+            <?php // if ($invoice['tax'] > 0) { ?>
                 <td><strong><?php $loc = location($invoice['loc']);
                     echo $loc['cname']; ?></strong><br>
                     <?php echo
@@ -202,7 +202,7 @@
                     if ($loc['taxid']) echo '<br>' . $this->lang->line('Tax') . ' ID: ' . $loc['taxid'];
                     ?>
                 </td>
-            <?php } ?>
+            <?php //} ?>
             <td>
                 <?php echo '<strong>' . $invoice['name'] . '</strong><br>';
                 if ($invoice['company']) echo $invoice['company'] . '<br>';
@@ -265,7 +265,8 @@
             <td>
                 <?php echo $this->lang->line('Qty') ?> / الكمية
             </td>
-            <?php if ($invoice['tax'] > 0) echo '<td>' . $this->lang->line('Tax') . ' / الضرائب </td>';
+            <?php if ($invoice['tax'] > 0) 
+            echo '<td>' . $this->lang->line('Tax') . ' / الضرائب </td>';
             if ($invoice['discount'] > 0) echo '<td>' . $this->lang->line('Discount') . ' / خصم  </td>'; ?>
             <td class="t_center">
                 <?php echo $this->lang->line('SubTotal') ?> / المجموع الفرعي
@@ -333,9 +334,9 @@
 
             $sub_t_col++;
         }
-        if ($invoice['tax'] > 0) {
+        //if ($invoice['tax'] > 0) {
             $sub_t_col++;
-        }
+        //}
         if ($invoice['discount'] > 0) {
             $sub_t_col++;
         }
@@ -379,12 +380,12 @@
             <td><?php echo $this->lang->line('SubTotal') ?> / المجموع الفرعي:</td>
             <td><?php echo amountExchange($sub_t, $invoice['multi'], $invoice['loc']); ?></td>
         </tr>
-        <?php if ($invoice['tax'] > 0) {
+        <?php // if ($invoice['tax'] > 0) {
             echo '<tr>
             <td> ' . $this->lang->line('Total Tax') . ' / مجموع الضريبة :</td>
             <td>' . amountExchange($invoice['tax'], $invoice['multi'], $invoice['loc']) . '</td>
         </tr>';
-        }
+        //}
         if ($invoice['discount'] > 0) {
             echo '<tr>
             <td>' . $this->lang->line('Total Discount') . ' / /إجمالي الخصم:</td>

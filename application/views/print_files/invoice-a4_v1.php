@@ -180,9 +180,9 @@
     <table class="party">
         <thead>
         <tr class="heading">
-            <?php  if ($invoice['tax'] > 0) { ?>
+            <?php  //if ($invoice['tax'] > 0) { ?>
                 <td> <?php echo $this->lang->line('Our Info') ?>:</td>
-            <?php } ?>
+            <?php //} ?>
             <td><?= $general['person'] ?>:</td>
             <td>QR Scan:</td>
 
@@ -190,7 +190,7 @@
         </thead>
         <tbody>
         <tr>
-            <?php  if ($invoice['tax'] > 0) { ?>
+            <?php // if ($invoice['tax'] > 0) { ?>
                 <td>
                     <strong><?php $loc = location($invoice['loc']);
                         echo $loc['cname']; ?></strong><br>
@@ -199,7 +199,7 @@
                     if ($loc['taxid']) echo '<br>' . $this->lang->line('TaxID') . ': ' . $loc['taxid'];
                     ?>
                 </td>
-            <?php } ?>
+            <?php //} ?>
             <td>
                 <?php echo '<strong>' . $invoice['name'] . '</strong><br>';
                 if ($invoice['company']) echo $invoice['company'] . '<br>';
@@ -262,7 +262,8 @@
             <td>
                 <?php echo $this->lang->line('Qty') ?>
             </td>
-            <?php if ($invoice['tax'] > 0) echo '<td>' . $this->lang->line('Tax') . '</td>';
+            <?php if ($invoice['tax'] > 0) 
+                echo '<td>' . $this->lang->line('Tax') . '</td>';
             if ($invoice['discount'] > 0) echo '<td>' . $this->lang->line('Discount') . '</td>'; ?>
             <td class="t_center">
                 <?php echo $this->lang->line('SubTotal') ?>
@@ -329,9 +330,9 @@
 
             $sub_t_col++;
         }
-        if ($invoice['tax'] > 0) {
+        //if ($invoice['tax'] > 0) {
             $sub_t_col++;
-        }
+        //}
         if ($invoice['discount'] > 0) {
             $sub_t_col++;
         }
@@ -375,12 +376,12 @@
             <td><?php echo $this->lang->line('SubTotal') ?>:</td>
             <td><?php echo amountExchange($sub_t, $invoice['multi'], $invoice['loc']); ?></td>
         </tr>
-        <?php if ($invoice['tax'] > 0) {
+        <?php //if ($invoice['tax'] > 0) {
             echo '<tr>
             <td> ' . $this->lang->line('Total Tax') . ' :</td>
             <td>' . amountExchange($invoice['tax'], $invoice['multi'], $invoice['loc']) . '</td>
         </tr>';
-        }
+        //}
         if ($invoice['discount'] > 0) {
             echo '<tr>
             <td>' . $this->lang->line('Total Discount') . ':</td>
