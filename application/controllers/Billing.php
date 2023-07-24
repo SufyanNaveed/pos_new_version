@@ -223,16 +223,18 @@ class Billing extends CI_Controller
             if ($data['invoice']['taxstatus'] == 'cgst' || $data['invoice']['taxstatus'] == 'igst') {
                 $html = $this->load->view('print_files/invoice-a4-gst_v' . INVV, $data, true);
             } else {
-                $html = $this->load->view('print_files/invoice-a4_v' . INVV, $data, true);
+                // $html = $this->load->view('print_files/invoice-a4_v' . INVV, $data, true);
+                $html = $this->load->view('print_files/invoice-designer_v' . INVV, $data, true);
                 //    $html=str_replace("strong","span",$html);
                 //     $html=str_replace("<h","<span",$html);
             }
             //PDF Rendering
             $this->load->library('pdf');
             if (INVV == 1) {
-                $header = $this->load->view('print_files/invoice-header_v' . INVV, $data, true);
+                $header = $this->load->view('print_files/invoice-header_designer_v' . INVV, $data, true);
+                // $header = $this->load->view('print_files/invoice-header_v' . INVV, $data, true);
                 //  $header=str_replace("<h","<span",$header);
-                $pdf = $this->pdf->load_split(array('margin_top' => 40));
+                $pdf = $this->pdf->load_split(array('margin_top' => 60));
                 $pdf->SetHTMLHeader($header);
             }
             if (INVV == 2) {
